@@ -1,0 +1,1475 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ROMS Voice Knowledge Capture</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: #17365d;
+      color: white;
+      padding: 25px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .header p {
+      margin: 4px 0;
+      opacity: 0.9;
+    }
+
+    .panel {
+      background: white;
+      padding: 25px;
+      border: 1px solid #d7dce1;
+      border-top: none;
+    }
+
+    .section-title {
+      font-size: 19px;
+      font-weight: bold;
+      color: #17365d;
+      margin: 0 0 15px;
+    }
+
+    .status {
+      padding: 15px;
+      border-radius: 8px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      margin-bottom: 22px;
+      font-weight: bold;
+    }
+
+    .diagnostics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .diagnostic-card {
+      border: 1px solid #d7dce1;
+      border-radius: 8px;
+      padding: 15px;
+      background: #fafafa;
+    }
+
+    .diagnostic-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #6b7280;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .diagnostic-value {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .pass {
+      color: #166534;
+    }
+
+    .fail {
+      color: #b91c1c;
+    }
+
+    .warn {
+      color: #92400e;
+    }
+
+    .neutral {
+      color: #374151;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    button {
+      border: none;
+      border-radius: 7px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #diagnosticButton {
+      background: #2563eb;
+      color: white;
+    }
+
+    #startButton {
+      background: #166534;
+      color: white;
+    }
+
+    #stopButton {
+      background: #b91c1c;
+      color: white;
+    }
+
+    #clearButton {
+      background: #6b7280;
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .transcript-box {
+      width: 100%;
+      min-height: 250px;
+      padding: 18px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: white;
+      font-size: 17px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+
+    .log {
+      margin-top: 20px;
+      background: #111827;
+      color: #d1fae5;
+      border-radius: 8px;
+      padding: 15px;
+      height: 280px;
+      overflow-y: auto;
+      font-family: Consolas, monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+
+    .instruction {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
+    .footer {
+      background: #e5e7eb;
+      padding: 15px;
+      border-radius: 0 0 12px 12px;
+      font-size: 12px;
+      color: #4b5563;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        margin: 10px;
+        padding: 5px;
+      }
+
+      .header h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>ROMS AI Knowledge Engine</h1>
+    <p><strong>Voice Knowledge Capture</strong></p>
+    <p>Research Operations Management System</p>
+    <p>External Voice Capture Interface</p>
+  </div>
+
+  <div class="panel">
+
+    <div class="section-title">
+      🎤 Operational Voice Capture
+    </div>
+
+    <div class="status" id="mainStatus">
+      Ready. Run the microphone diagnostic first.
+    </div>
+
+    <!-- DIAGNOSTICS -->
+
+    <div class="section-title">
+      🔎 Voice System Diagnostics
+    </div>
+
+    <div class="diagnostics">
+
+      <div class="diagnostic-card">
+        <div class="diagnostic-label">Browser</div>
+        <div id="browserStatus" class="diagnostic-value neutral">
+          Checking...
+        </div>
+      </div>
+
+      <div class="diagnostic-card">
+        <div class="diagnostic-label">Secure Connection</div>
+        <div id="secureStatus" class="diagnostic-value neutral">
+          Checking...
+        </div>
+      </div>
+
+      <div class="diagnostic-card">
+        <div class="diagnostic-label">Speech Recognition</div>
+        <div id="speechStatus" class="diagnostic-value neutral">
+          Checking...
+        </div>
+      </div>
+
+      <div class="diagnostic-card">
+        <div class="diagnostic-label">Microphone API</div>
+        <div id="microphoneStatus" class="diagnostic-value neutral">
+          Checking...
+        </div>
+      </div>
+
+      <div class="diagnostic-card">
+        <div class="diagnostic-label">Permission</div>
+        <div id="permissionStatus" class="diagnostic-value neutral">
+          Not checked
+        </div>
+      </div>
+
+      <div class="diagnostic-card">
+        <div class="diagnostic-label">Recognition</div>
+        <div id="recognitionStatus" class="diagnostic-value neutral">
+          Idle
+        </div>
+      </div>
+
+      <div class="diagnostic-card">
+        <div class="diagnostic-label">Last Error</div>
+        <div id="errorStatus" class="diagnostic-value neutral">
+          None
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CONTROLS -->
+
+    <div class="controls">
+
+      <button id="diagnosticButton">
+        🔎 Run Microphone Diagnostic
+      </button>
+
+      <button id="startButton">
+        🎤 Start Voice Capture
+      </button>
+
+      <button id="stopButton" disabled>
+        ⏹ Stop Capture
+      </button>
+
+      <button id="clearButton">
+        🗑 Clear Transcript
+      </button>
+
+    </div>
+
+    <!-- TRANSCRIPT -->
+
+    <div class="section-title">
+      Voice Transcript
+    </div>
+
+    <div
+      id="transcript"
+      class="transcript-box"
+      contenteditable="true"
+    >
+      Voice transcript will appear here...
+    </div>
+
+    <div class="instruction">
+      <strong>First test:</strong>
+      Click <strong>Run Microphone Diagnostic</strong>.
+      If the microphone is granted, click
+      <strong>Start Voice Capture</strong> and speak normally.
+    </div>
+
+    <!-- LOG -->
+
+    <div class="section-title" style="margin-top:25px;">
+      Diagnostic Log
+    </div>
+
+    <div id="log" class="log"></div>
+
+  </div>
+
+  <div class="footer">
+    ROMS AI Knowledge Engine | Voice Knowledge Capture
+  </div>
+
+</div>
+
+
+<script>
+
+/****************************************************************
+ * ROMS AI KNOWLEDGE ENGINE
+ * VOICE KNOWLEDGE CAPTURE
+ *
+ * EXTERNAL GITHUB PAGES BUILD
+ *
+ * IMPORTANT:
+ * This file is intentionally independent of Google Apps Script
+ * HTML Service. The microphone is accessed directly by the
+ * browser from the GitHub Pages HTTPS domain.
+ ****************************************************************/
+
+
+/****************************************************************
+ * STATE
+ ****************************************************************/
+
+let recognition = null;
+
+let isRecognizing = false;
+
+let finalTranscript = "";
+
+let diagnosticRunning = false;
+
+
+/****************************************************************
+ * DOM REFERENCES
+ ****************************************************************/
+
+const mainStatus =
+  document.getElementById("mainStatus");
+
+const browserStatus =
+  document.getElementById("browserStatus");
+
+const secureStatus =
+  document.getElementById("secureStatus");
+
+const speechStatus =
+  document.getElementById("speechStatus");
+
+const microphoneStatus =
+  document.getElementById("microphoneStatus");
+
+const permissionStatus =
+  document.getElementById("permissionStatus");
+
+const recognitionStatus =
+  document.getElementById("recognitionStatus");
+
+const errorStatus =
+  document.getElementById("errorStatus");
+
+const transcript =
+  document.getElementById("transcript");
+
+const logBox =
+  document.getElementById("log");
+
+const diagnosticButton =
+  document.getElementById("diagnosticButton");
+
+const startButton =
+  document.getElementById("startButton");
+
+const stopButton =
+  document.getElementById("stopButton");
+
+const clearButton =
+  document.getElementById("clearButton");
+
+
+/****************************************************************
+ * LOGGING
+ ****************************************************************/
+
+function log(message, type = "INFO") {
+
+  const timestamp =
+    new Date().toLocaleTimeString();
+
+  const line =
+    "[" +
+    timestamp +
+    "] " +
+    type +
+    ": " +
+    message;
+
+  console.log(line);
+
+  logBox.textContent +=
+    line + "\n";
+
+  logBox.scrollTop =
+    logBox.scrollHeight;
+}
+
+
+/****************************************************************
+ * STATUS
+ ****************************************************************/
+
+function setStatus(element, text, className) {
+
+  element.textContent = text;
+
+  element.className =
+    "diagnostic-value " +
+    className;
+}
+
+
+function setMainStatus(text) {
+
+  mainStatus.textContent = text;
+}
+
+
+/****************************************************************
+ * BROWSER CHECK
+ ****************************************************************/
+
+function checkBrowser() {
+
+  log("Checking browser...");
+
+  const userAgent =
+    navigator.userAgent;
+
+  if (
+    userAgent.includes("Chrome") ||
+    userAgent.includes("Edg")
+  ) {
+
+    setStatus(
+      browserStatus,
+      "PASS - Chromium browser",
+      "pass"
+    );
+
+    log(
+      "Chromium-based browser detected.",
+      "PASS"
+    );
+
+    return true;
+  }
+
+  setStatus(
+    browserStatus,
+    "WARNING - Browser not verified",
+    "warn"
+  );
+
+  log(
+    "Browser is not Chrome/Edge.",
+    "WARNING"
+  );
+
+  return false;
+}
+
+
+/****************************************************************
+ * HTTPS / SECURE CONTEXT
+ ****************************************************************/
+
+function checkSecureConnection() {
+
+  log("Checking secure connection...");
+
+  if (window.isSecureContext) {
+
+    setStatus(
+      secureStatus,
+      "PASS - HTTPS secure context",
+      "pass"
+    );
+
+    log(
+      "Secure browser context confirmed.",
+      "PASS"
+    );
+
+    return true;
+  }
+
+  setStatus(
+    secureStatus,
+    "FAIL - Not secure",
+    "fail"
+  );
+
+  log(
+    "Page is not running in a secure browser context.",
+    "ERROR"
+  );
+
+  return false;
+}
+
+
+/****************************************************************
+ * SPEECH RECOGNITION CHECK
+ ****************************************************************/
+
+function checkSpeechRecognition() {
+
+  log(
+    "Checking Speech Recognition API..."
+  );
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+
+    setStatus(
+      speechStatus,
+      "FAIL - Not supported",
+      "fail"
+    );
+
+    log(
+      "Speech Recognition API unavailable.",
+      "ERROR"
+    );
+
+    return false;
+  }
+
+  setStatus(
+    speechStatus,
+    "PASS - API available",
+    "pass"
+  );
+
+  log(
+    "Speech Recognition API available.",
+    "PASS"
+  );
+
+  return true;
+}
+
+
+/****************************************************************
+ * MICROPHONE API CHECK
+ ****************************************************************/
+
+function checkMicrophoneAPI() {
+
+  log(
+    "Checking microphone API..."
+  );
+
+  if (
+    !navigator.mediaDevices ||
+    !navigator.mediaDevices.getUserMedia
+  ) {
+
+    setStatus(
+      microphoneStatus,
+      "FAIL - getUserMedia unavailable",
+      "fail"
+    );
+
+    log(
+      "getUserMedia is unavailable.",
+      "ERROR"
+    );
+
+    return false;
+  }
+
+  setStatus(
+    microphoneStatus,
+    "PASS - API available",
+    "pass"
+  );
+
+  log(
+    "Microphone API available.",
+    "PASS"
+  );
+
+  return true;
+}
+
+
+/****************************************************************
+ * PERMISSION CHECK
+ ****************************************************************/
+
+async function checkPermission() {
+
+  log(
+    "Checking microphone permission..."
+  );
+
+  if (!navigator.permissions) {
+
+    setStatus(
+      permissionStatus,
+      "UNKNOWN",
+      "warn"
+    );
+
+    log(
+      "Permissions API unavailable.",
+      "WARNING"
+    );
+
+    return null;
+  }
+
+  try {
+
+    const permission =
+      await navigator.permissions.query({
+        name: "microphone"
+      });
+
+    log(
+      "Microphone permission state: " +
+      permission.state
+    );
+
+    if (permission.state === "granted") {
+
+      setStatus(
+        permissionStatus,
+        "GRANTED",
+        "pass"
+      );
+
+      return true;
+    }
+
+    if (permission.state === "denied") {
+
+      setStatus(
+        permissionStatus,
+        "DENIED",
+        "fail"
+      );
+
+      log(
+        "Microphone permission is denied.",
+        "ERROR"
+      );
+
+      return false;
+    }
+
+    setStatus(
+      permissionStatus,
+      "PROMPT",
+      "warn"
+    );
+
+    log(
+      "Browser will request microphone permission.",
+      "INFO"
+    );
+
+    return null;
+
+  } catch (error) {
+
+    setStatus(
+      permissionStatus,
+      "UNKNOWN",
+      "warn"
+    );
+
+    log(
+      "Permission query failed: " +
+      error.message,
+      "ERROR"
+    );
+
+    return null;
+  }
+}
+
+
+/****************************************************************
+ * ACTUAL MICROPHONE TEST
+ ****************************************************************/
+
+async function testMicrophone() {
+
+  log(
+    "Requesting microphone access..."
+  );
+
+  try {
+
+    const stream =
+      await navigator.mediaDevices.getUserMedia({
+        audio: true
+      });
+
+    log(
+      "Microphone access successfully granted.",
+      "PASS"
+    );
+
+    setStatus(
+      permissionStatus,
+      "GRANTED",
+      "pass"
+    );
+
+    setStatus(
+      microphoneStatus,
+      "PASS - Microphone responding",
+      "pass"
+    );
+
+    const tracks =
+      stream.getAudioTracks();
+
+    if (tracks.length > 0) {
+
+      log(
+        "Microphone detected: " +
+        (
+          tracks[0].label ||
+          "Unnamed microphone"
+        ),
+        "PASS"
+      );
+
+      log(
+        "Microphone state: " +
+        tracks[0].readyState,
+        "INFO"
+      );
+
+      log(
+        "Microphone enabled: " +
+        tracks[0].enabled,
+        "INFO"
+      );
+    }
+
+    stream.getTracks().forEach(
+      track => track.stop()
+    );
+
+    return true;
+
+  } catch (error) {
+
+    setStatus(
+      microphoneStatus,
+      "FAIL - Access failed",
+      "fail"
+    );
+
+    setStatus(
+      permissionStatus,
+      "DENIED / BLOCKED",
+      "fail"
+    );
+
+    setStatus(
+      errorStatus,
+      error.name + ": " + error.message,
+      "fail"
+    );
+
+    log(
+      "Microphone access failed.",
+      "ERROR"
+    );
+
+    log(
+      "Error name: " +
+      error.name,
+      "ERROR"
+    );
+
+    log(
+      "Error message: " +
+      error.message,
+      "ERROR"
+    );
+
+    return false;
+  }
+}
+
+
+/****************************************************************
+ * FULL DIAGNOSTIC
+ ****************************************************************/
+
+async function runDiagnostic() {
+
+  if (diagnosticRunning) {
+    return;
+  }
+
+  diagnosticRunning = true;
+
+  diagnosticButton.disabled = true;
+
+  setMainStatus(
+    "Running external microphone diagnostics..."
+  );
+
+  log("");
+
+  log(
+    "=========================================="
+  );
+
+  log(
+    "ROMS EXTERNAL VOICE DIAGNOSTIC START"
+  );
+
+  log(
+    "=========================================="
+  );
+
+  setStatus(
+    errorStatus,
+    "None",
+    "neutral"
+  );
+
+  const browserOK =
+    checkBrowser();
+
+  const secureOK =
+    checkSecureConnection();
+
+  const speechOK =
+    checkSpeechRecognition();
+
+  const microphoneAPI =
+    checkMicrophoneAPI();
+
+  await checkPermission();
+
+  const microphoneOK =
+    await testMicrophone();
+
+  log(
+    "------------------------------------------"
+  );
+
+  if (
+    browserOK &&
+    secureOK &&
+    speechOK &&
+    microphoneAPI &&
+    microphoneOK
+  ) {
+
+    setMainStatus(
+      "✅ Microphone diagnostic PASSED."
+    );
+
+    log(
+      "ALL PRIMARY DIAGNOSTICS PASSED.",
+      "PASS"
+    );
+
+  } else {
+
+    setMainStatus(
+      "⚠️ Diagnostic completed. Review the log."
+    );
+
+    log(
+      "ONE OR MORE DIAGNOSTICS FAILED.",
+      "ERROR"
+    );
+  }
+
+  log(
+    "=========================================="
+  );
+
+  log(
+    "ROMS EXTERNAL VOICE DIAGNOSTIC COMPLETE"
+  );
+
+  log(
+    "=========================================="
+  );
+
+  diagnosticRunning = false;
+
+  diagnosticButton.disabled = false;
+}
+
+
+/****************************************************************
+ * INITIALIZE SPEECH RECOGNITION
+ ****************************************************************/
+
+function initializeRecognition() {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+
+    log(
+      "Speech Recognition API unavailable.",
+      "ERROR"
+    );
+
+    return false;
+  }
+
+  recognition =
+    new SpeechRecognition();
+
+  recognition.continuous = true;
+
+  recognition.interimResults = true;
+
+  recognition.lang = "en-US";
+
+  recognition.maxAlternatives = 1;
+
+
+  /**************************************************************
+   * START
+   **************************************************************/
+
+  recognition.onstart =
+    function() {
+
+      isRecognizing = true;
+
+      setStatus(
+        recognitionStatus,
+        "ACTIVE",
+        "pass"
+      );
+
+      startButton.disabled = true;
+
+      stopButton.disabled = false;
+
+      setMainStatus(
+        "🎤 Listening... Speak normally."
+      );
+
+      log(
+        "Speech recognition started.",
+        "PASS"
+      );
+    };
+
+
+  /**************************************************************
+   * RESULT
+   **************************************************************/
+
+  recognition.onresult =
+    function(event) {
+
+      let interimTranscript = "";
+
+      for (
+        let i = event.resultIndex;
+        i < event.results.length;
+        i++
+      ) {
+
+        const text =
+          event.results[i][0].transcript;
+
+        if (
+          event.results[i].isFinal
+        ) {
+
+          finalTranscript +=
+            text + " ";
+
+          log(
+            "Final speech captured: " +
+            text,
+            "VOICE"
+          );
+
+        } else {
+
+          interimTranscript +=
+            text;
+        }
+      }
+
+      transcript.textContent =
+        finalTranscript +
+        interimTranscript;
+    };
+
+
+  /**************************************************************
+   * ERROR
+   **************************************************************/
+
+  recognition.onerror =
+    function(event) {
+
+      const error =
+        event.error;
+
+      setStatus(
+        recognitionStatus,
+        "ERROR",
+        "fail"
+      );
+
+      setStatus(
+        errorStatus,
+        error,
+        "fail"
+      );
+
+      log(
+        "Speech recognition error: " +
+        error,
+        "ERROR"
+      );
+
+      if (error === "not-allowed") {
+
+        setMainStatus(
+          "❌ Speech recognition permission denied."
+        );
+
+        log(
+          "Chrome denied speech recognition.",
+          "ACTION"
+        );
+      }
+
+      if (error === "audio-capture") {
+
+        setMainStatus(
+          "❌ Speech engine cannot access microphone."
+        );
+
+        log(
+          "Speech engine cannot access microphone.",
+          "ACTION"
+        );
+      }
+
+      if (error === "no-speech") {
+
+        log(
+          "No speech detected.",
+          "INFO"
+        );
+      }
+
+      if (error === "network") {
+
+        setMainStatus(
+          "❌ Speech recognition network error."
+        );
+
+        log(
+          "Speech recognition network error.",
+          "ERROR"
+        );
+      }
+    };
+
+
+  /**************************************************************
+   * END
+   **************************************************************/
+
+  recognition.onend =
+    function() {
+
+      isRecognizing = false;
+
+      setStatus(
+        recognitionStatus,
+        "STOPPED",
+        "neutral"
+      );
+
+      startButton.disabled = false;
+
+      stopButton.disabled = true;
+
+      log(
+        "Speech recognition ended.",
+        "INFO"
+      );
+
+      if (
+        mainStatus.textContent.includes(
+          "Listening"
+        )
+      ) {
+
+        setMainStatus(
+          "Voice capture stopped."
+        );
+      }
+    };
+
+
+  /**************************************************************
+   * AUDIO START
+   **************************************************************/
+
+  recognition.onaudiostart =
+    function() {
+
+      log(
+        "Browser detected audio input.",
+        "PASS"
+      );
+    };
+
+
+  /**************************************************************
+   * AUDIO END
+   **************************************************************/
+
+  recognition.onaudioend =
+    function() {
+
+      log(
+        "Browser stopped receiving audio input.",
+        "INFO"
+      );
+    };
+
+
+  /**************************************************************
+   * SPEECH START
+   **************************************************************/
+
+  recognition.onspeechstart =
+    function() {
+
+      log(
+        "Speech detected.",
+        "PASS"
+      );
+    };
+
+
+  /**************************************************************
+   * SPEECH END
+   **************************************************************/
+
+  recognition.onspeechend =
+    function() {
+
+      log(
+        "Speech ended.",
+        "INFO"
+      );
+    };
+
+
+  log(
+    "Speech Recognition handlers registered.",
+    "PASS"
+  );
+
+  return true;
+}
+
+
+/****************************************************************
+ * START VOICE CAPTURE
+ ****************************************************************/
+
+async function startVoiceCapture() {
+
+  log(
+    "Start Voice Capture button pressed."
+  );
+
+  setStatus(
+    errorStatus,
+    "None",
+    "neutral"
+  );
+
+  /*
+   * Test microphone directly before recognition.
+   */
+
+  const microphoneOK =
+    await testMicrophone();
+
+  if (!microphoneOK) {
+
+    setMainStatus(
+      "❌ Microphone access failed."
+    );
+
+    return;
+  }
+
+  /*
+   * Initialize recognition if necessary.
+   */
+
+  if (!recognition) {
+
+    const initialized =
+      initializeRecognition();
+
+    if (!initialized) {
+
+      setMainStatus(
+        "❌ Speech recognition unavailable."
+      );
+
+      return;
+    }
+  }
+
+  /*
+   * Start recognition.
+   */
+
+  try {
+
+    recognition.start();
+
+    log(
+      "Recognition.start() called.",
+      "INFO"
+    );
+
+  } catch (error) {
+
+    if (
+      error.name ===
+      "InvalidStateError"
+    ) {
+
+      log(
+        "Recognition is already running.",
+        "WARNING"
+      );
+
+      return;
+    }
+
+    setStatus(
+      errorStatus,
+      error.name + ": " + error.message,
+      "fail"
+    );
+
+    log(
+      "Unable to start recognition: " +
+      error.message,
+      "ERROR"
+    );
+  }
+}
+
+
+/****************************************************************
+ * STOP VOICE CAPTURE
+ ****************************************************************/
+
+function stopVoiceCapture() {
+
+  log(
+    "Stop Voice Capture button pressed."
+  );
+
+  if (
+    recognition &&
+    isRecognizing
+  ) {
+
+    recognition.stop();
+
+    log(
+      "Recognition.stop() called.",
+      "INFO"
+    );
+  }
+}
+
+
+/****************************************************************
+ * CLEAR TRANSCRIPT
+ ****************************************************************/
+
+function clearTranscript() {
+
+  finalTranscript = "";
+
+  transcript.textContent =
+    "Voice transcript will appear here...";
+
+  log(
+    "Transcript cleared.",
+    "INFO"
+  );
+}
+
+
+/****************************************************************
+ * BUTTON EVENTS
+ ****************************************************************/
+
+diagnosticButton.addEventListener(
+  "click",
+  runDiagnostic
+);
+
+startButton.addEventListener(
+  "click",
+  startVoiceCapture
+);
+
+stopButton.addEventListener(
+  "click",
+  stopVoiceCapture
+);
+
+clearButton.addEventListener(
+  "click",
+  clearTranscript
+);
+
+
+/****************************************************************
+ * INITIALIZATION
+ ****************************************************************/
+
+window.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    log(
+      "ROMS external Voice Capture page loaded.",
+      "PASS"
+    );
+
+    checkBrowser();
+
+    checkSecureConnection();
+
+    checkSpeechRecognition();
+
+    checkMicrophoneAPI();
+
+    initializeRecognition();
+
+    setMainStatus(
+      "Ready. Run the microphone diagnostic."
+    );
+
+  }
+);
+
+
+/****************************************************************
+ * GLOBAL ERROR HANDLER
+ ****************************************************************/
+
+window.addEventListener(
+  "error",
+  function(event) {
+
+    log(
+      "JavaScript error: " +
+      event.message,
+      "ERROR"
+    );
+
+    setStatus(
+      errorStatus,
+      event.message,
+      "fail"
+    );
+
+  }
+);
+
+
+/****************************************************************
+ * UNHANDLED PROMISE ERRORS
+ ****************************************************************/
+
+window.addEventListener(
+  "unhandledrejection",
+  function(event) {
+
+    log(
+      "Unhandled promise rejection: " +
+      event.reason,
+      "ERROR"
+    );
+
+  }
+);
+
+</script>
+
+</body>
+</html>
+```
