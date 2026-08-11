@@ -1,890 +1,641 @@
+						```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROMS AI Knowledge Engine | Voice Knowledge Capture</title>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<style>
+* {
+  box-sizing: border-box;
+}
 
-  <title>ROMS AI Knowledge Engine | Voice Knowledge Capture</title>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f3f6f4;
+  color: #1f2933;
+}
 
-  <style>
+header {
+  background: #173f2a;
+  color: white;
+  padding: 24px;
+  text-align: center;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f4f7f5;
-      color: #1f2933;
-    }
+header p {
+  margin: 4px 0;
+}
 
-    .container {
-      width: min(1100px, 94%);
-      margin: 30px auto;
-    }
+.container {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px 40px;
+}
 
-    .header {
-      background: #174a2e;
-      color: white;
-      padding: 28px;
-      border-radius: 14px 14px 0 0;
-    }
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
 
-    .header h1 {
-      margin: 0 0 8px 0;
-      font-size: 30px;
-    }
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
 
-    .header h2 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: normal;
-    }
+.status {
+  border: 1px solid #d7ddd9;
+  border-radius: 8px;
+  padding: 14px;
+  background: #fafcfb;
+}
 
-    .header p {
-      margin: 10px 0 0 0;
-      opacity: 0.9;
-    }
+.status-title {
+  font-size: 13px;
+  color: #667;
+  margin-bottom: 5px;
+}
 
-    .status-banner {
-      background: #e8f5e9;
-      border: 1px solid #81c784;
-      color: #1b5e20;
-      padding: 14px 18px;
-      font-weight: bold;
-      margin-bottom: 18px;
-      border-radius: 10px;
-    }
+.status-value {
+  font-weight: bold;
+}
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 22px;
-      margin-top: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.pass {
+  color: #176b3a;
+}
 
-    .card h2 {
-      margin-top: 0;
-      color: #174a2e;
-    }
+.fail {
+  color: #b42318;
+}
 
-    .diagnostics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-    }
+.warn {
+  color: #9a6700;
+}
 
-    .diagnostic-item {
-      border: 1px solid #d9e1dc;
-      border-radius: 10px;
-      padding: 14px;
-      background: #fafcfb;
-    }
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 13px 18px;
+  margin: 5px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    .diagnostic-label {
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
+button:hover {
+  opacity: .9;
+}
 
-    .diagnostic-value {
-      font-weight: bold;
-    }
+.btn-diagnostic {
+  background: #e7eef9;
+  color: #173f67;
+}
 
-    .pass {
-      color: #16803c;
-    }
+.btn-start {
+  background: #1f7a45;
+  color: white;
+}
 
-    .fail {
-      color: #b42318;
-    }
+.btn-stop {
+  background: #a63d2f;
+  color: white;
+}
 
-    .warn {
-      color: #9a6700;
-    }
+.btn-send {
+  background: #245b9c;
+  color: white;
+}
 
-    .neutral {
-      color: #52606d;
-    }
+.btn-clear {
+  background: #e5e7eb;
+  color: #222;
+}
 
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
-    }
+textarea {
+  width: 100%;
+  min-height: 180px;
+  border: 1px solid #cfd6d2;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 16px;
+  resize: vertical;
+}
 
-    button {
-      border: none;
-      border-radius: 8px;
-      padding: 13px 18px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
 
-    button:hover {
-      opacity: 0.9;
-    }
+.analysis-item {
+  background: #f5f8f6;
+  border: 1px solid #dce4df;
+  border-radius: 8px;
+  padding: 12px;
+}
 
-    button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
+.analysis-label {
+  font-size: 12px;
+  color: #68736d;
+  margin-bottom: 4px;
+}
 
-    .btn-diagnostic {
-      background: #1565c0;
-      color: white;
-    }
+.analysis-value {
+  font-weight: bold;
+}
 
-    .btn-start {
-      background: #2e7d32;
-      color: white;
-    }
+.log {
+  background: #111827;
+  color: #d1fae5;
+  border-radius: 8px;
+  padding: 14px;
+  height: 260px;
+  overflow-y: auto;
+  font-family: Consolas, monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
 
-    .btn-stop {
-      background: #c62828;
-      color: white;
-    }
+.connection-box {
+  background: #f7faf8;
+  border: 1px solid #d7e0da;
+  border-radius: 8px;
+  padding: 14px;
+}
 
-    .btn-send {
-      background: #6a1b9a;
-      color: white;
-    }
+.endpoint {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cfd6d2;
+  border-radius: 7px;
+  margin-top: 6px;
+  font-family: monospace;
+}
 
-    .btn-clear {
-      background: #616161;
-      color: white;
-    }
+.success {
+  background: #e8f7ed;
+  border: 1px solid #9fd5ae;
+  color: #176b3a;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
 
-    textarea {
-      width: 100%;
-      min-height: 220px;
-      padding: 15px;
-      border: 1px solid #cfd8d3;
-      border-radius: 10px;
-      resize: vertical;
-      font-size: 17px;
-      line-height: 1.5;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+.error {
+  background: #fdecec;
+  border: 1px solid #e0a4a4;
+  color: #8a1c1c;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
 
-    .connection-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .connection-box {
-      padding: 14px;
-      border-radius: 8px;
-      background: #f7f9f8;
-      border: 1px solid #d9e1dc;
-    }
-
-    .endpoint {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #cfd8d3;
-      border-radius: 7px;
-      font-family: monospace;
-      font-size: 13px;
-    }
-
-    .log {
-      background: #101820;
-      color: #d6f5df;
-      padding: 15px;
-      border-radius: 10px;
-      height: 330px;
-      overflow-y: auto;
-      font-family: Consolas, Monaco, monospace;
-      font-size: 13px;
-      line-height: 1.55;
-      white-space: pre-wrap;
-    }
-
-    .workflow {
-      background: #f5f7f6;
-      border-left: 5px solid #174a2e;
-      padding: 16px;
-      border-radius: 8px;
-    }
-
-    .workflow ol {
-      margin-bottom: 0;
-    }
-
-    .footer {
-      text-align: center;
-      color: #68737d;
-      padding: 25px;
-      font-size: 13px;
-    }
-
-    .listening {
-      animation: pulse 1.4s infinite;
-    }
-
-    @keyframes pulse {
-      0% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.55;
-      }
-
-      100% {
-        opacity: 1;
-      }
-    }
-
-  </style>
+footer {
+  text-align: center;
+  color: #66736b;
+  font-size: 13px;
+  padding: 20px;
+}
+</style>
 </head>
 
 <body>
 
+<header>
+  <h1>ROMS AI Knowledge Engine</h1>
+  <p>Voice Knowledge Capture v1.2</p>
+  <p>Research Operations Management System</p>
+  <p>Central Crops Research Station</p>
+</header>
+
 <div class="container">
 
-  <div class="header">
-
-    <h1>ROMS AI Knowledge Engine</h1>
-
-    <h2>Voice Knowledge Capture v1.1</h2>
-
-    <p>
-      Research Operations Management System
-    </p>
-
-    <p>
-      Central Crops Research Station
-    </p>
-
-  </div>
-
-  <div
-    id="statusBanner"
-    class="status-banner"
-  >
-    🎤 Operational Voice Capture
-  </div>
-
-  <!-- ========================================================= -->
-  <!-- DIAGNOSTICS -->
-  <!-- ========================================================= -->
+  <div id="messageArea"></div>
 
   <div class="card">
+    <h2>🎤 Operational Voice Capture</h2>
 
-    <h2>🔎 Voice System Diagnostics</h2>
+    <div class="status-grid">
 
-    <div class="diagnostics">
-
-      <div class="diagnostic-item">
-
-        <div class="diagnostic-label">
-          Browser
-        </div>
-
-        <div
-          id="browserStatus"
-          class="diagnostic-value neutral"
-        >
-          NOT TESTED
-        </div>
-
+      <div class="status">
+        <div class="status-title">Browser</div>
+        <div id="browserStatus" class="status-value">Checking...</div>
       </div>
 
-      <div class="diagnostic-item">
-
-        <div class="diagnostic-label">
-          Secure Connection
-        </div>
-
-        <div
-          id="secureStatus"
-          class="diagnostic-value neutral"
-        >
-          NOT TESTED
-        </div>
-
+      <div class="status">
+        <div class="status-title">Secure Connection</div>
+        <div id="secureStatus" class="status-value">Checking...</div>
       </div>
 
-      <div class="diagnostic-item">
-
-        <div class="diagnostic-label">
-          Speech Recognition
-        </div>
-
-        <div
-          id="speechStatus"
-          class="diagnostic-value neutral"
-        >
-          NOT TESTED
-        </div>
-
+      <div class="status">
+        <div class="status-title">Speech Recognition</div>
+        <div id="speechStatus" class="status-value">Checking...</div>
       </div>
 
-      <div class="diagnostic-item">
-
-        <div class="diagnostic-label">
-          Microphone API
-        </div>
-
-        <div
-          id="microphoneStatus"
-          class="diagnostic-value neutral"
-        >
-          NOT TESTED
-        </div>
-
+      <div class="status">
+        <div class="status-title">Microphone API</div>
+        <div id="microphoneStatus" class="status-value">Checking...</div>
       </div>
 
-      <div class="diagnostic-item">
-
-        <div class="diagnostic-label">
-          Permission
-        </div>
-
-        <div
-          id="permissionStatus"
-          class="diagnostic-value neutral"
-        >
-          NOT TESTED
-        </div>
-
+      <div class="status">
+        <div class="status-title">Permission</div>
+        <div id="permissionStatus" class="status-value">Unknown</div>
       </div>
 
-      <div class="diagnostic-item">
-
-        <div class="diagnostic-label">
-          Recognition
-        </div>
-
-        <div
-          id="recognitionStatus"
-          class="diagnostic-value neutral"
-        >
-          IDLE
-        </div>
-
+      <div class="status">
+        <div class="status-title">Recognition</div>
+        <div id="recognitionStatus" class="status-value">Idle</div>
       </div>
 
-      <div class="diagnostic-item">
-
-        <div class="diagnostic-label">
-          ROMS Connection
-        </div>
-
-        <div
-          id="romsStatus"
-          class="diagnostic-value warn"
-        >
-          NOT TESTED
-        </div>
-
+      <div class="status">
+        <div class="status-title">ROMS Connection</div>
+        <div id="romsStatus" class="status-value">Checking...</div>
       </div>
 
-      <div class="diagnostic-item">
-
-        <div class="diagnostic-label">
-          Last Error
-        </div>
-
-        <div
-          id="errorStatus"
-          class="diagnostic-value neutral"
-        >
-          None
-        </div>
-
+      <div class="status">
+        <div class="status-title">Last Error</div>
+        <div id="errorStatus" class="status-value">None</div>
       </div>
 
     </div>
 
-    <div class="buttons">
-
-      <button
-        id="diagnosticButton"
-        class="btn-diagnostic"
-      >
+    <div style="margin-top:15px;">
+      <button class="btn-diagnostic" id="diagnosticButton">
         🔎 Run Microphone Diagnostic
       </button>
 
-      <button
-        id="startButton"
-        class="btn-start"
-      >
+      <button class="btn-start" id="startButton">
         🎤 Start Voice Capture
       </button>
 
-      <button
-        id="stopButton"
-        class="btn-stop"
-        disabled
-      >
+      <button class="btn-stop" id="stopButton">
         ⏹ Stop Capture
       </button>
 
-      <button
-        id="sendButton"
-        class="btn-send"
-        disabled
-      >
-        📤 Send to ROMS
+      <button class="btn-send" id="sendButton">
+        📤 Analyze & Send to ROMS
       </button>
 
-      <button
-        id="clearButton"
-        class="btn-clear"
-      >
+      <button class="btn-clear" id="clearButton">
         🗑 Clear Transcript
       </button>
-
     </div>
-
   </div>
 
-
-  <!-- ========================================================= -->
-  <!-- TRANSCRIPT -->
-  <!-- ========================================================= -->
-
   <div class="card">
-
     <h2>Voice Transcript</h2>
 
-    <textarea
-      id="transcript"
-      placeholder="Voice transcript will appear here..."
-    ></textarea>
+    <textarea id="transcript" placeholder="Voice transcript will appear here..."></textarea>
 
-    <div
-      id="characterCount"
-      style="margin-top:8px;color:#68737d;"
-    >
-      Transcript Characters: 0
-    </div>
-
+    <p>
+      <b>Workflow:</b>
+      Run diagnostic → Start capture → Speak → Stop → Review → Analyze & Send to ROMS
+    </p>
   </div>
 
+  <div class="card">
+    <h2>🧠 Operational Knowledge Analysis</h2>
 
-  <!-- ========================================================= -->
-  <!-- ROMS CONNECTION -->
-  <!-- ========================================================= -->
+    <div class="analysis-grid">
+
+      <div class="analysis-item">
+        <div class="analysis-label">Intent</div>
+        <div id="intent" class="analysis-value">Not analyzed</div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Category</div>
+        <div id="category" class="analysis-value">Not analyzed</div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Knowledge Type</div>
+        <div id="knowledgeType" class="analysis-value">Not analyzed</div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Confidence</div>
+        <div id="confidence" class="analysis-value">Not analyzed</div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Location / Block</div>
+        <div id="location" class="analysis-value">None detected</div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Equipment</div>
+        <div id="equipment" class="analysis-value">None detected</div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Crop</div>
+        <div id="crop" class="analysis-value">None detected</div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Activity</div>
+        <div id="activity" class="analysis-value">None detected</div>
+      </div>
+
+    </div>
+  </div>
 
   <div class="card">
-
     <h2>🔗 ROMS Connection</h2>
 
-    <div class="connection-grid">
+    <div class="connection-box">
 
-      <div class="connection-box">
+      <label>
+        <b>Apps Script Endpoint</b>
+      </label>
 
-        <strong>Apps Script Endpoint</strong>
+      <input
+        id="endpoint"
+        class="endpoint"
+        type="text"
+        value="https://script.google.com/macros/s/AKfycbyZhV4jfpTJQJ1GcKUW6xIhjMHSPYGLozVjB5PpZIMIfMPJjAkiXzAN9yYsG4MWoA8q/exec"
+      >
 
-        <input
-          id="endpoint"
-          class="endpoint"
-          type="text"
-          value="https://script.google.com/macros/s/AKfycbyZhV4jfpTJQJ1GcKUW6xIhjMHSPYGLozVjB5PpZIMIfMPJjAkiXzAN9yYsG4MWoA8q/exec"
-        >
+      <p>
+        <b>Connection:</b>
+        <span id="connectionText">Configured</span>
+      </p>
 
-      </div>
+      <p>
+        <b>Last Transmission:</b>
+        <span id="lastTransmission">None</span>
+      </p>
 
-      <div class="connection-box">
-
-        <strong>Connection</strong>
-
-        <div
-          id="connectionDisplay"
-          class="neutral"
-          style="margin-top:6px;"
-        >
-          Endpoint configured
-        </div>
-
-      </div>
-
-      <div class="connection-box">
-
-        <strong>Last Transmission</strong>
-
-        <div
-          id="lastTransmission"
-          class="neutral"
-          style="margin-top:6px;"
-        >
-          None
-        </div>
-
-      </div>
+      <p>
+        <b>Knowledge ID:</b>
+        <span id="knowledgeId">None</span>
+      </p>
 
     </div>
-
   </div>
-
-
-  <!-- ========================================================= -->
-  <!-- WORKFLOW -->
-  <!-- ========================================================= -->
 
   <div class="card">
-
-    <h2>ROMS Voice Workflow</h2>
-
-    <div class="workflow">
-
-      <ol>
-
-        <li>
-          Run the microphone diagnostic.
-        </li>
-
-        <li>
-          Start Voice Capture.
-        </li>
-
-        <li>
-          Speak the operational knowledge you want ROMS to capture.
-        </li>
-
-        <li>
-          Stop Capture when finished.
-        </li>
-
-        <li>
-          Review the transcript.
-        </li>
-
-        <li>
-          Click Send to ROMS.
-        </li>
-
-      </ol>
-
-    </div>
-
-  </div>
-
-
-  <!-- ========================================================= -->
-  <!-- LOG -->
-  <!-- ========================================================= -->
-
-  <div class="card">
-
-    <h2>Diagnostic & Transmission Log</h2>
-
-    <div
-      id="log"
-      class="log"
-    ></div>
-
-  </div>
-
-
-  <div class="footer">
-
-    ROMS AI Knowledge Engine |
-    Voice Knowledge Capture |
-    External Voice Interface
-
+    <h2>📋 Diagnostic & Transmission Log</h2>
+    <div id="log" class="log"></div>
   </div>
 
 </div>
 
+<footer>
+  ROMS AI Knowledge Engine v1.2 | Voice Knowledge Capture
+</footer>
 
 <script>
 
 "use strict";
 
-
 /* ============================================================
    ROMS CONFIGURATION
    ============================================================ */
 
-const ROMS_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbyZhV4jfpTJQJ1GcKUW6xIhjMHSPYGLozVjB5PpZIMIfMPJjAkiXzAN9yYsG4MWoA8q/exec";
+const ROMS = {
+  VERSION: "1.2",
+
+  DEFAULT_ENDPOINT:
+    "https://script.google.com/macros/s/AKfycbyZhV4jfpTJQJ1GcKUW6xIhjMHSPYGLozVjB5PpZIMIfMPJjAkiXzAN9yYsG4MWoA8q/exec",
+
+  LANGUAGE: "en-US"
+};
 
 
 /* ============================================================
-   STATE
+   APPLICATION STATE
    ============================================================ */
 
 let recognition = null;
-
-let isRecognizing = false;
-
+let recognizing = false;
 let finalTranscript = "";
-
 let interimTranscript = "";
-
 let microphoneStream = null;
-
-let speechRecognitionSupported = false;
-
-
-/* ============================================================
-   DOM
-   ============================================================ */
-
-const browserStatus =
-  document.getElementById("browserStatus");
-
-const secureStatus =
-  document.getElementById("secureStatus");
-
-const speechStatus =
-  document.getElementById("speechStatus");
-
-const microphoneStatus =
-  document.getElementById("microphoneStatus");
-
-const permissionStatus =
-  document.getElementById("permissionStatus");
-
-const recognitionStatus =
-  document.getElementById("recognitionStatus");
-
-const romsStatus =
-  document.getElementById("romsStatus");
-
-const errorStatus =
-  document.getElementById("errorStatus");
-
-const statusBanner =
-  document.getElementById("statusBanner");
-
-const transcriptBox =
-  document.getElementById("transcript");
-
-const characterCount =
-  document.getElementById("characterCount");
-
-const logBox =
-  document.getElementById("log");
-
-const endpointBox =
-  document.getElementById("endpoint");
-
-const connectionDisplay =
-  document.getElementById("connectionDisplay");
-
-const lastTransmission =
-  document.getElementById("lastTransmission");
-
-const diagnosticButton =
-  document.getElementById("diagnosticButton");
-
-const startButton =
-  document.getElementById("startButton");
-
-const stopButton =
-  document.getElementById("stopButton");
-
-const sendButton =
-  document.getElementById("sendButton");
-
-const clearButton =
-  document.getElementById("clearButton");
+let lastTransmissionId = null;
 
 
 /* ============================================================
-   LOGGING
+   DOM HELPERS
    ============================================================ */
 
-function log(type, message) {
+function $(id) {
+  return document.getElementById(id);
+}
 
-  const now =
-    new Date();
+function log(message, type = "INFO") {
 
   const time =
-    now.toLocaleTimeString();
+    new Date().toLocaleTimeString();
 
   const line =
-    "[" +
-    time +
-    "] " +
-    type +
-    ": " +
-    message;
+    `[${time}] ${type}: ${message}`;
 
-  logBox.textContent +=
-    line +
-    "\n";
+  $("log").textContent +=
+    line + "\n";
 
-  logBox.scrollTop =
-    logBox.scrollHeight;
+  $("log").scrollTop =
+    $("log").scrollHeight;
 
+  console.log(line);
 }
 
+function setStatus(id, text, className = "") {
 
-function clearLog() {
+  const element = $(id);
 
-  logBox.textContent = "";
+  element.textContent = text;
+  element.className =
+    "status-value " + className;
+}
 
+function showMessage(message, type = "success") {
+
+  const area = $("messageArea");
+
+  area.innerHTML =
+    `<div class="${type}">${message}</div>`;
+}
+
+function clearMessage() {
+  $("messageArea").innerHTML = "";
 }
 
 
 /* ============================================================
-   STATUS HELPERS
+   INITIALIZATION
    ============================================================ */
 
-function setStatus(
-  element,
-  text,
-  className
-) {
+document.addEventListener(
+  "DOMContentLoaded",
+  initializeROMSVoice
+);
 
-  element.textContent =
-    text;
+function initializeROMSVoice() {
 
-  element.className =
-    "diagnostic-value " +
-    className;
-
-}
-
-
-function setError(message) {
-
-  setStatus(
-    errorStatus,
-    message,
-    "fail"
+  log(
+    "ROMS external Voice Capture v1.2 loaded.",
+    "PASS"
   );
 
-}
+  checkBrowser();
+  checkSecureConnection();
+  checkSpeechRecognition();
+  checkMicrophoneAPI();
+  initializeSpeechRecognition();
 
+  $("endpoint").value =
+    localStorage.getItem("ROMS_ENDPOINT") ||
+    ROMS.DEFAULT_ENDPOINT;
 
-function clearError() {
+  updateConnectionStatus();
 
-  setStatus(
-    errorStatus,
-    "None",
-    "neutral"
+  $("diagnosticButton")
+    .addEventListener(
+      "click",
+      runFullDiagnostic
+    );
+
+  $("startButton")
+    .addEventListener(
+      "click",
+      startVoiceCapture
+    );
+
+  $("stopButton")
+    .addEventListener(
+      "click",
+      stopVoiceCapture
+    );
+
+  $("sendButton")
+    .addEventListener(
+      "click",
+      analyzeAndSend
+    );
+
+  $("clearButton")
+    .addEventListener(
+      "click",
+      clearTranscript
+    );
+
+  $("endpoint")
+    .addEventListener(
+      "change",
+      function() {
+
+        localStorage.setItem(
+          "ROMS_ENDPOINT",
+          $("endpoint").value.trim()
+        );
+
+        updateConnectionStatus();
+
+      }
+    );
+
+  log(
+    "Speech recognition handlers registered.",
+    "PASS"
   );
-
 }
 
 
 /* ============================================================
-   BROWSER TEST
+   BROWSER CHECK
    ============================================================ */
 
 function checkBrowser() {
 
-  log(
-    "INFO",
-    "Checking browser..."
-  );
-
   const userAgent =
-    navigator.userAgent;
+    navigator.userAgent.toLowerCase();
 
-  const isChrome =
-    /Chrome/i.test(userAgent) &&
-    !/Edge/i.test(userAgent);
-
-  const isChromium =
-    /Chrome|Chromium|Edg/i.test(
-      userAgent
-    );
-
-  if (isChrome || isChromium) {
+  if (
+    userAgent.includes("chrome") ||
+    userAgent.includes("chromium") ||
+    userAgent.includes("edg/")
+  ) {
 
     setStatus(
-      browserStatus,
+      "browserStatus",
       "PASS - Chromium browser",
       "pass"
     );
 
     log(
-      "PASS",
-      "Chromium-based browser detected."
+      "Chromium-based browser detected.",
+      "PASS"
     );
 
-    return true;
+  } else {
 
+    setStatus(
+      "browserStatus",
+      "WARNING - Unsupported browser",
+      "warn"
+    );
+
+    log(
+      "Browser is not Chromium-based.",
+      "WARNING"
+    );
   }
-
-  setStatus(
-    browserStatus,
-    "WARNING - Browser not confirmed",
-    "warn"
-  );
-
-  log(
-    "WARNING",
-    "Chromium browser could not be confirmed."
-  );
-
-  return false;
-
 }
 
 
 /* ============================================================
-   SECURE CONTEXT TEST
+   SECURE CONTEXT
    ============================================================ */
 
-function checkSecureContext() {
-
-  log(
-    "INFO",
-    "Checking secure connection..."
-  );
+function checkSecureConnection() {
 
   if (window.isSecureContext) {
 
     setStatus(
-      secureStatus,
+      "secureStatus",
       "PASS - HTTPS secure context",
       "pass"
     );
 
     log(
-      "PASS",
-      "HTTPS secure context confirmed."
+      "HTTPS secure context confirmed.",
+      "PASS"
     );
 
-    return true;
+  } else {
 
+    setStatus(
+      "secureStatus",
+      "FAIL - Not secure",
+      "fail"
+    );
+
+    log(
+      "Secure context is required.",
+      "ERROR"
+    );
   }
-
-  setStatus(
-    secureStatus,
-    "FAIL - Not secure",
-    "fail"
-  );
-
-  log(
-    "ERROR",
-    "Browser is not operating in a secure context."
-  );
-
-  return false;
-
 }
 
 
 /* ============================================================
-   SPEECH API TEST
+   SPEECH API
    ============================================================ */
 
 function checkSpeechRecognition() {
-
-  log(
-    "INFO",
-    "Checking Speech Recognition API..."
-  );
 
   const SpeechRecognition =
     window.SpeechRecognition ||
@@ -892,53 +643,38 @@ function checkSpeechRecognition() {
 
   if (SpeechRecognition) {
 
-    speechRecognitionSupported =
-      true;
-
     setStatus(
-      speechStatus,
+      "speechStatus",
       "PASS - API available",
       "pass"
     );
 
     log(
-      "PASS",
-      "Speech Recognition API available."
+      "Speech Recognition API available.",
+      "PASS"
     );
 
-    return true;
+  } else {
 
+    setStatus(
+      "speechStatus",
+      "FAIL - API unavailable",
+      "fail"
+    );
+
+    log(
+      "Speech Recognition API unavailable.",
+      "ERROR"
+    );
   }
-
-  speechRecognitionSupported =
-    false;
-
-  setStatus(
-    speechStatus,
-    "FAIL - API unavailable",
-    "fail"
-  );
-
-  log(
-    "ERROR",
-    "Speech Recognition API is unavailable."
-  );
-
-  return false;
-
 }
 
 
 /* ============================================================
-   MICROPHONE API TEST
+   MICROPHONE API
    ============================================================ */
 
 function checkMicrophoneAPI() {
-
-  log(
-    "INFO",
-    "Checking microphone API..."
-  );
 
   if (
     navigator.mediaDevices &&
@@ -946,533 +682,74 @@ function checkMicrophoneAPI() {
   ) {
 
     setStatus(
-      microphoneStatus,
+      "microphoneStatus",
       "PASS - Microphone responding",
       "pass"
     );
 
     log(
-      "PASS",
-      "Microphone API available."
+      "Microphone API available.",
+      "PASS"
     );
 
-    return true;
-
-  }
-
-  setStatus(
-    microphoneStatus,
-    "FAIL - Access unavailable",
-    "fail"
-  );
-
-  log(
-    "ERROR",
-    "getUserMedia() is unavailable."
-  );
-
-  return false;
-
-}
-
-
-/* ============================================================
-   PERMISSION TEST
-   ============================================================ */
-
-async function checkMicrophonePermission() {
-
-  log(
-    "INFO",
-    "Checking microphone permission..."
-  );
-
-  if (
-    navigator.permissions &&
-    navigator.permissions.query
-  ) {
-
-    try {
-
-      const result =
-        await navigator.permissions.query({
-          name: "microphone"
-        });
-
-      log(
-        "INFO",
-        "Microphone permission state: " +
-        result.state
-      );
-
-      if (
-        result.state ===
-        "granted"
-      ) {
-
-        setStatus(
-          permissionStatus,
-          "GRANTED",
-          "pass"
-        );
-
-      }
-
-      else if (
-        result.state ===
-        "denied"
-      ) {
-
-        setStatus(
-          permissionStatus,
-          "DENIED / BLOCKED",
-          "fail"
-        );
-
-        log(
-          "ERROR",
-          "Browser reports microphone permission denied."
-        );
-
-      }
-
-      else {
-
-        setStatus(
-          permissionStatus,
-          "PROMPT",
-          "warn"
-        );
-
-        log(
-          "INFO",
-          "Browser will request microphone permission."
-        );
-
-      }
-
-      return result.state;
-
-    }
-
-    catch (error) {
-
-      log(
-        "WARNING",
-        "Permission API check failed: " +
-        error.message
-      );
-
-    }
-
-  }
-
-  setStatus(
-    permissionStatus,
-    "UNKNOWN",
-    "warn"
-  );
-
-  return "unknown";
-
-}
-
-
-/* ============================================================
-   REQUEST MICROPHONE
-   ============================================================ */
-
-async function requestMicrophone() {
-
-  log(
-    "INFO",
-    "Requesting microphone access..."
-  );
-
-  try {
-
-    microphoneStream =
-      await navigator.mediaDevices.getUserMedia({
-        audio: true
-      });
+  } else {
 
     setStatus(
-      permissionStatus,
-      "GRANTED",
-      "pass"
-    );
-
-    setStatus(
-      microphoneStatus,
-      "PASS - Microphone responding",
-      "pass"
-    );
-
-    const tracks =
-      microphoneStream.getAudioTracks();
-
-    if (tracks.length > 0) {
-
-      log(
-        "PASS",
-        "Microphone access successfully granted."
-      );
-
-      log(
-        "PASS",
-        "Microphone detected: " +
-        tracks[0].label
-      );
-
-      log(
-        "INFO",
-        "Microphone state: " +
-        tracks[0].readyState
-      );
-
-      log(
-        "INFO",
-        "Microphone enabled: " +
-        tracks[0].enabled
-      );
-
-    }
-
-    return true;
-
-  }
-
-  catch (error) {
-
-    setStatus(
-      permissionStatus,
-      "DENIED / BLOCKED",
+      "microphoneStatus",
+      "FAIL - Access unavailable",
       "fail"
     );
 
-    setStatus(
-      microphoneStatus,
-      "FAIL - Access failed",
-      "fail"
-    );
-
-    setError(
-      error.name +
-      ": " +
-      error.message
-    );
-
     log(
-      "ERROR",
-      "Microphone access failed."
+      "getUserMedia unavailable.",
+      "ERROR"
     );
-
-    log(
-      "ERROR",
-      "Error name: " +
-      error.name
-    );
-
-    log(
-      "ERROR",
-      "Error message: " +
-      error.message
-    );
-
-    return false;
-
   }
-
 }
 
 
 /* ============================================================
-   RELEASE MICROPHONE
+   SPEECH RECOGNITION SETUP
    ============================================================ */
 
-function releaseMicrophone() {
-
-  if (!microphoneStream) {
-    return;
-  }
-
-  microphoneStream
-    .getTracks()
-    .forEach(
-      function(track) {
-        track.stop();
-      }
-    );
-
-  microphoneStream =
-    null;
-
-  log(
-    "INFO",
-    "Microphone stream released."
-  );
-
-}
-
-
-/* ============================================================
-   FULL MICROPHONE DIAGNOSTIC
-   ============================================================ */
-
-async function runDiagnostic() {
-
-  clearError();
-
-  log("");
-
-  log(
-    "INFO",
-    "=========================================="
-  );
-
-  log(
-    "INFO",
-    "ROMS EXTERNAL VOICE DIAGNOSTIC START"
-  );
-
-  log(
-    "INFO",
-    "=========================================="
-  );
-
-  const browserOK =
-    checkBrowser();
-
-  const secureOK =
-    checkSecureContext();
-
-  const speechOK =
-    checkSpeechRecognition();
-
-  const microphoneAPI =
-    checkMicrophoneAPI();
-
-  if (!browserOK) {
-
-    log(
-      "WARNING",
-      "Browser is not confirmed as Chromium."
-    );
-
-  }
-
-  if (!secureOK) {
-
-    log(
-      "ERROR",
-      "Secure HTTPS context is required."
-    );
-
-  }
-
-  if (!speechOK) {
-
-    log(
-      "ERROR",
-      "Speech Recognition is unavailable."
-    );
-
-  }
-
-  if (!microphoneAPI) {
-
-    log(
-      "ERROR",
-      "Microphone API is unavailable."
-    );
-
-  }
-
-  if (
-    !secureOK ||
-    !microphoneAPI
-  ) {
-
-    log(
-      "ERROR",
-      "Primary browser requirements failed."
-    );
-
-    return false;
-
-  }
-
-  await checkMicrophonePermission();
-
-  const microphoneOK =
-    await requestMicrophone();
-
-  if (
-    microphoneOK &&
-    speechOK
-  ) {
-
-    setStatus(
-      recognitionStatus,
-      "READY",
-      "pass"
-    );
-
-    statusBanner.textContent =
-      "✅ Microphone diagnostic PASSED.";
-
-    statusBanner.style.background =
-      "#e8f5e9";
-
-    statusBanner.style.color =
-      "#1b5e20";
-
-    log(
-      "INFO",
-      "------------------------------------------"
-    );
-
-    log(
-      "PASS",
-      "ALL PRIMARY DIAGNOSTICS PASSED."
-    );
-
-    log(
-      "INFO",
-      "------------------------------------------"
-    );
-
-    log(
-      "INFO",
-      "ROMS EXTERNAL VOICE DIAGNOSTIC COMPLETE"
-    );
-
-    log(
-      "INFO",
-      "=========================================="
-    );
-
-    releaseMicrophone();
-
-    return true;
-
-  }
-
-  statusBanner.textContent =
-    "⚠️ Diagnostic completed. See the diagnostic log.";
-
-  log(
-    "ERROR",
-    "ONE OR MORE DIAGNOSTICS FAILED."
-  );
-
-  log(
-    "INFO",
-    "=========================================="
-  );
-
-  releaseMicrophone();
-
-  return false;
-
-}
-
-
-/* ============================================================
-   CREATE SPEECH RECOGNITION
-   ============================================================ */
-
-function createRecognition() {
+function initializeSpeechRecognition() {
 
   const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
   if (!SpeechRecognition) {
-
-    return null;
-
+    return;
   }
 
-  const recognizer =
+  recognition =
     new SpeechRecognition();
 
-  recognizer.continuous =
-    true;
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = ROMS.LANGUAGE;
 
-  recognizer.interimResults =
-    true;
-
-  recognizer.lang =
-    "en-US";
-
-  recognizer.maxAlternatives =
-    1;
-
-
-  recognizer.onstart =
+  recognition.onstart =
     function() {
 
-      isRecognizing =
-        true;
+      recognizing = true;
 
       setStatus(
-        recognitionStatus,
+        "recognitionStatus",
         "LISTENING",
         "pass"
       );
 
-      statusBanner.textContent =
-        "🎤 Listening... Speak normally.";
-
-      statusBanner.classList.add(
-        "listening"
-      );
-
-      startButton.disabled =
-        true;
-
-      stopButton.disabled =
-        false;
-
-      sendButton.disabled =
-        true;
-
       log(
-        "PASS",
-        "Speech recognition started."
+        "Speech recognition started.",
+        "PASS"
       );
-
     };
 
-
-  recognizer.onaudiostart =
-    function() {
-
-      log(
-        "PASS",
-        "Browser detected audio input."
-      );
-
-    };
-
-
-  recognizer.onspeechstart =
-    function() {
-
-      log(
-        "PASS",
-        "Speech detected."
-      );
-
-    };
-
-
-  recognizer.onresult =
+  recognition.onresult =
     function(event) {
 
-      interimTranscript =
-        "";
+      let interim = "";
 
       for (
         let i = event.resultIndex;
@@ -1480,7 +757,7 @@ function createRecognition() {
         i++
       ) {
 
-        const text =
+        const transcript =
           event.results[i][0].transcript;
 
         if (
@@ -1488,140 +765,224 @@ function createRecognition() {
         ) {
 
           finalTranscript +=
-            text +
-            " ";
+            transcript + " ";
 
           log(
-            "VOICE",
             "Final speech captured: " +
-            text
+            transcript,
+            "VOICE"
           );
 
+        } else {
+
+          interim += transcript;
         }
-
-        else {
-
-          interimTranscript +=
-            text;
-
-        }
-
       }
 
-      updateTranscript();
+      interimTranscript =
+        interim;
 
+      $("transcript").value =
+        finalTranscript +
+        interimTranscript;
     };
 
-
-  recognizer.onerror =
+  recognition.onerror =
     function(event) {
 
-      log(
-        "ERROR",
-        "Speech recognition error: " +
-        event.error
-      );
-
-      setError(
-        event.error
-      );
-
-      if (
-        event.error ===
-        "not-allowed"
-      ) {
-
-        setStatus(
-          permissionStatus,
-          "DENIED / BLOCKED",
-          "fail"
-        );
-
-      }
-
-    };
-
-
-  recognizer.onspeechend =
-    function() {
-
-      log(
-        "INFO",
-        "Speech ended."
-      );
-
-    };
-
-
-  recognizer.onaudioend =
-    function() {
-
-      log(
-        "INFO",
-        "Browser stopped receiving audio input."
-      );
-
-    };
-
-
-  recognizer.onend =
-    function() {
-
-      isRecognizing =
-        false;
+      $("errorStatus").textContent =
+        event.error;
 
       setStatus(
-        recognitionStatus,
-        "STOPPED",
-        "neutral"
+        "recognitionStatus",
+        "ERROR",
+        "fail"
       );
-
-      statusBanner.classList.remove(
-        "listening"
-      );
-
-      statusBanner.textContent =
-        "🎤 Voice capture stopped.";
-
-      startButton.disabled =
-        false;
-
-      stopButton.disabled =
-        true;
-
-      updateSendButton();
 
       log(
-        "INFO",
-        "Speech recognition ended."
+        "Speech recognition error: " +
+        event.error,
+        "ERROR"
       );
-
     };
 
+  recognition.onend =
+    function() {
 
-  return recognizer;
+      recognizing = false;
 
+      setStatus(
+        "recognitionStatus",
+        "IDLE",
+        ""
+      );
+
+      log(
+        "Speech recognition ended.",
+        "INFO"
+      );
+    };
 }
 
 
 /* ============================================================
-   UPDATE TRANSCRIPT
+   MICROPHONE ACCESS
    ============================================================ */
 
-function updateTranscript() {
+async function requestMicrophone() {
 
-  transcriptBox.value =
-    (
-      finalTranscript +
-      interimTranscript
-    ).trim();
+  try {
 
-  characterCount.textContent =
-    "Transcript Characters: " +
-    transcriptBox.value.length;
+    log(
+      "Requesting microphone access...",
+      "INFO"
+    );
 
-  updateSendButton();
+    microphoneStream =
+      await navigator.mediaDevices.getUserMedia({
+        audio: true
+      });
 
+    const tracks =
+      microphoneStream.getAudioTracks();
+
+    if (tracks.length > 0) {
+
+      const track =
+        tracks[0];
+
+      setStatus(
+        "permissionStatus",
+        "GRANTED",
+        "pass"
+      );
+
+      log(
+        "Microphone access granted.",
+        "PASS"
+      );
+
+      log(
+        "Microphone detected: " +
+        track.label,
+        "PASS"
+      );
+
+      log(
+        "Microphone state: " +
+        track.readyState,
+        "INFO"
+      );
+
+      log(
+        "Microphone enabled: " +
+        track.enabled,
+        "INFO"
+      );
+
+      return true;
+    }
+
+  } catch (error) {
+
+    setStatus(
+      "permissionStatus",
+      "DENIED / BLOCKED",
+      "fail"
+    );
+
+    $("errorStatus").textContent =
+      error.name + ": " + error.message;
+
+    log(
+      "Microphone access failed.",
+      "ERROR"
+    );
+
+    log(
+      "Error name: " +
+      error.name,
+      "ERROR"
+    );
+
+    log(
+      "Error message: " +
+      error.message,
+      "ERROR"
+    );
+
+    return false;
+  }
+
+  return false;
+}
+
+
+/* ============================================================
+   MICROPHONE DIAGNOSTIC
+   ============================================================ */
+
+async function runFullDiagnostic() {
+
+  clearMessage();
+
+  log("");
+  log(
+    "=========================================="
+  );
+  log(
+    "ROMS VOICE CAPTURE DIAGNOSTIC"
+  );
+  log(
+    "=========================================="
+  );
+
+  checkBrowser();
+  checkSecureConnection();
+  checkSpeechRecognition();
+  checkMicrophoneAPI();
+
+  const micOK =
+    await requestMicrophone();
+
+  updateConnectionStatus();
+
+  if (micOK) {
+
+    log(
+      "ALL PRIMARY MICROPHONE DIAGNOSTICS PASSED.",
+      "PASS"
+    );
+
+    showMessage(
+      "✅ Microphone diagnostic PASSED. Voice capture is ready.",
+      "success"
+    );
+
+  } else {
+
+    log(
+      "MICROPHONE DIAGNOSTIC FAILED.",
+      "ERROR"
+    );
+
+    showMessage(
+      "⚠️ Microphone diagnostic failed. See the diagnostic log.",
+      "error"
+    );
+  }
+
+  log(
+    "=========================================="
+  );
+
+  log(
+    "DIAGNOSTIC COMPLETE"
+  );
+
+  log(
+    "=========================================="
+  );
 }
 
 
@@ -1631,94 +992,47 @@ function updateTranscript() {
 
 async function startVoiceCapture() {
 
-  clearError();
-
-  log(
-    "INFO",
-    "Start Voice Capture pressed."
-  );
-
-  if (!speechRecognitionSupported) {
-
-    if (!checkSpeechRecognition()) {
-
-      return;
-
-    }
-
-  }
-
-  const microphoneOK =
-    await requestMicrophone();
-
-  if (!microphoneOK) {
-
-    statusBanner.textContent =
-      "⚠️ Microphone access failed.";
-
-    return;
-
-  }
+  clearMessage();
 
   if (!recognition) {
 
-    recognition =
-      createRecognition();
-
-  }
-
-  if (!recognition) {
-
-    setError(
-      "Speech Recognition could not be initialized."
+    showMessage(
+      "Speech recognition is not available.",
+      "error"
     );
 
     return;
-
   }
 
+  const micOK =
+    await requestMicrophone();
+
+  if (!micOK) {
+    return;
+  }
+
+  finalTranscript = "";
+  interimTranscript = "";
+
+  $("transcript").value = "";
+
   try {
-
-    finalTranscript =
-      transcriptBox.value.trim();
-
-    if (
-      finalTranscript.length > 0
-    ) {
-
-      finalTranscript +=
-        " ";
-
-    }
-
-    interimTranscript =
-      "";
 
     recognition.start();
 
     log(
-      "INFO",
-      "Recognition.start() called."
+      "Recognition.start() called.",
+      "INFO"
     );
 
-  }
-
-  catch (error) {
-
-    setError(
-      error.name +
-      ": " +
-      error.message
-    );
+  } catch (error) {
 
     log(
-      "ERROR",
-      "Could not start speech recognition: " +
-      error.message
+      "Recognition could not start: " +
+      error.message,
+      "ERROR"
     );
-
   }
-
 }
 
 
@@ -1728,125 +1042,91 @@ async function startVoiceCapture() {
 
 function stopVoiceCapture() {
 
-  log(
-    "INFO",
-    "Stop Voice Capture pressed."
-  );
-
   if (
     recognition &&
-    isRecognizing
+    recognizing
   ) {
 
-    try {
+    recognition.stop();
 
-      recognition.stop();
-
-      log(
-        "INFO",
-        "Recognition.stop() called."
-      );
-
-    }
-
-    catch (error) {
-
-      log(
-        "ERROR",
-        "Recognition stop failed: " +
-        error.message
-      );
-
-    }
-
+    log(
+      "Recognition.stop() called.",
+      "INFO"
+    );
   }
 
-  releaseMicrophone();
+  if (microphoneStream) {
 
-  updateSendButton();
+    microphoneStream
+      .getTracks()
+      .forEach(
+        track => track.stop()
+      );
 
+    microphoneStream = null;
+
+    log(
+      "Microphone stream stopped.",
+      "INFO"
+    );
+  }
 }
 
 
 /* ============================================================
-   SEND BUTTON STATE
+   CLEAR TRANSCRIPT
    ============================================================ */
 
-function updateSendButton() {
+function clearTranscript() {
 
-  const hasTranscript =
-    transcriptBox.value.trim().length >
-    0;
+  finalTranscript = "";
+  interimTranscript = "";
 
-  sendButton.disabled =
-    !hasTranscript ||
-    isRecognizing;
+  $("transcript").value = "";
 
-}
+  $("intent").textContent =
+    "Not analyzed";
 
+  $("category").textContent =
+    "Not analyzed";
 
-/* ============================================================
-   SEND TO ROMS
-   ============================================================ */
+  $("knowledgeType").textContent =
+    "Not analyzed";
 
-async function sendToROMS() {
+  $("confidence").textContent =
+    "Not analyzed";
 
-  const text =
-    transcriptBox.value.trim();
+  $("location").textContent =
+    "None detected";
 
-  if (!text) {
+  $("equipment").textContent =
+    "None detected";
 
-    log(
-      "WARNING",
-      "Cannot send empty transcript."
-    );
+  $("crop").textContent =
+    "None detected";
 
-    return;
+  $("activity").textContent =
+    "None detected";
 
-  }
-
-  const endpoint =
-    endpointBox.value.trim();
-
-  if (!endpoint) {
-
-    setStatus(
-      romsStatus,
-      "NOT CONFIGURED",
-      "warn"
-    );
-
-    log(
-      "ERROR",
-      "ROMS endpoint is empty."
-    );
-
-    return;
-
-  }
-
-  sendButton.disabled =
-    true;
-
-  setStatus(
-    romsStatus,
-    "TRANSMITTING",
-    "warn"
-  );
-
-  connectionDisplay.textContent =
-    "Sending voice knowledge to ROMS...";
+  clearMessage();
 
   log(
-    "INFO",
-    "Preparing ROMS knowledge transmission."
+    "Transcript and analysis cleared.",
+    "INFO"
   );
+}
 
 
-  const payload = {
+/* ============================================================
+   LOCAL OPERATIONAL ANALYSIS
+   ============================================================ */
 
-    Voice_Text:
-      text,
+function analyzeTranscript(text) {
+
+  const lower =
+    text.toLowerCase();
+
+  let result = {
 
     Intent:
       "General Knowledge Capture",
@@ -1857,366 +1137,557 @@ async function sendToROMS() {
     Knowledge_Type:
       "Operational",
 
-    Entities:
-      "",
-
     Confidence:
       0.75,
 
-    Approved_By:
+    Location:
       "",
 
-    Notes:
-      "Captured through ROMS External Voice Capture Interface.",
+    Equipment:
+      "",
+
+    Crop:
+      "",
+
+    Activity:
+      "",
+
+    Entities:
+      []
+  };
+
+
+  /* FIELD / LOCATION */
+
+  const blocks =
+    ["A","B","C","D","F","H","I","N","W"];
+
+  for (const block of blocks) {
+
+    const pattern =
+      new RegExp(
+        "\\b(block|field)\\s*" +
+        block +
+        "\\b",
+        "i"
+      );
+
+    if (pattern.test(text)) {
+
+      result.Location =
+        "Block " + block;
+
+      result.Entities.push(
+        "Block " + block
+      );
+
+      break;
+    }
+  }
+
+
+  /* IRRIGATION */
+
+  if (
+    lower.includes("irrigation") ||
+    lower.includes("pump") ||
+    lower.includes("water") ||
+    lower.includes("pressure")
+  ) {
+
+    result.Intent =
+      "Equipment Inspection";
+
+    result.Category =
+      "Irrigation";
+
+    result.Equipment =
+      "Irrigation System";
+
+    result.Activity =
+      "Inspection";
+
+    result.Entities.push(
+      "Irrigation"
+    );
+  }
+
+
+  /* SPRAYING */
+
+  if (
+    lower.includes("spray") ||
+    lower.includes("herbicide") ||
+    lower.includes("fungicide") ||
+    lower.includes("insecticide") ||
+    lower.includes("pesticide")
+  ) {
+
+    result.Intent =
+      "Field Application";
+
+    result.Category =
+      "Crop Management";
+
+    result.Activity =
+      "Spraying";
+
+    result.Entities.push(
+      "Field Application"
+    );
+  }
+
+
+  /* WEED MANAGEMENT */
+
+  if (
+    lower.includes("weed") ||
+    lower.includes("weeding") ||
+    lower.includes("hand pull") ||
+    lower.includes("handpull")
+  ) {
+
+    result.Intent =
+      "Weed Management";
+
+    result.Category =
+      "Crop Management";
+
+    result.Activity =
+      "Weed Control";
+
+    result.Entities.push(
+      "Weed Management"
+    );
+  }
+
+
+  /* TRACTOR / MAINTENANCE */
+
+  if (
+    lower.includes("tractor") ||
+    lower.includes("maintenance") ||
+    lower.includes("repair") ||
+    lower.includes("service")
+  ) {
+
+    result.Intent =
+      "Maintenance Activity";
+
+    result.Category =
+      "Equipment";
+
+    result.Equipment =
+      "Farm Equipment";
+
+    result.Activity =
+      "Maintenance";
+
+    result.Entities.push(
+      "Equipment"
+    );
+  }
+
+
+  /* SAFETY */
+
+  if (
+    lower.includes("ppe") ||
+    lower.includes("safety") ||
+    lower.includes("accident") ||
+    lower.includes("injury") ||
+    lower.includes("hazard")
+  ) {
+
+    result.Intent =
+      "Safety Observation";
+
+    result.Category =
+      "Safety";
+
+    result.Knowledge_Type =
+      "Safety";
+
+    result.Entities.push(
+      "Safety"
+    );
+  }
+
+
+  /* SWEETPOTATO */
+
+  if (
+    lower.includes("sweetpotato") ||
+    lower.includes("sweet potato")
+  ) {
+
+    result.Crop =
+      "Sweetpotato";
+
+    result.Entities.push(
+      "Sweetpotato"
+    );
+  }
+
+
+  /* GENERAL RESEARCH */
+
+  if (
+    lower.includes("research") ||
+    lower.includes("trial") ||
+    lower.includes("experiment") ||
+    lower.includes("plot")
+  ) {
+
+    result.Category =
+      "Research Operations";
+
+    result.Knowledge_Type =
+      "Research";
+
+    result.Entities.push(
+      "Research"
+    );
+  }
+
+
+  result.Entities =
+    [...new Set(result.Entities)];
+
+  return result;
+}
+
+
+/* ============================================================
+   DISPLAY ANALYSIS
+   ============================================================ */
+
+function displayAnalysis(result) {
+
+  $("intent").textContent =
+    result.Intent;
+
+  $("category").textContent =
+    result.Category;
+
+  $("knowledgeType").textContent =
+    result.Knowledge_Type;
+
+  $("confidence").textContent =
+    Math.round(
+      result.Confidence * 100
+    ) + "%";
+
+  $("location").textContent =
+    result.Location ||
+    "None detected";
+
+  $("equipment").textContent =
+    result.Equipment ||
+    "None detected";
+
+  $("crop").textContent =
+    result.Crop ||
+    "None detected";
+
+  $("activity").textContent =
+    result.Activity ||
+    "None detected";
+}
+
+
+/* ============================================================
+   SEND TO ROMS
+   ============================================================ */
+
+async function analyzeAndSend() {
+
+  clearMessage();
+
+  const text =
+    $("transcript")
+      .value
+      .trim();
+
+  if (!text) {
+
+    showMessage(
+      "Please capture or enter a voice transcript first.",
+      "error"
+    );
+
+    return;
+  }
+
+  const endpoint =
+    $("endpoint")
+      .value
+      .trim();
+
+  if (!endpoint) {
+
+    showMessage(
+      "ROMS endpoint is required.",
+      "error"
+    );
+
+    return;
+  }
+
+  const analysis =
+    analyzeTranscript(text);
+
+  displayAnalysis(analysis);
+
+  log(
+    "Operational knowledge analyzed.",
+    "PASS"
+  );
+
+  log(
+    "Intent: " +
+    analysis.Intent,
+    "INFO"
+  );
+
+  log(
+    "Category: " +
+    analysis.Category,
+    "INFO"
+  );
+
+  log(
+    "Entities: " +
+    analysis.Entities.join(", "),
+    "INFO"
+  );
+
+
+  const payload = {
+
+    Voice_Text:
+      text,
+
+    Intent:
+      analysis.Intent,
+
+    Category:
+      analysis.Category,
+
+    Knowledge_Type:
+      analysis.Knowledge_Type,
+
+    Entities:
+      analysis.Entities.join(","),
+
+    Confidence:
+      analysis.Confidence,
+
+    Location:
+      analysis.Location,
+
+    Equipment:
+      analysis.Equipment,
+
+    Crop:
+      analysis.Crop,
+
+    Activity:
+      analysis.Activity,
 
     Source:
-      "ROMS External Voice Capture",
+      "ROMS External Voice Capture Interface",
 
-    Source_Version:
-      "1.1",
+    Version:
+      ROMS.VERSION,
 
-    Timestamp:
+    Client_Timestamp:
       new Date().toISOString()
-
   };
+
+
+  log(
+    "Sending operational knowledge to ROMS...",
+    "INFO"
+  );
 
 
   try {
 
-    /*
-     * IMPORTANT:
-     *
-     * Apps Script web applications commonly redirect
-     * requests. Using text/plain avoids a JSON CORS
-     * preflight request.
-     *
-     * no-cors means the browser will not expose the
-     * response body to this page. Therefore a successful
-     * request submission is reported as SUBMITTED,
-     * while backend confirmation will be handled by
-     * the Apps Script logging system.
-     */
+    const response =
+      await fetch(
+        endpoint,
+        {
+          method: "POST",
 
-    await fetch(
-      endpoint,
-      {
-        method: "POST",
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
 
-        mode: "no-cors",
+          body:
+            JSON.stringify(payload)
+        }
+      );
 
-        headers: {
-          "Content-Type":
-            "text/plain;charset=utf-8"
-        },
 
-        body:
-          JSON.stringify(payload)
-      }
+    const raw =
+      await response.text();
+
+
+    log(
+      "ROMS server response received.",
+      "INFO"
     );
 
 
-    const timestamp =
-      new Date()
-        .toLocaleTimeString();
+    let result;
 
-    lastTransmission.textContent =
-      timestamp;
+    try {
 
-    connectionDisplay.textContent =
-      "Transmission submitted to ROMS.";
+      result =
+        JSON.parse(raw);
+
+    } catch (parseError) {
+
+      result = {
+        status: "UNKNOWN",
+        raw: raw
+      };
+    }
+
+
+    if (
+      result.status === "SUCCESS"
+    ) {
+
+      lastTransmissionId =
+        result.Knowledge_ID ||
+        result.knowledgeId ||
+        "Generated by ROMS";
+
+      $("knowledgeId").textContent =
+        lastTransmissionId;
+
+      $("lastTransmission").textContent =
+        new Date().toLocaleString();
+
+      setStatus(
+        "romsStatus",
+        "CONNECTED / SENT",
+        "pass"
+      );
+
+      showMessage(
+        "✅ Knowledge successfully transmitted to ROMS.",
+        "success"
+      );
+
+      log(
+        "KNOWLEDGE SUCCESSFULLY SAVED TO ROMS.",
+        "PASS"
+      );
+
+      log(
+        "Knowledge ID: " +
+        lastTransmissionId,
+        "PASS"
+      );
+
+    } else {
+
+      setStatus(
+        "romsStatus",
+        "TRANSMISSION ERROR",
+        "fail"
+      );
+
+      showMessage(
+        "⚠️ ROMS received a response, but the record was not confirmed as saved.",
+        "error"
+      );
+
+      log(
+        "ROMS response: " +
+        raw,
+        "ERROR"
+      );
+    }
+
+  } catch (error) {
 
     setStatus(
-      romsStatus,
-      "SUBMITTED",
-      "pass"
-    );
-
-    statusBanner.textContent =
-      "✅ Voice knowledge submitted to ROMS.";
-
-    statusBanner.style.background =
-      "#e8f5e9";
-
-    statusBanner.style.color =
-      "#1b5e20";
-
-
-    log(
-      "PASS",
-      "Voice knowledge transmission submitted."
-    );
-
-    log(
-      "INFO",
-      "ROMS endpoint: " +
-      endpoint
-    );
-
-    log(
-      "INFO",
-      "Transcript characters transmitted: " +
-      text.length
-    );
-
-    log(
-      "INFO",
-      "Backend confirmation is recorded server-side."
-    );
-
-  }
-
-  catch (error) {
-
-    setStatus(
-      romsStatus,
-      "TRANSMISSION ERROR",
+      "romsStatus",
+      "CONNECTION ERROR",
       "fail"
     );
 
-    connectionDisplay.textContent =
-      "Transmission failed.";
+    $("errorStatus").textContent =
+      error.name + ": " +
+      error.message;
 
-    setError(
-      error.name +
-      ": " +
-      error.message
+    showMessage(
+      "❌ Could not connect to the ROMS endpoint.",
+      "error"
     );
 
     log(
-      "ERROR",
-      "ROMS transmission failed."
+      "Transmission failed: " +
+      error.message,
+      "ERROR"
     );
-
-    log(
-      "ERROR",
-      error.message
-    );
-
   }
-
-  finally {
-
-    updateSendButton();
-
-  }
-
 }
 
 
 /* ============================================================
-   CLEAR TRANSCRIPT
+   CONNECTION STATUS
    ============================================================ */
 
-function clearTranscript() {
+function updateConnectionStatus() {
 
-  if (isRecognizing) {
+  const endpoint =
+    $("endpoint")
+      .value
+      .trim();
 
-    stopVoiceCapture();
+  if (endpoint) {
 
-  }
-
-  finalTranscript =
-    "";
-
-  interimTranscript =
-    "";
-
-  transcriptBox.value =
-    "";
-
-  characterCount.textContent =
-    "Transcript Characters: 0";
-
-  setStatus(
-    recognitionStatus,
-    "IDLE",
-    "neutral"
-  );
-
-  setStatus(
-    errorStatus,
-    "None",
-    "neutral"
-  );
-
-  updateSendButton();
-
-  log(
-    "INFO",
-    "Transcript cleared."
-  );
-
-}
-
-
-/* ============================================================
-   PAGE VISIBILITY
-   ============================================================ */
-
-document.addEventListener(
-  "visibilitychange",
-  function() {
-
-    log(
-      "INFO",
-      "Page visibility changed: " +
-      document.visibilityState
-    );
-
-  }
-);
-
-
-/* ============================================================
-   EVENT HANDLERS
-   ============================================================ */
-
-diagnosticButton.addEventListener(
-  "click",
-  runDiagnostic
-);
-
-startButton.addEventListener(
-  "click",
-  startVoiceCapture
-);
-
-stopButton.addEventListener(
-  "click",
-  stopVoiceCapture
-);
-
-sendButton.addEventListener(
-  "click",
-  sendToROMS
-);
-
-clearButton.addEventListener(
-  "click",
-  clearTranscript
-);
-
-transcriptBox.addEventListener(
-  "input",
-  function() {
-
-    finalTranscript =
-      transcriptBox.value;
-
-    interimTranscript =
-      "";
-
-    characterCount.textContent =
-      "Transcript Characters: " +
-      transcriptBox.value.length;
-
-    updateSendButton();
-
-  }
-);
-
-
-/* ============================================================
-   INITIALIZATION
-   ============================================================ */
-
-function initializeROMSVoiceCapture() {
-
-  log(
-    "PASS",
-    "ROMS external Voice Capture page loaded."
-  );
-
-  log(
-    "INFO",
-    "Checking browser..."
-  );
-
-  checkBrowser();
-
-  log(
-    "INFO",
-    "Checking secure connection..."
-  );
-
-  checkSecureContext();
-
-  log(
-    "INFO",
-    "Checking Speech Recognition API..."
-  );
-
-  checkSpeechRecognition();
-
-  log(
-    "INFO",
-    "Checking microphone API..."
-  );
-
-  checkMicrophoneAPI();
-
-
-  if (ROMS_ENDPOINT) {
+    $("connectionText").textContent =
+      "Configured";
 
     setStatus(
-      romsStatus,
+      "romsStatus",
       "CONFIGURED",
       "pass"
     );
 
-    connectionDisplay.textContent =
-      "Endpoint configured.";
-
     log(
-      "PASS",
-      "ROMS Apps Script endpoint configured."
+      "ROMS endpoint configured.",
+      "PASS"
     );
 
-  }
+  } else {
 
-  else {
+    $("connectionText").textContent =
+      "Endpoint required";
 
     setStatus(
-      romsStatus,
+      "romsStatus",
       "NOT CONFIGURED",
       "warn"
     );
 
-    connectionDisplay.textContent =
-      "Endpoint required.";
-
     log(
-      "WARNING",
-      "ROMS endpoint has not been configured yet."
+      "ROMS endpoint has not been configured.",
+      "WARNING"
     );
-
   }
-
-
-  recognition =
-    createRecognition();
-
-  if (recognition) {
-
-    log(
-      "PASS",
-      "Speech recognition handlers registered."
-    );
-
-  }
-
-
-  updateSendButton();
-
 }
-
-
-window.addEventListener(
-  "load",
-  initializeROMSVoiceCapture
-);
 
 </script>
 
 </body>
 </html>
+```
+						
