@@ -5202,7 +5202,387 @@
 
 
 </script>
+<script>
 
+/* ============================================================
+   ROMS MANAGER MOBILE VOICE AI v1.0
+   LIVE ROMS AI TRANSMISSION OVERRIDE
+
+   PURPOSE:
+   Connect the working GitHub mobile Voice AI interface
+   to the existing ROMS AI Voice Capture endpoint.
+
+   ARCHITECTURE:
+
+   PHONE
+     ↓
+   GITHUB MOBILE VOICE AI
+     ↓
+   ROMS AI ENDPOINT
+     ↓
+   Voice_Capture_v1
+     ↓
+   Knowledge Intelligence
+     ↓
+   Operational Intelligence
+
+   HUMAN REVIEW REMAINS REQUIRED.
+   NO AUTOMATIC OPERATIONAL AUTHORIZATION.
+   ============================================================ */
+
+
+const ROMS_MOBILE_AI_ENDPOINT =
+  "https://script.google.com/a/macros/ncsu.edu/s/AKfycbyZhV4jfpTJQJ1GcKUW6xIhjMHSPYGLozVjB5PpZIMIfMPJjAkiXzAN9yYsG4MWoA8q/exec";
+
+
+
+/* ============================================================
+   SEND MOBILE VOICE CAPTURE TO ROMS AI
+   ============================================================ */
+
+
+async function prepareVoiceForROMSAI(){
+
+  const reviewTranscript =
+    document.getElementById(
+      "reviewTranscript"
+    );
+
+
+  const capturedText =
+    cleanVoiceText(
+      reviewTranscript
+        ? reviewTranscript.textContent
+        : ""
+    );
+
+
+  if(
+    !capturedText
+  ){
+
+    setReviewMessage(
+      "No voice transcript is available to send.",
+      "warning"
+    );
+
+
+    return;
+
+  }
+
+
+  const sendButtons =
+    document.querySelectorAll(
+      ".review-action.primary"
+    );
+
+
+  sendButtons.forEach(
+    function(button){
+
+      button.disabled =
+        true;
+
+
+      button.textContent =
+        "SENDING TO ROMS AI...";
+
+    }
+  );
+
+
+  setReviewMessage(
+    "Sending voice intelligence to ROMS AI...",
+    "success"
+  );
+
+
+  setVoiceState(
+    "Transmitting voice intelligence to ROMS AI...",
+    "processing"
+  );
+
+
+  logVoice(
+    "Preparing mobile voice capture for ROMS AI transmission.",
+    "INFO"
+  );
+
+
+  try{
+
+    const formData =
+      new URLSearchParams();
+
+
+    formData.append(
+      "transcript",
+      capturedText
+    );
+
+
+    formData.append(
+      "source",
+      "ROMS Manager Mobile Voice AI"
+    );
+
+
+    formData.append(
+      "version",
+      "1.0"
+    );
+
+
+    logVoice(
+      "POST transmission started.",
+      "INFO"
+    );
+
+
+    const response =
+      await fetch(
+        ROMS_MOBILE_AI_ENDPOINT,
+        {
+
+          method:
+            "POST",
+
+          body:
+            formData
+
+        }
+      );
+
+
+    const responseText =
+      await response.text();
+
+
+    logVoice(
+      "ROMS AI response received.",
+      "INFO"
+    );
+
+
+    logVoice(
+      "Server response: " +
+      responseText,
+      "INFO"
+    );
+
+
+    let data;
+
+
+    try{
+
+      data =
+        JSON.parse(
+          responseText
+        );
+
+    }
+
+    catch(error){
+
+      throw new Error(
+        "ROMS AI returned a response that could not be read as JSON."
+      );
+
+    }
+
+
+    if(
+      !data ||
+      data.status !==
+      "SUCCESS"
+    ){
+
+      throw new Error(
+        data &&
+        data.message
+          ? data.message
+          : "ROMS AI rejected the voice transmission."
+      );
+
+    }
+
+
+    const captureID =
+      data.Capture_ID ||
+      data.captureId ||
+      data.captureID ||
+      "";
+
+
+    const destination =
+      data.destination ||
+      data.Destination ||
+      "Voice_Capture_v1";
+
+
+    setReviewMessage(
+
+      "Voice intelligence successfully transmitted to ROMS AI." +
+
+      (
+        captureID
+          ? " Capture ID: " +
+            captureID +
+            "."
+          : ""
+      ),
+
+      "success"
+
+    );
+
+
+    setVoiceState(
+      "Voice intelligence saved to ROMS AI.",
+      ""
+    );
+
+
+    logVoice(
+      "VOICE TRANSMISSION SUCCESSFUL",
+      "PASS"
+    );
+
+
+    if(
+      captureID
+    ){
+
+      logVoice(
+        "Capture ID: " +
+        captureID,
+        "PASS"
+      );
+
+    }
+
+
+    logVoice(
+      "Destination: " +
+      destination,
+      "PASS"
+    );
+
+
+    /*
+     * Update the interpretation panel only with
+     * information actually returned by ROMS.
+     *
+     * Full AI interpretation will be connected
+     * in the next controlled step.
+     */
+
+
+    const reviewLocation =
+      document.getElementById(
+        "reviewLocation"
+      );
+
+
+    const reviewCategory =
+      document.getElementById(
+        "reviewCategory"
+      );
+
+
+    const reviewAction =
+      document.getElementById(
+        "reviewAction"
+      );
+
+
+    if(
+      reviewLocation
+    ){
+
+      reviewLocation.textContent =
+        "Sent to ROMS AI";
+
+    }
+
+
+    if(
+      reviewCategory
+    ){
+
+      reviewCategory.textContent =
+        "Processing";
+
+    }
+
+
+    if(
+      reviewAction
+    ){
+
+      reviewAction.textContent =
+        captureID
+          ? "Capture " +
+            captureID +
+            " received"
+          : "Voice capture received";
+
+    }
+
+  }
+
+  catch(error){
+
+    const message =
+      error &&
+      error.message
+        ? error.message
+        : String(error);
+
+
+    setReviewMessage(
+      "ROMS AI transmission failed: " +
+      message,
+      "warning"
+    );
+
+
+    setVoiceState(
+      "Voice transmission failed. Capture remains available for review.",
+      "warning"
+    );
+
+
+    logVoice(
+      "ROMS AI transmission failed: " +
+      message,
+      "ERROR"
+    );
+
+  }
+
+  finally{
+
+    sendButtons.forEach(
+      function(button){
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          "SEND TO ROMS AI";
+
+      }
+    );
+
+  }
+
+}
+
+</script>
 
 </body>
 
