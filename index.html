@@ -5583,7 +5583,266 @@ async function prepareVoiceForROMSAI(){
 }
 
 </script>
+<script>
 
+/* ============================================================
+   ROMS MANAGER MOBILE VOICE AI v1.0
+   SAFARI / MOBILE TRANSMISSION FIX
+
+   PURPOSE:
+   Preserve the existing working mobile Voice AI interface
+   while allowing the ROMS Apps Script POST to be submitted
+   without requiring Safari to read the cross-origin response.
+
+   IMPORTANT:
+   Successful fetch completion means SUBMITTED.
+   Actual ROMS receipt must be verified in Voice_Capture_v1.
+   ============================================================ */
+
+
+async function prepareVoiceForROMSAI(){
+
+  const reviewTranscript =
+    document.getElementById(
+      "reviewTranscript"
+    );
+
+
+  const capturedText =
+    cleanVoiceText(
+      reviewTranscript
+        ? reviewTranscript.textContent
+        : ""
+    );
+
+
+  if(
+    !capturedText
+  ){
+
+    setReviewMessage(
+      "No voice transcript is available to send.",
+      "warning"
+    );
+
+    return;
+
+  }
+
+
+  const sendButtons =
+    document.querySelectorAll(
+      ".review-action.primary"
+    );
+
+
+  sendButtons.forEach(
+    function(button){
+
+      button.disabled =
+        true;
+
+      button.textContent =
+        "SENDING TO ROMS AI...";
+
+    }
+  );
+
+
+  setReviewMessage(
+    "Submitting voice intelligence to ROMS AI...",
+    "success"
+  );
+
+
+  setVoiceState(
+    "Transmitting voice intelligence to ROMS AI...",
+    "processing"
+  );
+
+
+  logVoice(
+    "Preparing mobile voice capture for ROMS AI transmission.",
+    "INFO"
+  );
+
+
+  try{
+
+    const formData =
+      new URLSearchParams();
+
+
+    formData.append(
+      "transcript",
+      capturedText
+    );
+
+
+    formData.append(
+      "source",
+      "ROMS Manager Mobile Voice AI"
+    );
+
+
+    formData.append(
+      "version",
+      "1.0"
+    );
+
+
+    logVoice(
+      "Safari-compatible POST transmission started.",
+      "INFO"
+    );
+
+
+    await fetch(
+      ROMS_MOBILE_AI_ENDPOINT,
+      {
+
+        method:
+          "POST",
+
+        mode:
+          "no-cors",
+
+        body:
+          formData
+
+      }
+    );
+
+
+    /*
+     * IMPORTANT:
+     *
+     * no-cors intentionally prevents the browser from
+     * reading the Apps Script response.
+     *
+     * Therefore we DO NOT claim here that ROMS saved
+     * the record.
+     *
+     * We only know that the browser submitted the request.
+     */
+
+
+    setReviewMessage(
+      "Voice capture submitted to ROMS AI. Verify ROMS receipt.",
+      "success"
+    );
+
+
+    setVoiceState(
+      "Voice capture submitted for ROMS processing.",
+      ""
+    );
+
+
+    logVoice(
+      "POST submitted. Awaiting ROMS-side verification.",
+      "PASS"
+    );
+
+
+    const reviewLocation =
+      document.getElementById(
+        "reviewLocation"
+      );
+
+
+    const reviewCategory =
+      document.getElementById(
+        "reviewCategory"
+      );
+
+
+    const reviewAction =
+      document.getElementById(
+        "reviewAction"
+      );
+
+
+    if(
+      reviewLocation
+    ){
+
+      reviewLocation.textContent =
+        "Submitted to ROMS";
+
+    }
+
+
+    if(
+      reviewCategory
+    ){
+
+      reviewCategory.textContent =
+        "Awaiting Verification";
+
+    }
+
+
+    if(
+      reviewAction
+    ){
+
+      reviewAction.textContent =
+        "Check Voice_Capture_v1";
+
+    }
+
+  }
+
+  catch(error){
+
+    const message =
+      error &&
+      error.message
+        ? error.message
+        : String(error);
+
+
+    setReviewMessage(
+      "ROMS AI transmission failed: " +
+      message,
+      "warning"
+    );
+
+
+    setVoiceState(
+      "Voice transmission failed. Capture remains available.",
+      "warning"
+    );
+
+
+    logVoice(
+      "ROMS AI transmission failed: " +
+      message,
+      "ERROR"
+    );
+
+  }
+
+  finally{
+
+    sendButtons.forEach(
+      function(button){
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          "SEND TO ROMS AI";
+
+      }
+    );
+
+  }
+
+}
+
+</script>
 </body>
 
 </html>
