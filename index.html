@@ -16,32 +16,11 @@
   >
 
   <title>
-    ROMS Manager Mobile Voice AI
+    ROMS Mobile Voice AI
   </title>
 
 
   <style>
-
-    /* =========================================================
-       ROMS MANAGER MOBILE VOICE AI v1.0
-       GITHUB FIELD INTERFACE
-
-       PURPOSE:
-       Superintendent + Manager mobile field intelligence
-
-       VOICE ENGINE:
-       Preserves proven browser microphone + speech recognition
-       architecture from ROMS Voice Knowledge Capture v1.1
-
-       CURRENT BUILD:
-       - Mobile-first interface
-       - Microphone diagnostics
-       - Live voice transcript
-       - iPhone / Android browser workflow
-       - No automatic operational authorization
-       - No AI submission yet in this stage
-       ========================================================= */
-
 
     :root{
 
@@ -50,7 +29,6 @@
       --green-900:#074a32;
       --green-850:#09563a;
       --green-800:#0d6945;
-      --green-700:#2f8056;
 
       --green-soft:#e9f3ec;
       --green-pale:#f4f8f5;
@@ -70,7 +48,6 @@
       --yellow-soft:#fff8e8;
 
       --blue:#367eae;
-      --blue-soft:#eef6fb;
 
       --purple:#7458a8;
       --purple-soft:#f4f0fa;
@@ -104,11 +81,14 @@
 
       min-height:100%;
 
-      background:var(--page);
+      background:
+        var(--page);
 
-      font-family:var(--font);
+      font-family:
+        var(--font);
 
-      color:var(--ink);
+      color:
+        var(--ink);
 
       -webkit-font-smoothing:
         antialiased;
@@ -129,16 +109,9 @@
     }
 
 
-    button,
-    input,
-    textarea{
+    button{
 
       font:inherit;
-
-    }
-
-
-    button{
 
       cursor:pointer;
 
@@ -156,7 +129,8 @@
 
       min-height:100vh;
 
-      margin:0 auto;
+      margin:
+        0 auto;
 
       background:
         linear-gradient(
@@ -165,9 +139,8 @@
           #edf2ee
         );
 
-      position:relative;
-
-      padding-bottom:86px;
+      padding-bottom:
+        88px;
 
     }
 
@@ -180,15 +153,13 @@
 
     .mobile-header{
 
+      min-height:184px;
+
       position:relative;
 
       overflow:hidden;
 
-      min-height:180px;
-
       padding:
-        18px
-        18px
         18px;
 
       color:white;
@@ -198,7 +169,7 @@
         linear-gradient(
           180deg,
           rgba(2,47,33,.97),
-          rgba(5,68,46,.92)
+          rgba(5,68,46,.91)
         ),
 
         url(
@@ -220,7 +191,8 @@
 
       align-items:center;
 
-      justify-content:space-between;
+      justify-content:
+        space-between;
 
       gap:12px;
 
@@ -244,11 +216,11 @@
 
       height:48px;
 
-      border-radius:12px;
-
       display:grid;
 
       place-items:center;
+
+      border-radius:12px;
 
       background:
         rgba(255,255,255,.10);
@@ -272,8 +244,6 @@
 
       font-weight:900;
 
-      letter-spacing:.01em;
-
     }
 
 
@@ -283,7 +253,7 @@
 
       color:#a8d357;
 
-      font-size:14px;
+      font-size:13px;
 
       font-weight:850;
 
@@ -295,8 +265,7 @@
     .version-pill{
 
       padding:
-        5px
-        9px;
+        5px 9px;
 
       border-radius:16px;
 
@@ -307,7 +276,7 @@
       background:
         rgba(255,255,255,.08);
 
-      font-size:11px;
+      font-size:10px;
 
       font-weight:850;
 
@@ -316,7 +285,7 @@
 
     .mobile-title{
 
-      margin-top:19px;
+      margin-top:20px;
 
       font-size:24px;
 
@@ -355,7 +324,7 @@
 
 
     /* =========================================================
-       MANAGER STRIP
+       IDENTITY
        ========================================================= */
 
 
@@ -368,7 +337,7 @@
 
       position:relative;
 
-      z-index:4;
+      z-index:5;
 
       min-height:58px;
 
@@ -376,13 +345,13 @@
 
       align-items:center;
 
-      justify-content:space-between;
+      justify-content:
+        space-between;
 
       gap:12px;
 
       padding:
-        10px
-        12px;
+        10px 12px;
 
       background:white;
 
@@ -392,22 +361,22 @@
 
       border-radius:12px;
 
-      box-shadow:var(--shadow);
+      box-shadow:
+        var(--shadow);
 
     }
 
 
     .manager-label{
 
-      color:var(--muted);
+      color:
+        var(--muted);
 
       font-size:10px;
 
       font-weight:850;
 
       text-transform:uppercase;
-
-      letter-spacing:.04em;
 
     }
 
@@ -434,8 +403,7 @@
       min-height:26px;
 
       padding:
-        4px
-        8px;
+        4px 8px;
 
       border-radius:14px;
 
@@ -471,7 +439,7 @@
 
 
     /* =========================================================
-       MAIN CONTENT
+       CONTENT
        ========================================================= */
 
 
@@ -514,13 +482,13 @@
 
       align-items:center;
 
-      justify-content:space-between;
+      justify-content:
+        space-between;
 
       gap:10px;
 
       padding:
-        11px
-        13px;
+        11px 13px;
 
       border-bottom:
         1px solid
@@ -566,18 +534,15 @@
       grid-template-columns:
         repeat(3,1fr);
 
-      gap:0;
-
     }
 
 
     .status-cell{
 
-      min-height:80px;
+      min-height:78px;
 
       padding:
-        10px
-        8px;
+        10px 8px;
 
       text-align:center;
 
@@ -598,8 +563,6 @@
     .status-icon{
 
       font-size:20px;
-
-      line-height:1;
 
     }
 
@@ -634,61 +597,18 @@
     }
 
 
-    .signal{
-
-      width:8px;
-
-      height:8px;
-
-      display:inline-block;
-
-      margin-right:4px;
-
-      border-radius:50%;
-
-    }
-
-
-    .signal.green{
-
-      background:#2e9c59;
-
-    }
-
-
-    .signal.yellow{
-
-      background:var(--yellow);
-
-    }
-
-
-    .signal.red{
-
-      background:var(--red);
-
-    }
-
-
-    .signal.blue{
-
-      background:var(--blue);
-
-    }
-
-
 
     /* =========================================================
-       VOICE AI HERO
+       VOICE HERO
        ========================================================= */
 
 
     .voice-card{
 
       padding:
-        15px
+        16px
         14px
-        16px;
+        17px;
 
       text-align:center;
 
@@ -696,7 +616,7 @@
 
         radial-gradient(
           circle at top,
-          rgba(116,88,168,.07),
+          rgba(116,88,168,.08),
           transparent 45%
         ),
 
@@ -713,11 +633,8 @@
 
       gap:6px;
 
-      min-height:26px;
-
       padding:
-        5px
-        9px;
+        5px 9px;
 
       border-radius:14px;
 
@@ -728,8 +645,7 @@
         1px solid
         #d9ccec;
 
-      color:
-        #624792;
+      color:#624792;
 
       font-size:10px;
 
@@ -760,11 +676,9 @@
 
       margin-top:11px;
 
-      font-size:23px;
+      font-size:24px;
 
       font-weight:900;
-
-      line-height:1.05;
 
       color:
         var(--green-950);
@@ -774,7 +688,7 @@
 
     .voice-copy{
 
-      width:92%;
+      width:94%;
 
       margin:
         7px auto
@@ -794,19 +708,19 @@
 
 
     /* =========================================================
-       MICROPHONE
+       LARGE MICROPHONE
        ========================================================= */
 
 
     .mic-wrap{
 
-      width:158px;
+      width:170px;
 
-      height:158px;
+      height:170px;
 
       margin:
         18px auto
-        12px;
+        10px;
 
       position:relative;
 
@@ -848,9 +762,9 @@
 
       z-index:3;
 
-      width:114px;
+      width:124px;
 
-      height:114px;
+      height:124px;
 
       border:0;
 
@@ -894,6 +808,7 @@
     .mic-button.listening{
 
       background:
+
         linear-gradient(
           180deg,
           #c9433b,
@@ -905,7 +820,7 @@
 
     .mic-symbol{
 
-      font-size:34px;
+      font-size:38px;
 
       line-height:1;
 
@@ -914,22 +829,18 @@
 
     .mic-label{
 
-      font-size:11px;
+      font-size:12px;
 
       font-weight:900;
-
-      letter-spacing:.02em;
 
     }
 
 
     .mic-sub{
 
-      margin-top:2px;
-
       font-size:9px;
 
-      opacity:.84;
+      opacity:.85;
 
       font-weight:700;
 
@@ -938,13 +849,13 @@
 
 
     /* =========================================================
-       VOICE STATUS
+       VOICE STATE
        ========================================================= */
 
 
     .voice-state{
 
-      min-height:42px;
+      min-height:44px;
 
       display:flex;
 
@@ -955,8 +866,7 @@
       gap:7px;
 
       padding:
-        7px
-        10px;
+        8px 10px;
 
       border-radius:8px;
 
@@ -999,7 +909,8 @@
     .voice-state.listening
     .voice-state-dot{
 
-      background:var(--red);
+      background:
+        var(--red);
 
       animation:
         pulse 1.15s
@@ -1050,7 +961,7 @@
       70%{
 
         box-shadow:
-          0 0 0 9px
+          0 0 0 10px
           rgba(199,61,54,0);
 
       }
@@ -1079,8 +990,7 @@
       margin-top:11px;
 
       padding:
-        11px
-        12px;
+        11px 12px;
 
       text-align:left;
 
@@ -1113,8 +1023,6 @@
 
       text-transform:uppercase;
 
-      letter-spacing:.04em;
-
     }
 
 
@@ -1122,14 +1030,14 @@
 
       margin-top:5px;
 
-      min-height:58px;
+      min-height:62px;
 
       color:
         var(--ink);
 
-      font-size:13px;
+      font-size:14px;
 
-      line-height:1.45;
+      line-height:1.5;
 
       font-weight:700;
 
@@ -1140,32 +1048,26 @@
     }
 
 
-
-    /* =========================================================
-       REVIEW BUTTON
-       ========================================================= */
-
-
     .review-button{
 
       display:none;
 
       width:100%;
 
-      min-height:44px;
+      min-height:50px;
 
       margin-top:10px;
 
       border:0;
 
-      border-radius:8px;
+      border-radius:9px;
 
       color:white;
 
       background:
         var(--purple);
 
-      font-size:12px;
+      font-size:13px;
 
       font-weight:900;
 
@@ -1188,8 +1090,7 @@
     .system-list{
 
       padding:
-        4px
-        12px
+        4px 12px
         8px;
 
     }
@@ -1202,8 +1103,7 @@
       display:grid;
 
       grid-template-columns:
-        1fr
-        auto;
+        1fr auto;
 
       gap:10px;
 
@@ -1248,7 +1148,7 @@
 
     .system-value{
 
-      min-width:70px;
+      min-width:78px;
 
       text-align:right;
 
@@ -1280,10 +1180,20 @@
     }
 
 
+    .diagnostic-toggle{
 
-    /* =========================================================
-       DIAGNOSTIC LOG
-       ========================================================= */
+      border:0;
+
+      background:transparent;
+
+      color:
+        var(--green-800);
+
+      font-size:10px;
+
+      font-weight:850;
+
+    }
 
 
     .diagnostic-wrap{
@@ -1291,8 +1201,7 @@
       display:none;
 
       padding:
-        10px
-        12px
+        10px 12px
         12px;
 
       border-top:
@@ -1313,7 +1222,7 @@
 
     .diagnostic-log{
 
-      height:180px;
+      height:160px;
 
       overflow:auto;
 
@@ -1334,22 +1243,6 @@
       line-height:1.4;
 
       white-space:pre-wrap;
-
-    }
-
-
-    .diagnostic-toggle{
-
-      border:0;
-
-      background:transparent;
-
-      color:
-        var(--green-800);
-
-      font-size:10px;
-
-      font-weight:850;
 
     }
 
@@ -1401,8 +1294,7 @@
       gap:10px;
 
       padding:
-        10px
-        11px;
+        10px 11px;
 
       text-align:left;
 
@@ -1416,8 +1308,7 @@
       height:37px;
 
       flex:
-        0 0
-        37px;
+        0 0 37px;
 
       border-radius:10px;
 
@@ -1427,9 +1318,6 @@
 
       background:
         var(--green-soft);
-
-      color:
-        var(--green-800);
 
       font-size:19px;
 
@@ -1454,9 +1342,9 @@
 
       font-size:9px;
 
-      font-weight:700;
-
       line-height:1.25;
+
+      font-weight:700;
 
     }
 
@@ -1510,9 +1398,6 @@
         0 -6px 24px
         rgba(0,40,28,.08);
 
-      backdrop-filter:
-        blur(9px);
-
     }
 
 
@@ -1545,8 +1430,6 @@
     .nav-icon{
 
       font-size:20px;
-
-      line-height:1;
 
     }
 
@@ -1597,16 +1480,484 @@
 
 
     /* =========================================================
-       RESPONSIVE
+       REVIEW OVERLAY
        ========================================================= */
 
 
-    @media
-    (max-width:390px){
+    body.review-open{
+
+      overflow:hidden;
+
+    }
+
+
+    .review-overlay{
+
+      position:fixed;
+
+      inset:0;
+
+      z-index:1000;
+
+      display:none;
+
+      align-items:flex-end;
+
+      justify-content:center;
+
+      padding:10px;
+
+      background:
+        rgba(3,30,22,.68);
+
+      backdrop-filter:
+        blur(5px);
+
+    }
+
+
+    .review-overlay.open{
+
+      display:flex;
+
+    }
+
+
+    .review-panel{
+
+      width:100%;
+
+      max-width:520px;
+
+      max-height:94vh;
+
+      overflow:auto;
+
+      background:white;
+
+      border-radius:
+        18px
+        18px
+        12px
+        12px;
+
+      box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.24);
+
+    }
+
+
+    .review-header{
+
+      display:flex;
+
+      justify-content:
+        space-between;
+
+      gap:12px;
+
+      padding:
+        17px;
+
+      color:white;
+
+      background:
+        linear-gradient(
+          135deg,
+          #06382a,
+          #0b6846
+        );
+
+      border-radius:
+        18px
+        18px
+        0
+        0;
+
+    }
+
+
+    .review-eyebrow{
+
+      display:inline-block;
+
+      padding:
+        4px 8px;
+
+      border-radius:12px;
+
+      background:
+        rgba(255,255,255,.12);
+
+      color:#b8dc74;
+
+      font-size:9px;
+
+      font-weight:900;
+
+    }
+
+
+    .review-title{
+
+      margin-top:8px;
+
+      font-size:22px;
+
+      font-weight:900;
+
+    }
+
+
+    .review-subtitle{
+
+      margin-top:6px;
+
+      color:#d6e5dc;
+
+      font-size:11px;
+
+      line-height:1.35;
+
+      font-weight:650;
+
+    }
+
+
+    .review-close{
+
+      width:38px;
+
+      height:38px;
+
+      flex:
+        0 0 38px;
+
+      border:0;
+
+      border-radius:50%;
+
+      background:
+        rgba(255,255,255,.12);
+
+      color:white;
+
+      font-size:24px;
+
+    }
+
+
+    .review-body{
+
+      padding:13px;
+
+    }
+
+
+    .review-section{
+
+      margin-bottom:11px;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius:11px;
+
+      overflow:hidden;
+
+      background:#fbfcfb;
+
+    }
+
+
+    .review-section-title{
+
+      padding:
+        9px 11px;
+
+      background:
+        var(--green-soft);
+
+      color:
+        var(--green-900);
+
+      border-bottom:
+        1px solid
+        var(--line);
+
+      font-size:11px;
+
+      font-weight:900;
+
+      text-transform:uppercase;
+
+    }
+
+
+    .review-transcript{
+
+      min-height:84px;
+
+      padding:12px;
+
+      font-size:14px;
+
+      line-height:1.5;
+
+      font-weight:700;
+
+    }
+
+
+    .review-row{
+
+      min-height:52px;
+
+      display:grid;
+
+      grid-template-columns:
+        120px 1fr;
+
+      gap:10px;
+
+      align-items:center;
+
+      padding:
+        8px 11px;
+
+      border-bottom:
+        1px solid
+        var(--line);
+
+    }
+
+
+    .review-row:last-child{
+
+      border-bottom:0;
+
+    }
+
+
+    .review-label{
+
+      color:
+        var(--muted);
+
+      font-size:10px;
+
+      font-weight:850;
+
+      text-transform:uppercase;
+
+    }
+
+
+    .review-value{
+
+      font-size:12px;
+
+      font-weight:900;
+
+      color:
+        var(--green-950);
+
+    }
+
+
+    .review-message{
+
+      display:none;
+
+      margin-bottom:10px;
+
+      padding:
+        10px 11px;
+
+      border-radius:9px;
+
+      font-size:11px;
+
+      line-height:1.4;
+
+      font-weight:800;
+
+    }
+
+
+    .review-message.show{
+
+      display:block;
+
+    }
+
+
+    .review-message.success{
+
+      background:
+        var(--green-soft);
+
+      border:
+        1px solid
+        #b9d7c4;
+
+      color:#176e42;
+
+    }
+
+
+    .review-message.warning{
+
+      background:
+        var(--yellow-soft);
+
+      border:
+        1px solid
+        #ecd99e;
+
+      color:#745715;
+
+    }
+
+
+    .review-actions{
+
+      display:grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap:8px;
+
+    }
+
+
+    .review-action{
+
+      min-height:50px;
+
+      border:0;
+
+      border-radius:9px;
+
+      font-size:12px;
+
+      font-weight:900;
+
+    }
+
+
+    .review-action.primary{
+
+      grid-column:
+        1 / -1;
+
+      color:white;
+
+      background:
+
+        linear-gradient(
+          180deg,
+          #7559aa,
+          #60438f
+        );
+
+    }
+
+
+    .review-action.secondary{
+
+      color:
+        var(--green-900);
+
+      background:
+        var(--green-soft);
+
+      border:
+        1px solid
+        #c8ddcf;
+
+    }
+
+
+    .review-action.cancel{
+
+      color:#94322d;
+
+      background:
+        var(--red-soft);
+
+      border:
+        1px solid
+        #ebc2be;
+
+    }
+
+
+    .review-action:disabled{
+
+      opacity:.55;
+
+      cursor:not-allowed;
+
+    }
+
+
+    .review-safety{
+
+      margin-top:11px;
+
+      display:flex;
+
+      align-items:flex-start;
+
+      gap:7px;
+
+      padding:
+        9px 10px;
+
+      border-radius:8px;
+
+      background:#f7f8f7;
+
+      color:
+        var(--muted);
+
+      font-size:9px;
+
+      line-height:1.4;
+
+      font-weight:700;
+
+    }
+
+
+    .review-safety-dot{
+
+      width:8px;
+
+      height:8px;
+
+      margin-top:2px;
+
+      flex:
+        0 0 8px;
+
+      border-radius:50%;
+
+      background:#2f9659;
+
+    }
+
+
+
+    @media(max-width:390px){
 
       .mobile-header{
 
-        min-height:164px;
+        min-height:166px;
 
       }
 
@@ -1627,39 +1978,40 @@
 
       .mic-wrap{
 
-        width:144px;
+        width:156px;
 
-        height:144px;
+        height:156px;
 
       }
 
 
       .mic-button{
 
-        width:104px;
+        width:114px;
 
-        height:104px;
+        height:114px;
+
+      }
+
+
+      .review-row{
+
+        grid-template-columns:
+          105px 1fr;
 
       }
 
     }
-
 
   </style>
 
 </head>
 
 
-
 <body>
 
 
 <div class="mobile-app">
-
-
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
 
 
   <header class="mobile-header">
@@ -1693,12 +2045,11 @@
 
 
       <div class="version-pill">
-        MOBILE v1
+        MOBILE v2.0-L8
       </div>
 
 
     </div>
-
 
 
     <div class="mobile-title">
@@ -1718,11 +2069,6 @@
 
   </header>
 
-
-
-  <!-- =====================================================
-       MANAGER IDENTITY
-       ===================================================== -->
 
 
   <div class="manager-strip">
@@ -1753,11 +2099,6 @@
   <main class="content">
 
 
-    <!-- ===================================================
-         FIELD CONDITIONS
-         =================================================== -->
-
-
     <section class="section-card">
 
 
@@ -1772,7 +2113,6 @@
         </div>
 
       </div>
-
 
 
       <div class="status-grid">
@@ -1795,7 +2135,6 @@
         </div>
 
 
-
         <div class="status-cell">
 
           <div class="status-icon">
@@ -1807,15 +2146,10 @@
           </div>
 
           <div class="status-label">
-
-            <span class="signal blue"></span>
-
             Spray
-
           </div>
 
         </div>
-
 
 
         <div class="status-cell">
@@ -1829,11 +2163,7 @@
           </div>
 
           <div class="status-label">
-
-            <span class="signal blue"></span>
-
             Field
-
           </div>
 
         </div>
@@ -1844,11 +2174,6 @@
 
     </section>
 
-
-
-    <!-- ===================================================
-         VOICE AI
-         =================================================== -->
 
 
     <section class="section-card">
@@ -1868,14 +2193,18 @@
 
 
         <div class="voice-copy">
-          Capture field observations, equipment needs,
-          crew activity and operational intelligence
-          without stopping to type.
+
+          Capture a task, field observation, equipment need,
+          crew activity or operational note.
+
+          ROMS determines where it belongs.
+
         </div>
 
 
 
         <div class="mic-wrap">
+
 
           <div class="mic-ring"></div>
 
@@ -1905,6 +2234,7 @@
 
           </button>
 
+
         </div>
 
 
@@ -1917,7 +2247,7 @@
           <span class="voice-state-dot"></span>
 
           <span id="voiceStateText">
-            Initializing ROMS Voice Engine...
+            Initializing ROMS Voice AI...
           </span>
 
         </div>
@@ -1957,11 +2287,6 @@
 
     </section>
 
-
-
-    <!-- ===================================================
-         VOICE SYSTEM STATUS
-         =================================================== -->
 
 
     <section class="section-card">
@@ -2072,7 +2397,7 @@
             </div>
 
             <div class="system-copy">
-              Current capture state
+              Current voice-capture state
             </div>
 
           </div>
@@ -2108,11 +2433,6 @@
 
 
 
-    <!-- ===================================================
-         QUICK ACTIONS
-         =================================================== -->
-
-
     <section class="section-card">
 
 
@@ -2136,56 +2456,7 @@
         <button
           class="quick-button"
           type="button"
-        >
-
-          <div class="quick-icon">
-            ♧
-          </div>
-
-          <div>
-
-            <div class="quick-title">
-              Field
-            </div>
-
-            <div class="quick-copy">
-              Conditions, activity and history
-            </div>
-
-          </div>
-
-        </button>
-
-
-
-        <button
-          class="quick-button"
-          type="button"
-        >
-
-          <div class="quick-icon">
-            ⚙
-          </div>
-
-          <div>
-
-            <div class="quick-title">
-              Equipment
-            </div>
-
-            <div class="quick-copy">
-              Status, repairs and QR access
-            </div>
-
-          </div>
-
-        </button>
-
-
-
-        <button
-          class="quick-button"
-          type="button"
+          onclick="openManagerOperations()"
         >
 
           <div class="quick-icon">
@@ -2211,20 +2482,71 @@
         <button
           class="quick-button"
           type="button"
+          onclick="startVoiceCapture()"
         >
 
           <div class="quick-icon">
-            ⚗
+            🎙
           </div>
 
           <div>
 
             <div class="quick-title">
-              Research
+              Voice
             </div>
 
             <div class="quick-copy">
-              Trials and project activity
+              Capture another field note
+            </div>
+
+          </div>
+
+        </button>
+
+
+
+        <button
+          class="quick-button"
+          type="button"
+        >
+
+          <div class="quick-icon">
+            ♧
+          </div>
+
+          <div>
+
+            <div class="quick-title">
+              Fields
+            </div>
+
+            <div class="quick-copy">
+              Conditions and field history
+            </div>
+
+          </div>
+
+        </button>
+
+
+
+        <button
+          class="quick-button"
+          type="button"
+        >
+
+          <div class="quick-icon">
+            ⚙
+          </div>
+
+          <div>
+
+            <div class="quick-title">
+              Equipment
+            </div>
+
+            <div class="quick-copy">
+              Equipment status and needs
             </div>
 
           </div>
@@ -2240,11 +2562,6 @@
 
   </main>
 
-
-
-  <!-- =====================================================
-       BOTTOM NAVIGATION
-       ===================================================== -->
 
 
   <nav class="bottom-nav">
@@ -2267,6 +2584,7 @@
     <button
       class="nav-button"
       type="button"
+      onclick="openManagerOperations()"
     >
 
       <span class="nav-icon">
@@ -2329,2016 +2647,7 @@
 
 
 <!-- =========================================================
-     PART 1 OF 3 ENDS HERE
-
-     PART 2 ADDS THE PRESERVED WORKING VOICE ENGINE:
-     - getUserMedia microphone test
-     - SpeechRecognition / webkitSpeechRecognition
-     - permission handling
-     - live transcript
-     - listening / stop states
-     - diagnostic logging
-
-     DO NOT ADD CLOSING BODY OR HTML TAGS YET.
-     ========================================================= -->
-     <script>
-
-
-  /* =========================================================
-     ROMS MANAGER MOBILE VOICE AI v1.0
-     PRESERVED VOICE ENGINE
-     ========================================================= */
-
-
-  let recognition =
-    null;
-
-
-  let isRecognizing =
-    false;
-
-
-  let finalTranscript =
-    "";
-
-
-  let interimTranscript =
-    "";
-
-
-  let diagnosticOpen =
-    false;
-
-
-
-  /* =========================================================
-     DOM REFERENCES
-     ========================================================= */
-
-
-  const voiceButton =
-    document.getElementById(
-      "voiceButton"
-    );
-
-
-  const bottomVoiceButton =
-    document.getElementById(
-      "bottomVoiceButton"
-    );
-
-
-  const voiceButtonLabel =
-    document.getElementById(
-      "voiceButtonLabel"
-    );
-
-
-  const voiceState =
-    document.getElementById(
-      "voiceState"
-    );
-
-
-  const voiceStateText =
-    document.getElementById(
-      "voiceStateText"
-    );
-
-
-  const transcriptBox =
-    document.getElementById(
-      "transcriptBox"
-    );
-
-
-  const transcriptText =
-    document.getElementById(
-      "transcriptText"
-    );
-
-
-  const reviewButton =
-    document.getElementById(
-      "reviewButton"
-    );
-
-
-  const browserStatus =
-    document.getElementById(
-      "browserStatus"
-    );
-
-
-  const speechStatus =
-    document.getElementById(
-      "speechStatus"
-    );
-
-
-  const microphoneStatus =
-    document.getElementById(
-      "microphoneStatus"
-    );
-
-
-  const recognitionStatus =
-    document.getElementById(
-      "recognitionStatus"
-    );
-
-
-  const diagnosticToggle =
-    document.getElementById(
-      "diagnosticToggle"
-    );
-
-
-  const diagnosticWrap =
-    document.getElementById(
-      "diagnosticWrap"
-    );
-
-
-  const diagnosticLog =
-    document.getElementById(
-      "diagnosticLog"
-    );
-
-
-
-  /* =========================================================
-     LOGGING
-     ========================================================= */
-
-
-  function logVoice(
-    message,
-    type
-  ){
-
-    const timestamp =
-      new Date()
-        .toLocaleTimeString();
-
-
-    const line =
-      "[" +
-      timestamp +
-      "] " +
-      (
-        type ||
-        "INFO"
-      ) +
-      ": " +
-      message;
-
-
-    console.log(
-      line
-    );
-
-
-    if(
-      diagnosticLog
-    ){
-
-      diagnosticLog.textContent +=
-        line +
-        "\n";
-
-
-      diagnosticLog.scrollTop =
-        diagnosticLog.scrollHeight;
-
-    }
-
-  }
-
-
-
-  /* =========================================================
-     STATUS HELPERS
-     ========================================================= */
-
-
-  function setSystemStatus(
-    element,
-    text,
-    statusClass
-  ){
-
-    if(
-      !element
-    ){
-
-      return;
-
-    }
-
-
-    element.textContent =
-      text;
-
-
-    element.className =
-      "system-value " +
-      (
-        statusClass ||
-        ""
-      );
-
-  }
-
-
-
-  function setVoiceState(
-    text,
-    state
-  ){
-
-    if(
-      !voiceState ||
-      !voiceStateText
-    ){
-
-      return;
-
-    }
-
-
-    voiceState.className =
-      "voice-state";
-
-
-    if(
-      state
-    ){
-
-      voiceState.classList.add(
-        state
-      );
-
-    }
-
-
-    voiceStateText.textContent =
-      text;
-
-  }
-
-
-
-  /* =========================================================
-     BROWSER DETECTION
-     ========================================================= */
-
-
-  function checkBrowser(){
-
-    const ua =
-      navigator.userAgent ||
-      "";
-
-
-    const isiPhone =
-      /iPhone/i.test(
-        ua
-      );
-
-
-    const isiPad =
-      /iPad/i.test(
-        ua
-      );
-
-
-    const isAndroid =
-      /Android/i.test(
-        ua
-      );
-
-
-    const isSafari =
-      /Safari/i.test(
-        ua
-      ) &&
-      !/Chrome|CriOS|Edg|OPR/i.test(
-        ua
-      );
-
-
-    const isChrome =
-      /Chrome|CriOS/i.test(
-        ua
-      );
-
-
-    let browserName =
-      "Browser";
-
-
-    if(
-      isiPhone ||
-      isiPad
-    ){
-
-      browserName =
-        isSafari
-          ? "Safari iOS"
-          : isChrome
-            ? "Chrome iOS"
-            : "iOS Browser";
-
-    }
-
-    else if(
-      isAndroid
-    ){
-
-      browserName =
-        isChrome
-          ? "Chrome Android"
-          : "Android Browser";
-
-    }
-
-    else if(
-      isChrome
-    ){
-
-      browserName =
-        "Chrome";
-
-    }
-
-    else if(
-      isSafari
-    ){
-
-      browserName =
-        "Safari";
-
-    }
-
-
-    setSystemStatus(
-      browserStatus,
-      browserName,
-      "pass"
-    );
-
-
-    logVoice(
-      "Browser detected: " +
-      browserName,
-      "PASS"
-    );
-
-
-    return {
-
-      isiPhone:
-        isiPhone,
-
-      isiPad:
-        isiPad,
-
-      isAndroid:
-        isAndroid,
-
-      isSafari:
-        isSafari,
-
-      isChrome:
-        isChrome
-
-    };
-
-  }
-
-
-
-  /* =========================================================
-     MICROPHONE API CHECK
-     ========================================================= */
-
-
-  function checkMicrophoneAPI(){
-
-    const available =
-      !!(
-        navigator.mediaDevices &&
-        navigator.mediaDevices
-          .getUserMedia
-      );
-
-
-    if(
-      available
-    ){
-
-      setSystemStatus(
-        microphoneStatus,
-        "AVAILABLE",
-        "pass"
-      );
-
-
-      logVoice(
-        "getUserMedia microphone API available.",
-        "PASS"
-      );
-
-    }
-
-    else{
-
-      setSystemStatus(
-        microphoneStatus,
-        "UNAVAILABLE",
-        "fail"
-      );
-
-
-      logVoice(
-        "getUserMedia microphone API unavailable.",
-        "ERROR"
-      );
-
-    }
-
-
-    return available;
-
-  }
-
-
-
-  /* =========================================================
-     SPEECH RECOGNITION CHECK
-     ========================================================= */
-
-
-  function checkSpeechRecognition(){
-
-    const SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
-
-
-    if(
-      SpeechRecognition
-    ){
-
-      setSystemStatus(
-        speechStatus,
-        "AVAILABLE",
-        "pass"
-      );
-
-
-      logVoice(
-        "Speech Recognition API available.",
-        "PASS"
-      );
-
-
-      return true;
-
-    }
-
-
-    setSystemStatus(
-      speechStatus,
-      "UNAVAILABLE",
-      "fail"
-    );
-
-
-    logVoice(
-      "Speech Recognition API unavailable.",
-      "ERROR"
-    );
-
-
-    return false;
-
-  }
-
-
-
-  /* =========================================================
-     ACTUAL MICROPHONE ACCESS TEST
-
-     IMPORTANT:
-     This is performed only after a direct user interaction.
-     ========================================================= */
-
-
-  async function testMicrophone(){
-
-    if(
-      !checkMicrophoneAPI()
-    ){
-
-      return false;
-
-    }
-
-
-    setVoiceState(
-      "Requesting microphone access...",
-      "processing"
-    );
-
-
-    logVoice(
-      "Requesting microphone access.",
-      "INFO"
-    );
-
-
-    try{
-
-      const stream =
-        await navigator
-          .mediaDevices
-          .getUserMedia({
-            audio:true
-          });
-
-
-      const tracks =
-        stream
-          .getAudioTracks();
-
-
-      if(
-        tracks.length > 0
-      ){
-
-        logVoice(
-          "Microphone detected: " +
-          (
-            tracks[0].label ||
-            "audio input"
-          ),
-          "PASS"
-        );
-
-      }
-
-
-      stream
-        .getTracks()
-        .forEach(
-          function(track){
-
-            track.stop();
-
-          }
-        );
-
-
-      setSystemStatus(
-        microphoneStatus,
-        "READY",
-        "pass"
-      );
-
-
-      logVoice(
-        "Microphone access granted.",
-        "PASS"
-      );
-
-
-      return true;
-
-    }
-
-    catch(error){
-
-      let message =
-        "Microphone access failed.";
-
-
-      if(
-        error &&
-        error.name ===
-        "NotAllowedError"
-      ){
-
-        message =
-          "Microphone permission was not allowed.";
-
-      }
-
-      else if(
-        error &&
-        error.name ===
-        "NotFoundError"
-      ){
-
-        message =
-          "No microphone was found.";
-
-      }
-
-      else if(
-        error &&
-        error.name ===
-        "NotReadableError"
-      ){
-
-        message =
-          "The microphone is busy or unavailable.";
-
-      }
-
-      else if(
-        error &&
-        error.name ===
-        "SecurityError"
-      ){
-
-        message =
-          "Browser security blocked microphone access.";
-
-      }
-
-
-      setSystemStatus(
-        microphoneStatus,
-        "BLOCKED",
-        "fail"
-      );
-
-
-      setVoiceState(
-        message,
-        "warning"
-      );
-
-
-      logVoice(
-        (
-          error &&
-          error.name
-            ? error.name +
-              ": "
-            : ""
-        ) +
-        (
-          error &&
-          error.message
-            ? error.message
-            : message
-        ),
-        "ERROR"
-      );
-
-
-      return false;
-
-    }
-
-  }
-
-
-
-  /* =========================================================
-     INITIALIZE SPEECH RECOGNITION
-     ========================================================= */
-
-
-  function initializeRecognition(){
-
-    const SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
-
-
-    if(
-      !SpeechRecognition
-    ){
-
-      setSystemStatus(
-        speechStatus,
-        "UNAVAILABLE",
-        "fail"
-      );
-
-
-      setVoiceState(
-        "Speech recognition is unavailable in this browser.",
-        "warning"
-      );
-
-
-      return false;
-
-    }
-
-
-    recognition =
-      new SpeechRecognition();
-
-
-    recognition.continuous =
-      true;
-
-
-    recognition.interimResults =
-      true;
-
-
-    recognition.lang =
-      "en-US";
-
-
-    recognition.maxAlternatives =
-      1;
-
-
-
-    /* =======================================================
-       RECOGNITION START
-       ======================================================= */
-
-
-    recognition.onstart =
-      function(){
-
-        isRecognizing =
-          true;
-
-
-        setSystemStatus(
-          recognitionStatus,
-          "LISTENING",
-          "pass"
-        );
-
-
-        voiceButton
-          .classList
-          .add(
-            "listening"
-          );
-
-
-        voiceButtonLabel.textContent =
-          "STOP";
-
-
-        setVoiceState(
-          "Listening... speak normally.",
-          "listening"
-        );
-
-
-        logVoice(
-          "Speech recognition started.",
-          "PASS"
-        );
-
-      };
-
-
-
-    /* =======================================================
-       RECOGNITION RESULT
-       ======================================================= */
-
-
-    recognition.onresult =
-      function(event){
-
-        interimTranscript =
-          "";
-
-
-        for(
-          let i =
-            event.resultIndex;
-
-          i <
-            event.results.length;
-
-          i++
-        ){
-
-          const result =
-            event.results[i];
-
-
-          if(
-            !result ||
-            !result[0]
-          ){
-
-            continue;
-
-          }
-
-
-          const text =
-            result[0]
-              .transcript;
-
-
-          if(
-            result.isFinal
-          ){
-
-            finalTranscript +=
-              text +
-              " ";
-
-
-            logVoice(
-              "Final speech captured: " +
-              text,
-              "VOICE"
-            );
-
-          }
-
-          else{
-
-            interimTranscript +=
-              text;
-
-          }
-
-        }
-
-
-        renderVoiceTranscript();
-
-      };
-
-
-
-    /* =======================================================
-       RECOGNITION ERROR
-       ======================================================= */
-
-
-    recognition.onerror =
-      function(event){
-
-        const error =
-          event &&
-          event.error
-            ? event.error
-            : "unknown";
-
-
-        setSystemStatus(
-          recognitionStatus,
-          "ERROR",
-          "fail"
-        );
-
-
-        logVoice(
-          "Speech recognition error: " +
-          error,
-          "ERROR"
-        );
-
-
-        if(
-          error ===
-          "not-allowed"
-        ){
-
-          setVoiceState(
-            "Microphone or speech permission was not allowed.",
-            "warning"
-          );
-
-        }
-
-        else if(
-          error ===
-          "audio-capture"
-        ){
-
-          setVoiceState(
-            "Speech engine cannot access the microphone.",
-            "warning"
-          );
-
-        }
-
-        else if(
-          error ===
-          "no-speech"
-        ){
-
-          setVoiceState(
-            "No speech detected. Tap to try again.",
-            "warning"
-          );
-
-        }
-
-        else if(
-          error ===
-          "network"
-        ){
-
-          setVoiceState(
-            "Speech recognition network error.",
-            "warning"
-          );
-
-        }
-
-        else{
-
-          setVoiceState(
-            "Voice capture stopped. Tap to try again.",
-            "warning"
-          );
-
-        }
-
-
-        resetVoiceButton();
-
-      };
-
-
-
-    /* =======================================================
-       RECOGNITION END
-       ======================================================= */
-
-
-    recognition.onend =
-      function(){
-
-        isRecognizing =
-          false;
-
-
-        setSystemStatus(
-          recognitionStatus,
-          "STOPPED",
-          "warn"
-        );
-
-
-        resetVoiceButton();
-
-
-        if(
-          cleanVoiceText(
-            finalTranscript
-          )
-        ){
-
-          setVoiceState(
-            "Voice capture ready for review.",
-            ""
-          );
-
-
-          reviewButton
-            .classList
-            .add(
-              "show"
-            );
-
-        }
-
-        else{
-
-          setVoiceState(
-            "Ready for field intelligence.",
-            ""
-          );
-
-        }
-
-
-        logVoice(
-          "Speech recognition ended.",
-          "INFO"
-        );
-
-      };
-
-
-
-    recognition.onaudiostart =
-      function(){
-
-        logVoice(
-          "Browser detected audio input.",
-          "PASS"
-        );
-
-      };
-
-
-    recognition.onaudioend =
-      function(){
-
-        logVoice(
-          "Browser stopped receiving audio.",
-          "INFO"
-        );
-
-      };
-
-
-    recognition.onspeechstart =
-      function(){
-
-        logVoice(
-          "Speech detected.",
-          "PASS"
-        );
-
-      };
-
-
-    recognition.onspeechend =
-      function(){
-
-        logVoice(
-          "Speech ended.",
-          "INFO"
-        );
-
-      };
-
-
-    logVoice(
-      "Speech Recognition handlers initialized.",
-      "PASS"
-    );
-
-
-    return true;
-
-  }
-
-
-
-  /* =========================================================
-     START VOICE CAPTURE
-     ========================================================= */
-
-
-  async function startVoiceCapture(){
-
-    if(
-      isRecognizing
-    ){
-
-      stopVoiceCapture();
-
-      return;
-
-    }
-
-
-    finalTranscript =
-      "";
-
-
-    interimTranscript =
-      "";
-
-
-    transcriptText.textContent =
-      "";
-
-
-    transcriptBox
-      .classList
-      .remove(
-        "show"
-      );
-
-
-    reviewButton
-      .classList
-      .remove(
-        "show"
-      );
-
-
-    const microphoneOK =
-      await testMicrophone();
-
-
-    if(
-      !microphoneOK
-    ){
-
-      return;
-
-    }
-
-
-    if(
-      !recognition
-    ){
-
-      const initialized =
-        initializeRecognition();
-
-
-      if(
-        !initialized
-      ){
-
-        return;
-
-      }
-
-    }
-
-
-    try{
-
-      recognition.start();
-
-
-      logVoice(
-        "Recognition.start() called.",
-        "INFO"
-      );
-
-    }
-
-    catch(error){
-
-      if(
-        error &&
-        error.name ===
-        "InvalidStateError"
-      ){
-
-        logVoice(
-          "Recognition already active.",
-          "WARNING"
-        );
-
-
-        return;
-
-      }
-
-
-      setVoiceState(
-        "Unable to start voice capture.",
-        "warning"
-      );
-
-
-      logVoice(
-        (
-          error &&
-          error.message
-            ? error.message
-            : String(error)
-        ),
-        "ERROR"
-      );
-
-    }
-
-  }
-
-
-
-  /* =========================================================
-     STOP VOICE CAPTURE
-     ========================================================= */
-
-
-  function stopVoiceCapture(){
-
-    if(
-      recognition &&
-      isRecognizing
-    ){
-
-      try{
-
-        recognition.stop();
-
-
-        logVoice(
-          "Recognition.stop() called.",
-          "INFO"
-        );
-
-      }
-
-      catch(error){
-
-        logVoice(
-          "Unable to stop recognition: " +
-          (
-            error &&
-            error.message
-              ? error.message
-              : String(error)
-          ),
-          "ERROR"
-        );
-
-      }
-
-    }
-
-  }
-
-
-
-  /* =========================================================
-     RESET VOICE BUTTON
-     ========================================================= */
-
-
-  function resetVoiceButton(){
-
-    voiceButton
-      .classList
-      .remove(
-        "listening"
-      );
-
-
-    voiceButtonLabel.textContent =
-      "TAP TO TALK";
-
-  }
-
-
-
-  /* =========================================================
-     TRANSCRIPT RENDERING
-     ========================================================= */
-
-
-  function renderVoiceTranscript(){
-
-    const finalText =
-      cleanVoiceText(
-        finalTranscript
-      );
-
-
-    const interimText =
-      cleanVoiceText(
-        interimTranscript
-      );
-
-
-    let combined =
-      finalText;
-
-
-    if(
-      interimText
-    ){
-
-      combined +=
-        (
-          combined
-            ? " "
-            : ""
-        ) +
-        interimText;
-
-    }
-
-
-    if(
-      combined
-    ){
-
-      transcriptBox
-        .classList
-        .add(
-          "show"
-        );
-
-
-      transcriptText.textContent =
-        combined;
-
-    }
-
-    else{
-
-      transcriptBox
-        .classList
-        .remove(
-          "show"
-        );
-
-
-      transcriptText.textContent =
-        "";
-
-    }
-
-  }
-
-
-
-  /* =========================================================
-     DIAGNOSTIC PANEL
-     ========================================================= */
-
-
-  function toggleDiagnosticDetails(){
-
-    diagnosticOpen =
-      !diagnosticOpen;
-
-
-    if(
-      diagnosticOpen
-    ){
-
-      diagnosticWrap
-        .classList
-        .add(
-          "show"
-        );
-
-
-      diagnosticToggle.textContent =
-        "HIDE DETAILS";
-
-    }
-
-    else{
-
-      diagnosticWrap
-        .classList
-        .remove(
-          "show"
-        );
-
-
-      diagnosticToggle.textContent =
-        "VIEW DETAILS";
-
-    }
-
-  }
-
-
-
-  /* =========================================================
-     REVIEW CAPTURE
-     PART 3 WILL BUILD THE ACTUAL REVIEW PANEL
-     ========================================================= */
-
-
-  function reviewVoiceCapture(){
-
-    const capturedText =
-      cleanVoiceText(
-        transcriptText
-          .textContent
-      );
-
-
-    if(
-      !capturedText
-    ){
-
-      setVoiceState(
-        "No voice capture is available to review.",
-        "warning"
-      );
-
-
-      return;
-
-    }
-
-
-    finalTranscript =
-      capturedText +
-      " ";
-
-
-    setVoiceState(
-      "Voice capture ready for ROMS AI review.",
-      "processing"
-    );
-
-
-    logVoice(
-      "Voice capture moved to review state.",
-      "INFO"
-    );
-
-
-    /*
-     * PART 3 WILL OPEN THE MOBILE REVIEW PANEL HERE.
-     */
-
-  }
-
-
-
-  /* =========================================================
-     TEXT CLEANING
-     ========================================================= */
-
-
-  function cleanVoiceText(
-    value
-  ){
-
-    return String(
-      value ||
-      ""
-    )
-      .replace(
-        /\s+/g,
-        " "
-      )
-      .trim();
-
-  }
-
-
-
-  /* =========================================================
-     EVENT HANDLERS
-     ========================================================= */
-
-
-  voiceButton
-    .addEventListener(
-      "click",
-      function(){
-
-        if(
-          isRecognizing
-        ){
-
-          stopVoiceCapture();
-
-        }
-
-        else{
-
-          startVoiceCapture();
-
-        }
-
-      }
-    );
-
-
-  bottomVoiceButton
-    .addEventListener(
-      "click",
-      function(){
-
-        if(
-          isRecognizing
-        ){
-
-          stopVoiceCapture();
-
-        }
-
-        else{
-
-          startVoiceCapture();
-
-        }
-
-      }
-    );
-
-
-  diagnosticToggle
-    .addEventListener(
-      "click",
-      toggleDiagnosticDetails
-    );
-
-
-  reviewButton
-    .addEventListener(
-      "click",
-      reviewVoiceCapture
-    );
-
-
-
-  /* =========================================================
-     INITIALIZATION
-     ========================================================= */
-
-
-  window.addEventListener(
-
-    "DOMContentLoaded",
-
-    function(){
-
-      logVoice(
-        "ROMS Manager Mobile Voice AI loaded.",
-        "PASS"
-      );
-
-
-      checkBrowser();
-
-
-      checkSpeechRecognition();
-
-
-      checkMicrophoneAPI();
-
-
-      initializeRecognition();
-
-
-      setVoiceState(
-        "Ready for field intelligence.",
-        ""
-      );
-
-
-      setSystemStatus(
-        recognitionStatus,
-        "IDLE",
-        "warn"
-      );
-
-
-      logVoice(
-        "ROMS Voice Engine initialization complete.",
-        "PASS"
-      );
-
-    }
-
-  );
-
-
-
-  /* =========================================================
-     GLOBAL ERROR CAPTURE
-     ========================================================= */
-
-
-  window.addEventListener(
-
-    "error",
-
-    function(event){
-
-      logVoice(
-        "JavaScript error: " +
-        (
-          event &&
-          event.message
-            ? event.message
-            : "Unknown error"
-        ),
-        "ERROR"
-      );
-
-    }
-
-  );
-
-
-
-  window.addEventListener(
-
-    "unhandledrejection",
-
-    function(event){
-
-      logVoice(
-        "Unhandled promise rejection: " +
-        (
-          event &&
-          event.reason
-            ? event.reason
-            : "Unknown promise error"
-        ),
-        "ERROR"
-      );
-
-    }
-
-  );
-
-
-
-  /* =========================================================
-     PART 2 OF 3 ENDS HERE
-
-     PART 3 WILL ADD:
-
-     - mobile review / confirmation panel
-     - captured transcript display
-     - field / category / action placeholders
-     - approve / modify / cancel controls
-     - safe submission preparation
-     - final closing script / body / html tags
-
-     IMPORTANT:
-     PART 3 WILL STILL NOT WRITE TO ROMS AI UNTIL THE
-     MOBILE MICROPHONE IS VERIFIED ON THE PHONE.
-     ========================================================= */
-       /* =========================================================
-     MOBILE REVIEW PANEL
-     ========================================================= */
-
-
-  function openVoiceReviewPanel(){
-
-    const capturedText =
-      cleanVoiceText(
-        transcriptText.textContent
-      );
-
-
-    if(
-      !capturedText
-    ){
-
-      setVoiceState(
-        "No voice capture is available to review.",
-        "warning"
-      );
-
-      return;
-
-    }
-
-
-    const overlay =
-      document.getElementById(
-        "reviewOverlay"
-      );
-
-
-    const reviewTranscript =
-      document.getElementById(
-        "reviewTranscript"
-      );
-
-
-    const reviewLocation =
-      document.getElementById(
-        "reviewLocation"
-      );
-
-
-    const reviewCategory =
-      document.getElementById(
-        "reviewCategory"
-      );
-
-
-    const reviewAction =
-      document.getElementById(
-        "reviewAction"
-      );
-
-
-    reviewTranscript.textContent =
-      capturedText;
-
-
-    /*
-     * v1 MOBILE TEST STATE
-     *
-     * These fields intentionally remain unclassified
-     * until the microphone workflow is proven on-device.
-     *
-     * The next controlled build will send the transcript
-     * into the existing ROMS AI v2.9.1 pipeline.
-     */
-
-
-    reviewLocation.textContent =
-      "Pending ROMS AI";
-
-
-    reviewCategory.textContent =
-      "Pending ROMS AI";
-
-
-    reviewAction.textContent =
-      "Pending ROMS AI";
-
-
-    overlay.classList.add(
-      "open"
-    );
-
-
-    document.body.classList.add(
-      "review-open"
-    );
-
-
-    setVoiceState(
-      "Review voice capture before submission.",
-      "processing"
-    );
-
-
-    logVoice(
-      "Mobile Voice Review opened.",
-      "INFO"
-    );
-
-  }
-
-
-
-  /* =========================================================
-     CLOSE REVIEW
-     ========================================================= */
-
-
-  function closeVoiceReviewPanel(){
-
-    const overlay =
-      document.getElementById(
-        "reviewOverlay"
-      );
-
-
-    overlay.classList.remove(
-      "open"
-    );
-
-
-    document.body.classList.remove(
-      "review-open"
-    );
-
-
-    setVoiceState(
-      "Voice capture ready for review.",
-      ""
-    );
-
-  }
-
-
-
-  /* =========================================================
-     MODIFY CAPTURE
-     ========================================================= */
-
-
-  function modifyVoiceCapture(){
-
-    closeVoiceReviewPanel();
-
-
-    transcriptBox.classList.add(
-      "show"
-    );
-
-
-    transcriptText.focus();
-
-
-    setVoiceState(
-      "Edit the transcript, then review again.",
-      ""
-    );
-
-
-    logVoice(
-      "Voice capture returned for manual editing.",
-      "INFO"
-    );
-
-  }
-
-
-
-  /* =========================================================
-     CLEAR CAPTURE
-     ========================================================= */
-
-
-  function clearVoiceCapture(){
-
-    finalTranscript =
-      "";
-
-
-    interimTranscript =
-      "";
-
-
-    transcriptText.textContent =
-      "";
-
-
-    transcriptBox.classList.remove(
-      "show"
-    );
-
-
-    reviewButton.classList.remove(
-      "show"
-    );
-
-
-    closeVoiceReviewPanel();
-
-
-    setVoiceState(
-      "Ready for field intelligence.",
-      ""
-    );
-
-
-    logVoice(
-      "Voice capture cleared.",
-      "INFO"
-    );
-
-  }
-
-
-
-  /* =========================================================
-     PREPARE FOR ROMS AI
-
-     IMPORTANT:
-     NO NETWORK WRITE YET.
-
-     This button validates the mobile capture workflow only.
-     ========================================================= */
-
-
-  function prepareVoiceForROMSAI(){
-
-    const capturedText =
-      cleanVoiceText(
-        document.getElementById(
-          "reviewTranscript"
-        ).textContent
-      );
-
-
-    if(
-      !capturedText
-    ){
-
-      setReviewMessage(
-        "No transcript is available.",
-        "warning"
-      );
-
-      return;
-
-    }
-
-
-    const payload = {
-
-      Voice_Text:
-        capturedText,
-
-      Source:
-        "ROMS_MANAGER_MOBILE",
-
-      Device:
-        navigator.userAgent,
-
-      Timestamp:
-        new Date().toISOString()
-
-    };
-
-
-    console.log(
-      "ROMS MOBILE VOICE PAYLOAD READY:",
-      payload
-    );
-
-
-    logVoice(
-      "Voice payload validated and ready for ROMS AI connection.",
-      "PASS"
-    );
-
-
-    setReviewMessage(
-      "Voice capture validated successfully. ROMS Mobile is ready for the AI connection step.",
-      "success"
-    );
-
-
-    /*
-     * NEXT CONTROLLED BUILD:
-     *
-     * POST payload to the existing ROMS Voice Capture endpoint.
-     *
-     * That will create the real path:
-     *
-     * MOBILE VOICE
-     *      ↓
-     * Voice_Capture_v1
-     *      ↓
-     * Knowledge_Intelligence_v1
-     *      ↓
-     * Operational_Intelligence_v1
-     *      ↓
-     * Level 8
-     *
-     * We intentionally do NOT enable that write
-     * until the phone microphone is verified.
-     */
-
-  }
-
-
-
-  /* =========================================================
-     REVIEW MESSAGE
-     ========================================================= */
-
-
-  function setReviewMessage(
-    message,
-    type
-  ){
-
-    const element =
-      document.getElementById(
-        "reviewMessage"
-      );
-
-
-    element.className =
-      "review-message show " +
-      (
-        type ||
-        ""
-      );
-
-
-    element.textContent =
-      message;
-
-  }
-
-
-
-  /* =========================================================
-     OVERRIDE PART 2 REVIEW FUNCTION
-
-     This replaces the temporary Part 2 behavior.
-     ========================================================= */
-
-
-  reviewButton.removeEventListener(
-    "click",
-    reviewVoiceCapture
-  );
-
-
-  reviewButton.addEventListener(
-    "click",
-    openVoiceReviewPanel
-  );
-
-
-</script>
-
-
-
-<!-- =========================================================
-     MOBILE VOICE REVIEW OVERLAY
+     REVIEW OVERLAY
      ========================================================= -->
 
 
@@ -4365,7 +2674,10 @@
         </div>
 
         <div class="review-subtitle">
-          Confirm the field intelligence before sending it to ROMS AI.
+
+          Confirm the transcript before sending it into
+          the ROMS Level 8 routing engine.
+
         </div>
 
       </div>
@@ -4411,55 +2723,47 @@
 
 
         <div class="review-section-title">
-          ROMS Interpretation
+          ROMS Routing
         </div>
 
 
         <div class="review-row">
 
           <div class="review-label">
-            Field / Location
+            Destination
           </div>
 
           <div
-            id="reviewLocation"
+            id="reviewDestination"
             class="review-value"
           >
-            Pending ROMS AI
+            ROMS will determine
           </div>
 
         </div>
 
 
-
         <div class="review-row">
 
           <div class="review-label">
-            Category
+            Task Work
           </div>
 
-          <div
-            id="reviewCategory"
-            class="review-value"
-          >
-            Pending ROMS AI
+          <div class="review-value">
+            Task Intake → Human Approval
           </div>
 
         </div>
 
 
-
         <div class="review-row">
 
           <div class="review-label">
-            Recommended Action
+            Observation
           </div>
 
-          <div
-            id="reviewAction"
-            class="review-value"
-          >
-            Pending ROMS AI
+          <div class="review-value">
+            Superintendent Voice Log
           </div>
 
         </div>
@@ -4480,11 +2784,12 @@
 
 
         <button
+          id="sendToROMSButton"
           class="review-action primary"
           type="button"
-          onclick="prepareVoiceForROMSAI()"
+          onclick="sendVoiceToROMS()"
         >
-          SEND TO ROMS AI
+          SEND TO ROMS
         </button>
 
 
@@ -4514,8 +2819,8 @@
 
         <span class="review-safety-dot"></span>
 
-        Voice capture does not automatically authorize operational work.
-        ROMS AI interpretation and management review remain separate steps.
+        Assignable voice work is never automatically approved.
+        ROMS requires human approval before an operational task is created.
 
       </div>
 
@@ -4530,577 +2835,1698 @@
 
 
 
-<style>
-
-
-  /* =========================================================
-     REVIEW OVERLAY
-     ========================================================= */
-
-
-  body.review-open{
-
-    overflow:hidden;
-
-  }
-
-
-  .review-overlay{
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:1000;
-
-    display:none;
-
-    align-items:flex-end;
-
-    justify-content:center;
-
-    padding:12px;
-
-    background:
-      rgba(3,30,22,.68);
-
-    backdrop-filter:
-      blur(5px);
-
-  }
-
-
-  .review-overlay.open{
-
-    display:flex;
-
-  }
-
-
-  .review-panel{
-
-    width:100%;
-
-    max-width:520px;
-
-    max-height:92vh;
-
-    overflow:auto;
-
-    background:white;
-
-    border-radius:
-      18px
-      18px
-      12px
-      12px;
-
-    box-shadow:
-      0 20px 50px
-      rgba(0,0,0,.24);
-
-  }
-
-
-
-  /* =========================================================
-     REVIEW HEADER
-     ========================================================= */
-
-
-  .review-header{
-
-    min-height:104px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    gap:12px;
-
-    padding:
-      17px
-      17px
-      15px;
-
-    color:white;
-
-    background:
-      linear-gradient(
-        135deg,
-        #06382a,
-        #0b6846
-      );
-
-    border-radius:
-      18px
-      18px
-      0
-      0;
-
-  }
-
-
-  .review-eyebrow{
-
-    display:inline-block;
-
-    padding:
-      4px
-      8px;
-
-    border-radius:12px;
-
-    background:
-      rgba(255,255,255,.12);
-
-    color:#b8dc74;
-
-    font-size:9px;
-
-    font-weight:900;
-
-    letter-spacing:.05em;
-
-  }
-
-
-  .review-title{
-
-    margin-top:8px;
-
-    font-size:22px;
-
-    line-height:1.05;
-
-    font-weight:900;
-
-  }
-
-
-  .review-subtitle{
-
-    margin-top:6px;
-
-    color:#d6e5dc;
-
-    font-size:11px;
-
-    font-weight:650;
-
-    line-height:1.35;
-
-  }
-
-
-  .review-close{
-
-    width:36px;
-
-    height:36px;
-
-    flex:0 0 36px;
-
-    border:0;
-
-    border-radius:50%;
-
-    display:grid;
-
-    place-items:center;
-
-    background:
-      rgba(255,255,255,.12);
-
-    color:white;
-
-    font-size:24px;
-
-    line-height:1;
-
-  }
-
-
-
-  /* =========================================================
-     REVIEW BODY
-     ========================================================= */
-
-
-  .review-body{
-
-    padding:
-      13px;
-
-  }
-
-
-  .review-section{
-
-    margin-bottom:11px;
-
-    border:
-      1px solid
-      var(--line);
-
-    border-radius:11px;
-
-    overflow:hidden;
-
-    background:#fbfcfb;
-
-  }
-
-
-  .review-section-title{
-
-    padding:
-      9px
-      11px;
-
-    background:
-      var(--green-soft);
-
-    color:
-      var(--green-900);
-
-    border-bottom:
-      1px solid
-      var(--line);
-
-    font-size:11px;
-
-    font-weight:900;
-
-    text-transform:uppercase;
-
-    letter-spacing:.04em;
-
-  }
-
-
-  .review-transcript{
-
-    min-height:80px;
-
-    padding:
-      12px;
-
-    font-size:14px;
-
-    line-height:1.5;
-
-    font-weight:700;
-
-    color:
-      var(--ink);
-
-  }
-
-
-  .review-row{
-
-    min-height:52px;
-
-    display:grid;
-
-    grid-template-columns:
-      120px
-      1fr;
-
-    gap:10px;
-
-    align-items:center;
-
-    padding:
-      8px
-      11px;
-
-    border-bottom:
-      1px solid
-      var(--line);
-
-  }
-
-
-  .review-row:last-child{
-
-    border-bottom:0;
-
-  }
-
-
-  .review-label{
-
-    color:
-      var(--muted);
-
-    font-size:10px;
-
-    font-weight:850;
-
-    text-transform:uppercase;
-
-  }
-
-
-  .review-value{
-
-    font-size:12px;
-
-    font-weight:900;
-
-    color:
-      var(--green-950);
-
-  }
-
-
-
-  /* =========================================================
-     REVIEW MESSAGE
-     ========================================================= */
-
-
-  .review-message{
-
-    display:none;
-
-    margin-bottom:10px;
-
-    padding:
-      10px
-      11px;
-
-    border-radius:9px;
-
-    font-size:11px;
-
-    line-height:1.4;
-
-    font-weight:800;
-
-  }
-
-
-  .review-message.show{
-
-    display:block;
-
-  }
-
-
-  .review-message.success{
-
-    background:
-      var(--green-soft);
-
-    border:
-      1px solid
-      #b9d7c4;
-
-    color:
-      #176e42;
-
-  }
-
-
-  .review-message.warning{
-
-    background:
-      var(--yellow-soft);
-
-    border:
-      1px solid
-      #ecd99e;
-
-    color:
-      #745715;
-
-  }
-
-
-
-  /* =========================================================
-     REVIEW ACTIONS
-     ========================================================= */
-
-
-  .review-actions{
-
-    display:grid;
-
-    grid-template-columns:
-      1fr
-      1fr;
-
-    gap:8px;
-
-  }
-
-
-  .review-action{
-
-    min-height:46px;
-
-    border:0;
-
-    border-radius:9px;
-
-    font-size:11px;
-
-    font-weight:900;
-
-  }
-
-
-  .review-action.primary{
-
-    grid-column:
-      1 / -1;
-
-    color:white;
-
-    background:
-      linear-gradient(
-        180deg,
-        #7559aa,
-        #60438f
-      );
-
-  }
-
-
-  .review-action.secondary{
-
-    color:
-      var(--green-900);
-
-    background:
-      var(--green-soft);
-
-    border:
-      1px solid
-      #c8ddcf;
-
-  }
-
-
-  .review-action.cancel{
-
-    color:#94322d;
-
-    background:
-      var(--red-soft);
-
-    border:
-      1px solid
-      #ebc2be;
-
-  }
-
-
-
-  /* =========================================================
-     SAFETY
-     ========================================================= */
-
-
-  .review-safety{
-
-    margin-top:11px;
-
-    display:flex;
-
-    align-items:flex-start;
-
-    gap:7px;
-
-    padding:
-      9px
-      10px;
-
-    border-radius:8px;
-
-    background:#f7f8f7;
-
-    color:
-      var(--muted);
-
-    font-size:9px;
-
-    line-height:1.4;
-
-    font-weight:700;
-
-  }
-
-
-  .review-safety-dot{
-
-    width:8px;
-
-    height:8px;
-
-    margin-top:2px;
-
-    flex:
-      0 0 8px;
-
-    border-radius:50%;
-
-    background:#2f9659;
-
-  }
-
-
-
-  /* =========================================================
-     SMALL PHONE REVIEW
-     ========================================================= */
-
-
-  @media
-  (max-width:390px){
-
-    .review-overlay{
-
-      padding:7px;
-
-    }
-
-
-    .review-panel{
-
-      max-height:96vh;
-
-    }
-
-
-    .review-row{
-
-      grid-template-columns:
-        100px
-        1fr;
-
-    }
-
-  }
-
-
-</style>
-
-
-
 <script>
 
 
-  /* =========================================================
-     REVIEW OVERLAY SAFETY EVENTS
-     ========================================================= */
+/* =========================================================
+   ROMS MOBILE VOICE AI v2.0-L8
+   GITHUB FIELD INTERFACE
+   ========================================================= */
 
 
-  document.addEventListener(
+const ROMS_MOBILE_VOICE_ENDPOINT =
+
+  "https://script.google.com/macros/s/AKfycbx0Ev0YfJqbKjp6i6VFhPT3v7kIVQd9RneIDP5DXO9rUr0Z733OlyZpcHWrXN5hjfTqeA/exec";
+
+
+const ROMS_MANAGER_OPERATIONS_URL =
+
+  ROMS_MOBILE_VOICE_ENDPOINT +
+
+  "?page=ManagerOperationsCenter_v3.2.1";
+
+
+let recognition =
+  null;
+
+
+let isRecognizing =
+  false;
+
+
+let finalTranscript =
+  "";
+
+
+let interimTranscript =
+  "";
+
+
+let diagnosticOpen =
+  false;
+
+
+
+/* =========================================================
+   DOM
+   ========================================================= */
+
+
+const voiceButton =
+  document.getElementById(
+    "voiceButton"
+  );
+
+
+const bottomVoiceButton =
+  document.getElementById(
+    "bottomVoiceButton"
+  );
+
+
+const voiceButtonLabel =
+  document.getElementById(
+    "voiceButtonLabel"
+  );
+
+
+const voiceState =
+  document.getElementById(
+    "voiceState"
+  );
+
+
+const voiceStateText =
+  document.getElementById(
+    "voiceStateText"
+  );
+
+
+const transcriptBox =
+  document.getElementById(
+    "transcriptBox"
+  );
+
+
+const transcriptText =
+  document.getElementById(
+    "transcriptText"
+  );
+
+
+const reviewButton =
+  document.getElementById(
+    "reviewButton"
+  );
+
+
+const reviewOverlay =
+  document.getElementById(
+    "reviewOverlay"
+  );
+
+
+const browserStatus =
+  document.getElementById(
+    "browserStatus"
+  );
+
+
+const speechStatus =
+  document.getElementById(
+    "speechStatus"
+  );
+
+
+const microphoneStatus =
+  document.getElementById(
+    "microphoneStatus"
+  );
+
+
+const recognitionStatus =
+  document.getElementById(
+    "recognitionStatus"
+  );
+
+
+const diagnosticToggle =
+  document.getElementById(
+    "diagnosticToggle"
+  );
+
+
+const diagnosticWrap =
+  document.getElementById(
+    "diagnosticWrap"
+  );
+
+
+const diagnosticLog =
+  document.getElementById(
+    "diagnosticLog"
+  );
+
+
+
+/* =========================================================
+   LOGGING
+   ========================================================= */
+
+
+function logVoice(
+  message,
+  type
+){
+
+  const timestamp =
+    new Date()
+      .toLocaleTimeString();
+
+
+  const line =
+
+    "[" +
+    timestamp +
+    "] " +
+    (
+      type ||
+      "INFO"
+    ) +
+    ": " +
+    message;
+
+
+  console.log(
+    line
+  );
+
+
+  if(
+    diagnosticLog
+  ){
+
+    diagnosticLog.textContent +=
+
+      line +
+      "\n";
+
+
+    diagnosticLog.scrollTop =
+      diagnosticLog.scrollHeight;
+
+  }
+
+}
+
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+
+function setSystemStatus(
+  element,
+  text,
+  statusClass
+){
+
+  if(
+    !element
+  ){
+
+    return;
+
+  }
+
+
+  element.textContent =
+    text;
+
+
+  element.className =
+
+    "system-value " +
+
+    (
+      statusClass ||
+      ""
+    );
+
+}
+
+
+
+function setVoiceState(
+  text,
+  state
+){
+
+  voiceState.className =
+    "voice-state";
+
+
+  if(
+    state
+  ){
+
+    voiceState
+      .classList
+      .add(
+        state
+      );
+
+  }
+
+
+  voiceStateText.textContent =
+    text;
+
+}
+
+
+
+/* =========================================================
+   BROWSER
+   ========================================================= */
+
+
+function checkBrowser(){
+
+  const ua =
+    navigator.userAgent ||
+    "";
+
+
+  let name =
+    "Browser";
+
+
+  if(
+    /iPhone/i.test(ua)
+  ){
+
+    if(
+      /CriOS/i.test(ua)
+    ){
+
+      name =
+        "Chrome iPhone";
+
+    }
+
+    else{
+
+      name =
+        "Safari iPhone";
+
+    }
+
+  }
+
+  else if(
+    /Android/i.test(ua)
+  ){
+
+    name =
+      "Android";
+
+  }
+
+  else if(
+    /Chrome/i.test(ua)
+  ){
+
+    name =
+      "Chrome";
+
+  }
+
+
+  setSystemStatus(
+    browserStatus,
+    name,
+    "pass"
+  );
+
+
+  logVoice(
+    "Browser detected: " +
+    name,
+    "PASS"
+  );
+
+}
+
+
+
+/* =========================================================
+   API CHECKS
+   ========================================================= */
+
+
+function checkMicrophoneAPI(){
+
+  const available =
+    !!(
+      navigator.mediaDevices &&
+      navigator.mediaDevices.getUserMedia
+    );
+
+
+  setSystemStatus(
+
+    microphoneStatus,
+
+    available
+      ? "AVAILABLE"
+      : "UNAVAILABLE",
+
+    available
+      ? "pass"
+      : "fail"
+
+  );
+
+
+  return available;
+
+}
+
+
+
+function checkSpeechRecognition(){
+
+  const SpeechRecognition =
+
+    window.SpeechRecognition ||
+
+    window.webkitSpeechRecognition;
+
+
+  const available =
+    !!SpeechRecognition;
+
+
+  setSystemStatus(
+
+    speechStatus,
+
+    available
+      ? "AVAILABLE"
+      : "UNAVAILABLE",
+
+    available
+      ? "pass"
+      : "fail"
+
+  );
+
+
+  return available;
+
+}
+
+
+
+/* =========================================================
+   MICROPHONE TEST
+   ========================================================= */
+
+
+async function testMicrophone(){
+
+  if(
+    !checkMicrophoneAPI()
+  ){
+
+    return false;
+
+  }
+
+
+  setVoiceState(
+    "Requesting microphone access...",
+    "processing"
+  );
+
+
+  try{
+
+
+    const stream =
+
+      await navigator
+        .mediaDevices
+        .getUserMedia({
+
+          audio:true
+
+        });
+
+
+    const tracks =
+      stream.getAudioTracks();
+
+
+    if(
+      tracks.length >
+      0
+    ){
+
+      logVoice(
+
+        "Microphone detected: " +
+
+        (
+          tracks[0].label ||
+          "audio input"
+        ),
+
+        "PASS"
+
+      );
+
+    }
+
+
+    stream
+      .getTracks()
+      .forEach(
+        function(track){
+
+          track.stop();
+
+        }
+      );
+
+
+    setSystemStatus(
+      microphoneStatus,
+      "READY",
+      "pass"
+    );
+
+
+    return true;
+
+  }
+
+  catch(error){
+
+
+    setSystemStatus(
+      microphoneStatus,
+      "BLOCKED",
+      "fail"
+    );
+
+
+    setVoiceState(
+      "Microphone permission was not allowed.",
+      "warning"
+    );
+
+
+    logVoice(
+
+      (
+        error &&
+        error.name
+          ? error.name +
+            ": "
+          : ""
+      ) +
+
+      (
+        error &&
+        error.message
+          ? error.message
+          : "Microphone access failed."
+      ),
+
+      "ERROR"
+
+    );
+
+
+    return false;
+
+  }
+
+}
+
+
+
+/* =========================================================
+   SPEECH RECOGNITION
+   ========================================================= */
+
+
+function initializeRecognition(){
+
+  const SpeechRecognition =
+
+    window.SpeechRecognition ||
+
+    window.webkitSpeechRecognition;
+
+
+  if(
+    !SpeechRecognition
+  ){
+
+    return false;
+
+  }
+
+
+  recognition =
+    new SpeechRecognition();
+
+
+  recognition.continuous =
+    true;
+
+
+  recognition.interimResults =
+    true;
+
+
+  recognition.lang =
+    "en-US";
+
+
+  recognition.maxAlternatives =
+    1;
+
+
+
+  recognition.onstart =
+    function(){
+
+
+      isRecognizing =
+        true;
+
+
+      setSystemStatus(
+        recognitionStatus,
+        "LISTENING",
+        "pass"
+      );
+
+
+      voiceButton
+        .classList
+        .add(
+          "listening"
+        );
+
+
+      voiceButtonLabel.textContent =
+        "STOP";
+
+
+      setVoiceState(
+        "Listening... speak normally.",
+        "listening"
+      );
+
+
+      logVoice(
+        "Speech recognition started.",
+        "PASS"
+      );
+
+  };
+
+
+
+  recognition.onresult =
+    function(event){
+
+
+      interimTranscript =
+        "";
+
+
+      for(
+        let i =
+          event.resultIndex;
+
+        i <
+          event.results.length;
+
+        i++
+      ){
+
+
+        const result =
+          event.results[i];
+
+
+        if(
+          !result ||
+          !result[0]
+        ){
+
+          continue;
+
+        }
+
+
+        const text =
+          result[0]
+            .transcript;
+
+
+        if(
+          result.isFinal
+        ){
+
+          finalTranscript +=
+
+            text +
+            " ";
+
+
+          logVoice(
+            "Final speech captured: " +
+            text,
+            "VOICE"
+          );
+
+        }
+
+        else{
+
+          interimTranscript +=
+            text;
+
+        }
+
+      }
+
+
+      renderVoiceTranscript();
+
+  };
+
+
+
+  recognition.onerror =
+    function(event){
+
+
+      const error =
+
+        event &&
+        event.error
+
+          ? event.error
+
+          : "unknown";
+
+
+      setSystemStatus(
+        recognitionStatus,
+        "ERROR",
+        "fail"
+      );
+
+
+      setVoiceState(
+        "Voice capture stopped. Tap to try again.",
+        "warning"
+      );
+
+
+      logVoice(
+        "Speech recognition error: " +
+        error,
+        "ERROR"
+      );
+
+
+      resetVoiceButton();
+
+  };
+
+
+
+  recognition.onend =
+    function(){
+
+
+      isRecognizing =
+        false;
+
+
+      resetVoiceButton();
+
+
+      if(
+        cleanVoiceText(
+          finalTranscript
+        )
+      ){
+
+        setSystemStatus(
+          recognitionStatus,
+          "READY",
+          "pass"
+        );
+
+
+        setVoiceState(
+          "Voice capture ready for review.",
+          ""
+        );
+
+
+        reviewButton
+          .classList
+          .add(
+            "show"
+          );
+
+      }
+
+      else{
+
+
+        setSystemStatus(
+          recognitionStatus,
+          "IDLE",
+          "warn"
+        );
+
+
+        setVoiceState(
+          "Ready for field intelligence.",
+          ""
+        );
+
+      }
+
+
+      logVoice(
+        "Speech recognition ended.",
+        "INFO"
+      );
+
+  };
+
+
+  recognition.onaudiostart =
+    function(){
+
+      logVoice(
+        "Browser detected audio input.",
+        "PASS"
+      );
+
+  };
+
+
+  recognition.onspeechstart =
+    function(){
+
+      logVoice(
+        "Speech detected.",
+        "PASS"
+      );
+
+  };
+
+
+  return true;
+
+}
+
+
+
+/* =========================================================
+   START CAPTURE
+   ========================================================= */
+
+
+async function startVoiceCapture(){
+
+  if(
+    isRecognizing
+  ){
+
+    stopVoiceCapture();
+
+    return;
+
+  }
+
+
+  finalTranscript =
+    "";
+
+
+  interimTranscript =
+    "";
+
+
+  transcriptText.textContent =
+    "";
+
+
+  transcriptBox
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  reviewButton
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  const microphoneOK =
+    await testMicrophone();
+
+
+  if(
+    !microphoneOK
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    !recognition
+  ){
+
+    const initialized =
+      initializeRecognition();
+
+
+    if(
+      !initialized
+    ){
+
+      setVoiceState(
+        "Speech recognition is unavailable.",
+        "warning"
+      );
+
+
+      return;
+
+    }
+
+  }
+
+
+  try{
+
+
+    recognition.start();
+
+
+    logVoice(
+      "Recognition.start() called.",
+      "INFO"
+    );
+
+  }
+
+  catch(error){
+
+
+    if(
+      error &&
+      error.name ===
+      "InvalidStateError"
+    ){
+
+      return;
+
+    }
+
+
+    setVoiceState(
+      "Unable to start voice capture.",
+      "warning"
+    );
+
+
+    logVoice(
+      error &&
+      error.message
+        ? error.message
+        : String(error),
+      "ERROR"
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
+   STOP
+   ========================================================= */
+
+
+function stopVoiceCapture(){
+
+  if(
+    recognition &&
+    isRecognizing
+  ){
+
+    try{
+
+      recognition.stop();
+
+    }
+
+    catch(error){
+
+      logVoice(
+        "Unable to stop recognition.",
+        "ERROR"
+      );
+
+    }
+
+  }
+
+}
+
+
+
+/* =========================================================
+   BUTTON RESET
+   ========================================================= */
+
+
+function resetVoiceButton(){
+
+  voiceButton
+    .classList
+    .remove(
+      "listening"
+    );
+
+
+  voiceButtonLabel.textContent =
+    "TAP TO TALK";
+
+}
+
+
+
+/* =========================================================
+   TRANSCRIPT
+   ========================================================= */
+
+
+function renderVoiceTranscript(){
+
+  const finalText =
+    cleanVoiceText(
+      finalTranscript
+    );
+
+
+  const interimText =
+    cleanVoiceText(
+      interimTranscript
+    );
+
+
+  let combined =
+    finalText;
+
+
+  if(
+    interimText
+  ){
+
+    combined +=
+
+      (
+        combined
+          ? " "
+          : ""
+      ) +
+
+      interimText;
+
+  }
+
+
+  if(
+    combined
+  ){
+
+    transcriptBox
+      .classList
+      .add(
+        "show"
+      );
+
+
+    transcriptText.textContent =
+      combined;
+
+  }
+
+}
+
+
+
+/* =========================================================
+   REVIEW PANEL
+   ========================================================= */
+
+
+function openVoiceReviewPanel(){
+
+  const capturedText =
+    cleanVoiceText(
+      transcriptText.textContent
+    );
+
+
+  if(
+    !capturedText
+  ){
+
+    setVoiceState(
+      "No voice capture is available to review.",
+      "warning"
+    );
+
+
+    return;
+
+  }
+
+
+  document
+    .getElementById(
+      "reviewTranscript"
+    )
+    .textContent =
+      capturedText;
+
+
+  document
+    .getElementById(
+      "reviewDestination"
+    )
+    .textContent =
+      "ROMS Level 8 Router";
+
+
+  clearReviewMessage();
+
+
+  reviewOverlay
+    .classList
+    .add(
+      "open"
+    );
+
+
+  document.body
+    .classList
+    .add(
+      "review-open"
+    );
+
+
+  setVoiceState(
+    "Review voice capture before sending to ROMS.",
+    "processing"
+  );
+
+}
+
+
+
+function closeVoiceReviewPanel(){
+
+  reviewOverlay
+    .classList
+    .remove(
+      "open"
+    );
+
+
+  document.body
+    .classList
+    .remove(
+      "review-open"
+    );
+
+
+  setVoiceState(
+    "Voice capture ready for review.",
+    ""
+  );
+
+}
+
+
+
+/* =========================================================
+   MODIFY
+   ========================================================= */
+
+
+function modifyVoiceCapture(){
+
+  closeVoiceReviewPanel();
+
+
+  transcriptBox
+    .classList
+    .add(
+      "show"
+    );
+
+
+  transcriptText.focus();
+
+
+  setVoiceState(
+    "Edit the transcript, then review again.",
+    ""
+  );
+
+}
+
+
+
+/* =========================================================
+   CLEAR
+   ========================================================= */
+
+
+function clearVoiceCapture(){
+
+  if(
+    isRecognizing
+  ){
+
+    stopVoiceCapture();
+
+  }
+
+
+  finalTranscript =
+    "";
+
+
+  interimTranscript =
+    "";
+
+
+  transcriptText.textContent =
+    "";
+
+
+  transcriptBox
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  reviewButton
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  reviewOverlay
+    .classList
+    .remove(
+      "open"
+    );
+
+
+  document.body
+    .classList
+    .remove(
+      "review-open"
+    );
+
+
+  setVoiceState(
+    "Ready for field intelligence.",
+    ""
+  );
+
+}
+
+
+
+/* =========================================================
+   SEND TO ROMS
+   ========================================================= */
+
+
+async function sendVoiceToROMS(){
+
+  const capturedText =
+    cleanVoiceText(
+
+      document
+        .getElementById(
+          "reviewTranscript"
+        )
+        .textContent
+
+    );
+
+
+  if(
+    !capturedText
+  ){
+
+    setReviewMessage(
+      "No voice transcript is available to send.",
+      "warning"
+    );
+
+
+    return;
+
+  }
+
+
+  const sendButton =
+    document.getElementById(
+      "sendToROMSButton"
+    );
+
+
+  sendButton.disabled =
+    true;
+
+
+  sendButton.textContent =
+    "SENDING TO ROMS...";
+
+
+  setReviewMessage(
+    "Submitting voice capture to ROMS Level 8...",
+    "success"
+  );
+
+
+  setVoiceState(
+    "Transmitting voice capture to ROMS...",
+    "processing"
+  );
+
+
+  try{
+
+
+    const formData =
+      new URLSearchParams();
+
+
+    formData.append(
+      "transcript",
+      capturedText
+    );
+
+
+    formData.append(
+      "user",
+      "Superintendent"
+    );
+
+
+    formData.append(
+      "role",
+      "Superintendent"
+    );
+
+
+    formData.append(
+      "source",
+      "ROMS GitHub Mobile Voice AI"
+    );
+
+
+    formData.append(
+      "version",
+      "2.0-L8"
+    );
+
+
+    /*
+     * Safari / iPhone-safe transmission.
+     *
+     * no-cors means the browser cannot read the
+     * Apps Script JSON response.
+     *
+     * The POST still reaches the ROMS doPost(e)
+     * endpoint, where Level 8 performs the routing.
+     */
+
+
+    await fetch(
+
+      ROMS_MOBILE_VOICE_ENDPOINT,
+
+      {
+
+        method:
+          "POST",
+
+        mode:
+          "no-cors",
+
+        body:
+          formData
+
+      }
+
+    );
+
+
+    setReviewMessage(
+
+      "Voice capture submitted to ROMS. " +
+      "ROMS will route assignable work to Task Intake " +
+      "and operational observations to the Voice Log.",
+
+      "success"
+
+    );
+
+
+    document
+      .getElementById(
+        "reviewDestination"
+      )
+      .textContent =
+        "Submitted to ROMS";
+
+
+    setVoiceState(
+      "Voice capture submitted for ROMS processing.",
+      ""
+    );
+
+
+    logVoice(
+      "Voice capture POST submitted to ROMS Level 8.",
+      "PASS"
+    );
+
+  }
+
+  catch(error){
+
+
+    const message =
+
+      error &&
+      error.message
+
+        ? error.message
+
+        : String(error);
+
+
+    setReviewMessage(
+      "ROMS submission failed: " +
+      message,
+      "warning"
+    );
+
+
+    setVoiceState(
+      "Voice transmission failed. Capture remains available.",
+      "warning"
+    );
+
+
+    logVoice(
+      message,
+      "ERROR"
+    );
+
+  }
+
+  finally{
+
+
+    sendButton.disabled =
+      false;
+
+
+    sendButton.textContent =
+      "SEND TO ROMS";
+
+  }
+
+}
+
+
+
+/* =========================================================
+   REVIEW MESSAGE
+   ========================================================= */
+
+
+function setReviewMessage(
+  message,
+  type
+){
+
+  const element =
+    document.getElementById(
+      "reviewMessage"
+    );
+
+
+  element.className =
+
+    "review-message show " +
+
+    (
+      type ||
+      ""
+    );
+
+
+  element.textContent =
+    message;
+
+}
+
+
+
+function clearReviewMessage(){
+
+  const element =
+    document.getElementById(
+      "reviewMessage"
+    );
+
+
+  element.className =
+    "review-message";
+
+
+  element.textContent =
+    "";
+
+}
+
+
+
+/* =========================================================
+   TEXT CLEANING
+   ========================================================= */
+
+
+function cleanVoiceText(
+  value
+){
+
+  return String(
+    value ||
+    ""
+  )
+    .replace(
+      /\s+/g,
+      " "
+    )
+    .trim();
+
+}
+
+
+
+/* =========================================================
+   DIAGNOSTICS
+   ========================================================= */
+
+
+function toggleDiagnosticDetails(){
+
+  diagnosticOpen =
+    !diagnosticOpen;
+
+
+  if(
+    diagnosticOpen
+  ){
+
+    diagnosticWrap
+      .classList
+      .add(
+        "show"
+      );
+
+
+    diagnosticToggle.textContent =
+      "HIDE DETAILS";
+
+  }
+
+  else{
+
+    diagnosticWrap
+      .classList
+      .remove(
+        "show"
+      );
+
+
+    diagnosticToggle.textContent =
+      "VIEW DETAILS";
+
+  }
+
+}
+
+
+
+/* =========================================================
+   OPERATIONS
+   ========================================================= */
+
+
+function openManagerOperations(){
+
+  window.location.href =
+    ROMS_MANAGER_OPERATIONS_URL;
+
+}
+
+
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+
+
+voiceButton
+  .addEventListener(
+
+    "click",
+
+    function(){
+
+      if(
+        isRecognizing
+      ){
+
+        stopVoiceCapture();
+
+      }
+
+      else{
+
+        startVoiceCapture();
+
+      }
+
+    }
+
+  );
+
+
+bottomVoiceButton
+  .addEventListener(
+
+    "click",
+
+    function(){
+
+      if(
+        isRecognizing
+      ){
+
+        stopVoiceCapture();
+
+      }
+
+      else{
+
+        startVoiceCapture();
+
+      }
+
+    }
+
+  );
+
+
+reviewButton
+  .addEventListener(
+    "click",
+    openVoiceReviewPanel
+  );
+
+
+diagnosticToggle
+  .addEventListener(
+    "click",
+    toggleDiagnosticDetails
+  );
+
+
+reviewOverlay
+  .addEventListener(
+
+    "click",
+
+    function(event){
+
+      if(
+        event.target ===
+        reviewOverlay
+      ){
+
+        closeVoiceReviewPanel();
+
+      }
+
+    }
+
+  );
+
+
+document
+  .addEventListener(
 
     "keydown",
 
@@ -5121,728 +4547,70 @@
 
 
 
-  document.addEventListener(
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
 
-    "click",
 
-    function(event){
+window
+  .addEventListener(
 
-      const overlay =
-        document.getElementById(
-          "reviewOverlay"
-        );
+    "DOMContentLoaded",
+
+    function(){
+
+
+      logVoice(
+        "ROMS Mobile Voice AI v2.0-L8 loaded.",
+        "PASS"
+      );
+
+
+      checkBrowser();
+
+
+      const speechOK =
+        checkSpeechRecognition();
+
+
+      checkMicrophoneAPI();
 
 
       if(
-        overlay &&
-        overlay.classList.contains(
-          "open"
-        ) &&
-        event.target ===
-        overlay
+        speechOK
       ){
 
-        closeVoiceReviewPanel();
+        initializeRecognition();
 
       }
 
-    }
 
-  );
-
-
-
-  /* =========================================================
-     ROMS MANAGER MOBILE VOICE AI v1.0
-
-     CURRENT VERIFIED ARCHITECTURE TARGET:
-
-     MANAGER / SUPERINTENDENT PHONE
-                  ↓
-           MOBILE VOICE CAPTURE
-                  ↓
-             TRANSCRIPT
-                  ↓
-             REVIEW SCREEN
-                  ↓
-            ROMS AI PIPELINE
-             [NEXT STEP]
-                  ↓
-       Knowledge Intelligence
-                  ↓
-      Operational Intelligence
-                  ↓
-            Level 8 Bridge
-                  ↓
-     Superintendent / Manager Review
-                  ↓
-          Approved Task Creation
-
-
-     CURRENT SAFETY STATE:
-
-     MICROPHONE CAPTURE:
-       ENABLED
-
-     TRANSCRIPT:
-       ENABLED
-
-     MOBILE REVIEW:
-       ENABLED
-
-     ROMS AI WRITE:
-       NOT YET ENABLED
-
-     AUTOMATIC OPERATIONAL ACTION:
-       DISABLED
-
-     HUMAN REVIEW:
-       REQUIRED
-     ========================================================= */
-
-
-</script>
-<script>
-
-/* ============================================================
-   ROMS MANAGER MOBILE VOICE AI v1.0
-   LIVE ROMS AI TRANSMISSION OVERRIDE
-
-   PURPOSE:
-   Connect the working GitHub mobile Voice AI interface
-   to the existing ROMS AI Voice Capture endpoint.
-
-   ARCHITECTURE:
-
-   PHONE
-     ↓
-   GITHUB MOBILE VOICE AI
-     ↓
-   ROMS AI ENDPOINT
-     ↓
-   Voice_Capture_v1
-     ↓
-   Knowledge Intelligence
-     ↓
-   Operational Intelligence
-
-   HUMAN REVIEW REMAINS REQUIRED.
-   NO AUTOMATIC OPERATIONAL AUTHORIZATION.
-   ============================================================ */
-
-
-const ROMS_MOBILE_AI_ENDPOINT =
-  "https://script.google.com/a/macros/ncsu.edu/s/AKfycbyZhV4jfpTJQJ1GcKUW6xIhjMHSPYGLozVjB5PpZIMIfMPJjAkiXzAN9yYsG4MWoA8q/exec";
-
-
-
-/* ============================================================
-   SEND MOBILE VOICE CAPTURE TO ROMS AI
-   ============================================================ */
-
-
-async function prepareVoiceForROMSAI(){
-
-  const reviewTranscript =
-    document.getElementById(
-      "reviewTranscript"
-    );
-
-
-  const capturedText =
-    cleanVoiceText(
-      reviewTranscript
-        ? reviewTranscript.textContent
-        : ""
-    );
-
-
-  if(
-    !capturedText
-  ){
-
-    setReviewMessage(
-      "No voice transcript is available to send.",
-      "warning"
-    );
-
-
-    return;
-
-  }
-
-
-  const sendButtons =
-    document.querySelectorAll(
-      ".review-action.primary"
-    );
-
-
-  sendButtons.forEach(
-    function(button){
-
-      button.disabled =
-        true;
-
-
-      button.textContent =
-        "SENDING TO ROMS AI...";
-
-    }
-  );
-
-
-  setReviewMessage(
-    "Sending voice intelligence to ROMS AI...",
-    "success"
-  );
-
-
-  setVoiceState(
-    "Transmitting voice intelligence to ROMS AI...",
-    "processing"
-  );
-
-
-  logVoice(
-    "Preparing mobile voice capture for ROMS AI transmission.",
-    "INFO"
-  );
-
-
-  try{
-
-    const formData =
-      new URLSearchParams();
-
-
-    formData.append(
-      "transcript",
-      capturedText
-    );
-
-
-    formData.append(
-      "source",
-      "ROMS Manager Mobile Voice AI"
-    );
-
-
-    formData.append(
-      "version",
-      "1.0"
-    );
-
-
-    logVoice(
-      "POST transmission started.",
-      "INFO"
-    );
-
-
-    const response =
-      await fetch(
-        ROMS_MOBILE_AI_ENDPOINT,
-        {
-
-          method:
-            "POST",
-
-          body:
-            formData
-
-        }
+      setSystemStatus(
+        recognitionStatus,
+        "IDLE",
+        "warn"
       );
 
 
-    const responseText =
-      await response.text();
-
-
-    logVoice(
-      "ROMS AI response received.",
-      "INFO"
-    );
-
-
-    logVoice(
-      "Server response: " +
-      responseText,
-      "INFO"
-    );
-
-
-    let data;
-
-
-    try{
-
-      data =
-        JSON.parse(
-          responseText
-        );
-
-    }
-
-    catch(error){
-
-      throw new Error(
-        "ROMS AI returned a response that could not be read as JSON."
+      setVoiceState(
+        "Ready for field intelligence.",
+        ""
       );
 
-    }
-
-
-    if(
-      !data ||
-      data.status !==
-      "SUCCESS"
-    ){
-
-      throw new Error(
-        data &&
-        data.message
-          ? data.message
-          : "ROMS AI rejected the voice transmission."
-      );
-
-    }
-
-
-    const captureID =
-      data.Capture_ID ||
-      data.captureId ||
-      data.captureID ||
-      "";
-
-
-    const destination =
-      data.destination ||
-      data.Destination ||
-      "Voice_Capture_v1";
-
-
-    setReviewMessage(
-
-      "Voice intelligence successfully transmitted to ROMS AI." +
-
-      (
-        captureID
-          ? " Capture ID: " +
-            captureID +
-            "."
-          : ""
-      ),
-
-      "success"
-
-    );
-
-
-    setVoiceState(
-      "Voice intelligence saved to ROMS AI.",
-      ""
-    );
-
-
-    logVoice(
-      "VOICE TRANSMISSION SUCCESSFUL",
-      "PASS"
-    );
-
-
-    if(
-      captureID
-    ){
 
       logVoice(
-        "Capture ID: " +
-        captureID,
+        "Level 8 mobile voice interface initialized.",
         "PASS"
       );
 
     }
 
+  );
 
-    logVoice(
-      "Destination: " +
-      destination,
-      "PASS"
-    );
-
-
-    /*
-     * Update the interpretation panel only with
-     * information actually returned by ROMS.
-     *
-     * Full AI interpretation will be connected
-     * in the next controlled step.
-     */
-
-
-    const reviewLocation =
-      document.getElementById(
-        "reviewLocation"
-      );
-
-
-    const reviewCategory =
-      document.getElementById(
-        "reviewCategory"
-      );
-
-
-    const reviewAction =
-      document.getElementById(
-        "reviewAction"
-      );
-
-
-    if(
-      reviewLocation
-    ){
-
-      reviewLocation.textContent =
-        "Sent to ROMS AI";
-
-    }
-
-
-    if(
-      reviewCategory
-    ){
-
-      reviewCategory.textContent =
-        "Processing";
-
-    }
-
-
-    if(
-      reviewAction
-    ){
-
-      reviewAction.textContent =
-        captureID
-          ? "Capture " +
-            captureID +
-            " received"
-          : "Voice capture received";
-
-    }
-
-  }
-
-  catch(error){
-
-    const message =
-      error &&
-      error.message
-        ? error.message
-        : String(error);
-
-
-    setReviewMessage(
-      "ROMS AI transmission failed: " +
-      message,
-      "warning"
-    );
-
-
-    setVoiceState(
-      "Voice transmission failed. Capture remains available for review.",
-      "warning"
-    );
-
-
-    logVoice(
-      "ROMS AI transmission failed: " +
-      message,
-      "ERROR"
-    );
-
-  }
-
-  finally{
-
-    sendButtons.forEach(
-      function(button){
-
-        button.disabled =
-          false;
-
-
-        button.textContent =
-          "SEND TO ROMS AI";
-
-      }
-    );
-
-  }
-
-}
 
 </script>
-<script>
 
-/* ============================================================
-   ROMS MANAGER MOBILE VOICE AI v1.0
-   SAFARI / MOBILE TRANSMISSION FIX
 
-   PURPOSE:
-   Preserve the existing working mobile Voice AI interface
-   while allowing the ROMS Apps Script POST to be submitted
-   without requiring Safari to read the cross-origin response.
-
-   IMPORTANT:
-   Successful fetch completion means SUBMITTED.
-   Actual ROMS receipt must be verified in Voice_Capture_v1.
-   ============================================================ */
-
-
-async function prepareVoiceForROMSAI(){
-
-  const reviewTranscript =
-    document.getElementById(
-      "reviewTranscript"
-    );
-
-
-  const capturedText =
-    cleanVoiceText(
-      reviewTranscript
-        ? reviewTranscript.textContent
-        : ""
-    );
-
-
-  if(
-    !capturedText
-  ){
-
-    setReviewMessage(
-      "No voice transcript is available to send.",
-      "warning"
-    );
-
-    return;
-
-  }
-
-
-  const sendButtons =
-    document.querySelectorAll(
-      ".review-action.primary"
-    );
-
-
-  sendButtons.forEach(
-    function(button){
-
-      button.disabled =
-        true;
-
-      button.textContent =
-        "SENDING TO ROMS AI...";
-
-    }
-  );
-
-
-  setReviewMessage(
-    "Submitting voice intelligence to ROMS AI...",
-    "success"
-  );
-
-
-  setVoiceState(
-    "Transmitting voice intelligence to ROMS AI...",
-    "processing"
-  );
-
-
-  logVoice(
-    "Preparing mobile voice capture for ROMS AI transmission.",
-    "INFO"
-  );
-
-
-  try{
-
-    const formData =
-      new URLSearchParams();
-
-
-    formData.append(
-      "transcript",
-      capturedText
-    );
-
-
-    formData.append(
-      "source",
-      "ROMS Manager Mobile Voice AI"
-    );
-
-
-    formData.append(
-      "version",
-      "1.0"
-    );
-
-
-    logVoice(
-      "Safari-compatible POST transmission started.",
-      "INFO"
-    );
-
-
-    await fetch(
-      ROMS_MOBILE_AI_ENDPOINT,
-      {
-
-        method:
-          "POST",
-
-        mode:
-          "no-cors",
-
-        body:
-          formData
-
-      }
-    );
-
-
-    /*
-     * IMPORTANT:
-     *
-     * no-cors intentionally prevents the browser from
-     * reading the Apps Script response.
-     *
-     * Therefore we DO NOT claim here that ROMS saved
-     * the record.
-     *
-     * We only know that the browser submitted the request.
-     */
-
-
-    setReviewMessage(
-      "Voice capture submitted to ROMS AI. Verify ROMS receipt.",
-      "success"
-    );
-
-
-    setVoiceState(
-      "Voice capture submitted for ROMS processing.",
-      ""
-    );
-
-
-    logVoice(
-      "POST submitted. Awaiting ROMS-side verification.",
-      "PASS"
-    );
-
-
-    const reviewLocation =
-      document.getElementById(
-        "reviewLocation"
-      );
-
-
-    const reviewCategory =
-      document.getElementById(
-        "reviewCategory"
-      );
-
-
-    const reviewAction =
-      document.getElementById(
-        "reviewAction"
-      );
-
-
-    if(
-      reviewLocation
-    ){
-
-      reviewLocation.textContent =
-        "Submitted to ROMS";
-
-    }
-
-
-    if(
-      reviewCategory
-    ){
-
-      reviewCategory.textContent =
-        "Awaiting Verification";
-
-    }
-
-
-    if(
-      reviewAction
-    ){
-
-      reviewAction.textContent =
-        "Check Voice_Capture_v1";
-
-    }
-
-  }
-
-  catch(error){
-
-    const message =
-      error &&
-      error.message
-        ? error.message
-        : String(error);
-
-
-    setReviewMessage(
-      "ROMS AI transmission failed: " +
-      message,
-      "warning"
-    );
-
-
-    setVoiceState(
-      "Voice transmission failed. Capture remains available.",
-      "warning"
-    );
-
-
-    logVoice(
-      "ROMS AI transmission failed: " +
-      message,
-      "ERROR"
-    );
-
-  }
-
-  finally{
-
-    sendButtons.forEach(
-      function(button){
-
-        button.disabled =
-          false;
-
-        button.textContent =
-          "SEND TO ROMS AI";
-
-      }
-    );
-
-  }
-
-}
-
-</script>
 </body>
 
 </html>
