@@ -2052,7 +2052,7 @@
     .mobile-app{
       max-width:760px;
       background:transparent;
-      padding-bottom:92px;
+      padding-bottom:18px;
     }
 
     .topline{
@@ -2197,11 +2197,141 @@
 
     .nav-button.active{ color:#315f3a; }
 
+    .quick-actions-section,
+    .field-conditions-section,
+    .bottom-nav{
+      display:none !important;
+    }
+
+    .capture-steps{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:7px;
+      margin:14px 0 16px;
+    }
+
+    .capture-step{
+      min-height:58px;
+      padding:8px 6px;
+      border:1px solid #d5d1c7;
+      border-radius:8px;
+      background:#f3f0e8;
+      color:#68736b;
+      text-align:center;
+    }
+
+    .capture-step b{
+      display:grid;
+      width:22px;
+      height:22px;
+      place-items:center;
+      margin:0 auto 5px;
+      border-radius:50%;
+      background:#dfe5de;
+      color:#315f3a;
+      font-size:10px;
+    }
+
+    .capture-step span{
+      display:block;
+      font-size:9px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .capture-step.active{
+      border-color:#477b50;
+      background:#edf4ee;
+      color:#254d31;
+      box-shadow:inset 0 0 0 1px rgba(71,123,80,.18);
+    }
+
+    .capture-step.active b,
+    .capture-step.complete b{
+      background:#315f3a;
+      color:#ffffff;
+    }
+
+    .capture-step.complete{
+      border-color:#9fb5a2;
+      background:#f7faf7;
+      color:#315f3a;
+    }
+
+    .mode-label{
+      margin:0 0 8px;
+      color:#526157;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .mode-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:7px;
+    }
+
+    .mode-option input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .mode-option span{
+      display:grid;
+      min-height:48px;
+      place-items:center;
+      padding:7px;
+      border:1px solid #d4d0c5;
+      border-radius:8px;
+      background:#fffefb;
+      color:#526157;
+      text-align:center;
+      font-size:9px;
+      font-weight:900;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    .mode-option input:checked + span{
+      border-color:#315f3a;
+      background:linear-gradient(145deg,#477b50,#244a2e);
+      color:#ffffff;
+      box-shadow:0 4px 10px rgba(37,77,49,.18);
+    }
+
+    .mode-guidance{
+      margin-top:8px;
+      padding:9px 10px;
+      border-left:4px solid #a87820;
+      border-radius:6px;
+      background:#fffaf0;
+      color:#625b4b;
+      font-size:10px;
+      line-height:1.45;
+      font-weight:700;
+    }
+
+    .review-checklist{
+      margin:8px 0 0;
+      padding:10px 12px;
+      border:1px solid #d7d2c7;
+      border-radius:7px;
+      background:#f8f5ed;
+      color:#526157;
+      font-size:10px;
+      line-height:1.55;
+    }
+
     @media(max-width:520px){
       .mobile-header{ min-height:112px; padding:14px; }
       .header-title h1{ font-size:21px; white-space:normal; }
       .header-title p{ font-size:11px; }
       .return-command{ min-height:40px; padding:0 9px; font-size:8px; }
+      .mode-grid{ grid-template-columns:1fr; }
+      .mode-option span{ min-height:42px; }
     }
 
   </style>
@@ -2295,7 +2425,7 @@
   <main class="content">
 
 
-    <section class="section-card">
+    <section class="section-card field-conditions-section">
 
 
       <div class="section-head">
@@ -2395,6 +2525,33 @@
 
           ROMS determines where it belongs.
 
+        </div>
+
+        <div class="capture-steps" aria-label="Voice task workflow">
+          <div id="captureStep1" class="capture-step active"><b>1</b><span>Record</span></div>
+          <div id="captureStep2" class="capture-step"><b>2</b><span>Review</span></div>
+          <div id="captureStep3" class="capture-step"><b>3</b><span>Task Review</span></div>
+        </div>
+
+        <div class="mode-label">What are you capturing?</div>
+
+        <div class="mode-grid">
+          <label class="mode-option">
+            <input type="radio" name="captureMode" value="single" checked onchange="updateCaptureMode()">
+            <span>Single Task</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="captureMode" value="bulk" onchange="updateCaptureMode()">
+            <span>Bulk Tasks</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="captureMode" value="note" onchange="updateCaptureMode()">
+            <span>Operational Note</span>
+          </label>
+        </div>
+
+        <div id="modeGuidance" class="mode-guidance">
+          Say who or which team, the work, location, due date and priority.
         </div>
 
 
@@ -2629,7 +2786,7 @@
 
 
 
-    <section class="section-card">
+    <section class="section-card quick-actions-section">
 
 
       <div class="section-head">
@@ -2922,6 +3079,11 @@
           ROMS Routing
         </div>
 
+        <div class="review-row">
+          <div class="review-label">Capture Type</div>
+          <div id="reviewCaptureMode" class="review-value">Single Task</div>
+        </div>
+
 
         <div class="review-row">
 
@@ -2967,6 +3129,11 @@
 
       </div>
 
+      <div class="review-checklist">
+        <strong>Before sending:</strong> confirm the person or team, work requested,
+        location, due date and priority. For bulk tasks, confirm each task is stated separately.
+      </div>
+
 
 
       <div
@@ -2985,7 +3152,7 @@
           type="button"
           onclick="sendVoiceToROMS()"
         >
-          SEND TO ROMS
+          SEND FOR TASK REVIEW
         </button>
 
 
@@ -4141,6 +4308,37 @@ function openVoiceReviewPanel(){
       "ROMS Level 8 Router";
 
 
+  const captureMode =
+    getCaptureMode();
+
+
+  document
+    .getElementById(
+      "reviewCaptureMode"
+    )
+    .textContent =
+      captureMode === "bulk"
+        ? "Bulk Tasks"
+        : captureMode === "note"
+          ? "Operational Note"
+          : "Single Task";
+
+
+  document
+    .getElementById(
+      "sendToROMSButton"
+    )
+    .textContent =
+      captureMode === "note"
+        ? "SAVE OPERATIONAL NOTE"
+        : "SEND FOR TASK REVIEW";
+
+
+  setCaptureStep(
+    2
+  );
+
+
   clearReviewMessage();
 
 
@@ -4282,6 +4480,11 @@ function clearVoiceCapture(){
     ""
   );
 
+
+  setCaptureStep(
+    1
+  );
+
 }
 
 
@@ -4349,13 +4552,31 @@ async function sendVoiceToROMS(){
   try{
 
 
+    const captureMode =
+      getCaptureMode();
+
+
+    const routedTranscript =
+      captureMode === "bulk"
+        ? "Bulk task request. " + capturedText
+        : captureMode === "single"
+          ? "Single task request. " + capturedText
+          : "Operational note. " + capturedText;
+
+
     const formData =
       new URLSearchParams();
 
 
     formData.append(
       "transcript",
-      capturedText
+      routedTranscript
+    );
+
+
+    formData.append(
+      "capture_mode",
+      captureMode
     );
 
 
@@ -4439,6 +4660,12 @@ async function sendVoiceToROMS(){
     );
 
 
+    setCaptureStep(
+      3,
+      true
+    );
+
+
     logVoice(
       "Voice capture POST submitted to ROMS Level 8.",
       "PASS"
@@ -4487,7 +4714,9 @@ async function sendVoiceToROMS(){
 
 
     sendButton.textContent =
-      "SEND TO ROMS";
+      getCaptureMode() === "note"
+        ? "SAVE OPERATIONAL NOTE"
+        : "SEND FOR TASK REVIEW";
 
   }
 
@@ -4556,7 +4785,7 @@ function cleanVoiceText(
   value
 ){
 
-  return String(
+  const cleaned = String(
     value ||
     ""
   )
@@ -4565,6 +4794,149 @@ function cleanVoiceText(
       " "
     )
     .trim();
+
+
+  return normalizeROMSFieldReferences(
+    cleaned
+  );
+
+}
+
+
+/* =========================================================
+   CAPTURE MODE + WORKFLOW STEPS
+   ========================================================= */
+
+
+function getCaptureMode(){
+
+  const selected =
+    document.querySelector(
+      "input[name='captureMode']:checked"
+    );
+
+
+  return selected
+    ? selected.value
+    : "single";
+
+}
+
+
+function updateCaptureMode(){
+
+  const mode =
+    getCaptureMode();
+
+
+  const guidance =
+    document.getElementById(
+      "modeGuidance"
+    );
+
+
+  guidance.textContent =
+    mode === "bulk"
+      ? "State each task separately: task one, task two, task three. Include the person or team, work, location, due date and priority for each."
+      : mode === "note"
+        ? "Describe the observation, condition or operational knowledge that ROMS should retain."
+        : "Say who or which team, the work, location, due date and priority.";
+
+}
+
+
+function setCaptureStep(
+  activeStep,
+  complete
+){
+
+  for(
+    let step = 1;
+    step <= 3;
+    step++
+  ){
+
+    const element =
+      document.getElementById(
+        "captureStep" + step
+      );
+
+
+    if(
+      !element
+    ){
+      continue;
+    }
+
+
+    element.className =
+      "capture-step";
+
+
+    if(
+      step < activeStep ||
+      (
+        complete &&
+        step === activeStep
+      )
+    ){
+      element.classList.add(
+        "complete"
+      );
+    }
+    else if(
+      step === activeStep
+    ){
+      element.classList.add(
+        "active"
+      );
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   ROMS FIELD-CODE SPEECH NORMALIZATION
+   Browser speech engines commonly hear N7 as "in seven".
+   Corrections are limited to location language so ordinary
+   uses of the words "in seven" are not changed globally.
+   ========================================================= */
+
+
+function normalizeROMSFieldReferences(
+  value
+){
+
+  let text =
+    String(
+      value ||
+      ""
+    );
+
+
+  text = text.replace(
+    /\b(field|location|at|from|to|on|in)\s+(?:in|en|end|n)\s*(?:seven|7)\b/gi,
+    function(
+      match,
+      locationWord
+    ){
+
+      return locationWord +
+        " N7";
+
+    }
+  );
+
+
+  text = text.replace(
+    /\bfield\s+n\s*(?:seven|7)\b/gi,
+    "field N7"
+  );
+
+
+  return text;
 
 }
 
@@ -4811,6 +5183,14 @@ window
       logVoice(
         "Level 8 mobile voice interface initialized.",
         "PASS"
+      );
+
+
+      updateCaptureMode();
+
+
+      setCaptureStep(
+        1
       );
 
     }
