@@ -209,6 +209,22 @@
 
     }
 
+    .header-title h1{
+      margin:0;
+      color:#ffffff;
+      font-size:32px;
+      line-height:1.05;
+      letter-spacing:.01em;
+      white-space:nowrap;
+    }
+
+    .header-title p{
+      margin:6px 0 0;
+      color:#87d35f;
+      font-size:15px;
+      font-weight:900;
+    }
+
 
     .brand-mark{
 
@@ -2003,6 +2019,191 @@
 
     }
 
+
+    /* =========================================================
+       ROMS PLATFORM DESIGN SYSTEM
+       Canonical source: Superintendent Command Center
+       ========================================================= */
+
+    :root{
+      --green-1000:#0b2114;
+      --green-950:#102d1b;
+      --green-900:#174126;
+      --green-850:#254d31;
+      --green-800:#315f3a;
+      --green-soft:#e6ede5;
+      --green-pale:#f7f4ed;
+      --white:#fffefb;
+      --page:#eeeae0;
+      --ink:#17201a;
+      --muted:#68736b;
+      --line:#d4d0c5;
+      --yellow:#a87820;
+      --shadow:0 10px 24px rgba(25,43,31,.12),0 2px 5px rgba(25,43,31,.07);
+      --font:Arial,Helvetica,sans-serif;
+    }
+
+    html,
+    body{
+      background:radial-gradient(circle at 52% -10%,#fff 0,#f6f3eb 36%,var(--page) 78%);
+      color:var(--ink);
+    }
+
+    .mobile-app{
+      max-width:760px;
+      background:transparent;
+      padding-bottom:92px;
+    }
+
+    .topline{
+      height:8px;
+      background:linear-gradient(90deg,#2f7d45,#69c15b 70%,#a87820);
+    }
+
+    .mobile-header{
+      min-height:112px;
+      padding:16px 20px;
+      background:linear-gradient(105deg,#102d1b 0%,#174126 54%,#0b2114 100%);
+      border-bottom:1px solid #0b2114;
+      box-shadow:0 7px 20px rgba(6,25,12,.30);
+    }
+
+    .mobile-header::before,
+    .mobile-header::after{
+      display:none;
+    }
+
+    .brand-mark{
+      width:56px;
+      height:48px;
+      border:0;
+      border-radius:8px;
+      background:linear-gradient(145deg,#477b50,#24492b);
+      color:#ffffff;
+      font-size:22px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 4px 9px rgba(24,53,31,.22);
+    }
+
+    .brand-name{
+      color:#ffffff;
+      font-size:18px;
+      letter-spacing:.02em;
+    }
+
+    .brand-roots{
+      color:#69c15b;
+      font-size:8px;
+      letter-spacing:.08em;
+    }
+
+    .return-command{
+      min-height:44px;
+      padding:0 13px;
+      border:1px solid #8f691b;
+      border-radius:9px;
+      background:linear-gradient(145deg,#c69a3d,#966d18);
+      color:#ffffff;
+      font-size:9px;
+      font-weight:900;
+      text-transform:uppercase;
+      text-shadow:0 1px 1px rgba(60,34,8,.55);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 4px 8px rgba(0,0,0,.20);
+    }
+
+    .return-command:hover{
+      transform:translateY(-1px);
+      background:linear-gradient(145deg,#d0a64e,#a57820);
+    }
+
+    .mobile-title{
+      display:none;
+    }
+
+    .mobile-subtitle{
+      display:none;
+    }
+
+    .mobile-tagline{
+      display:none;
+    }
+
+    .manager-strip{
+      margin:14px 14px 0;
+      border:1px solid #d4d0c5;
+      border-radius:9px;
+      background:linear-gradient(145deg,#fffefb,#f3f0e8);
+      box-shadow:var(--shadow);
+    }
+
+    .manager-label,
+    .section-note,
+    .status-label,
+    .voice-copy,
+    .system-copy{
+      color:var(--muted);
+    }
+
+    .manager-role{
+      border-color:#b9cebc;
+      background:#edf6ee;
+      color:#285c31;
+    }
+
+    .content{ padding:14px; }
+
+    .section-card{
+      border-color:#d5d1c7;
+      border-radius:11px;
+      background:linear-gradient(145deg,#fffefb,#f3f0e8);
+      box-shadow:var(--shadow);
+    }
+
+    .section-head{
+      border-bottom-color:#d5d1c7;
+      background:linear-gradient(#fffefb,#eae7de);
+    }
+
+    .section-title,
+    .voice-title,
+    .system-name{
+      color:#254d31;
+    }
+
+    .voice-eyebrow{ color:#a87820; }
+
+    .status-cell,
+    .system-row,
+    .transcript-box{
+      border-color:#dad6cc;
+      background:#fffefb;
+    }
+
+    .mic-button{
+      background:linear-gradient(145deg,#477b50,#244a2e);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 10px 24px rgba(31,83,45,.25);
+    }
+
+    .review-button{
+      border-color:#8f691b;
+      background:linear-gradient(145deg,#c69a3d,#966d18);
+      color:#ffffff;
+    }
+
+    .bottom-nav{
+      border-top-color:#d4d0c5;
+      background:#fffefb;
+      box-shadow:0 -6px 18px rgba(25,43,31,.10);
+    }
+
+    .nav-button.active{ color:#315f3a; }
+
+    @media(max-width:520px){
+      .mobile-header{ min-height:112px; padding:14px; }
+      .header-title h1{ font-size:21px; white-space:normal; }
+      .header-title p{ font-size:11px; }
+      .return-command{ min-height:40px; padding:0 9px; font-size:8px; }
+    }
+
   </style>
 
 </head>
@@ -2013,6 +2214,8 @@
 
 <div class="mobile-app">
 
+  <div class="topline"></div>
+
 
   <header class="mobile-header">
 
@@ -2022,22 +2225,9 @@
 
       <div class="brand-left">
 
-
-        <div class="brand-mark">
-          R
-        </div>
-
-
-        <div>
-
-          <div class="brand-name">
-            ROMS
-          </div>
-
-          <div class="brand-roots">
-            DNA ROOTS
-          </div>
-
+        <div class="header-title">
+          <h1>ROMS Mobile Voice AI</h1>
+          <p>Central Crops Research Station</p>
         </div>
 
 
@@ -2045,7 +2235,13 @@
 
 
       <div class="version-pill">
-        MOBILE v2.0-L8
+        <button
+          class="return-command"
+          type="button"
+          onclick="returnToCommandCenter()"
+        >
+          ← Return to Command Center
+        </button>
       </div>
 
 
@@ -2053,7 +2249,7 @@
 
 
     <div class="mobile-title">
-      FIELD INTELLIGENCE
+      MOBILE VOICE AI
     </div>
 
 
@@ -2063,7 +2259,7 @@
 
 
     <div class="mobile-tagline">
-      Where Field Intelligence Becomes Research Excellence
+      Speak naturally. Review clearly. Route work intelligently.
     </div>
 
 
@@ -4369,6 +4565,20 @@ function cleanVoiceText(
       " "
     )
     .trim();
+
+}
+
+
+/* =========================================================
+   RETURN TO ROMS COMMAND CENTER
+   Top-ribbon navigation only. No bottom return control.
+   ========================================================= */
+
+
+function returnToCommandCenter(){
+
+  window.location.href =
+    "https://script.google.com/a/ncsu.edu/macros/s/AKfycbynkgE3JbSiSdMzEmZt1mTw9AhEDoFZAi2WfLIE1TkIiQ0T8wyNoasao2E27fAzkSPdow/exec?page=ROMS_SUPERINTENDENT_COMMAND_CENTER_v3.2.1";
 
 }
 
