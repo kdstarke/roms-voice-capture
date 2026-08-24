@@ -3222,18 +3222,45 @@ const ROMS_DEVICE_STORAGE_KEY = "ROMS_MOBILE_VOICE_DEVICE_V1";
 let ROMS_DEVICE = null;
 
 function initializeROMSDevice(){
-  const params = new URLSearchParams(window.location.search);
-  const token = params.get("enroll");
-  if(token){
+  const params = new URLSearchParams(window.location.search || "");
+  const enrollment = params.get("enroll") || "";
+  let profile = null;
+  if(enrollment){
+    try{
+      const parsed = JSON.parse(enrollment);
+      if(parsed && parsed.t){
+        profile = {
+          token:String(parsed.t || ""),
+          userId:String(parsed.u || ""),
+          name:String(parsed.n || ""),
+          role:String(parsed.r || ""),
+          reviewCenter:String(parsed.c || "MANAGER_OPERATIONS_CENTER")
+        };
+      }
+    }
+    catch(error){
+      /* Backward-compatible support for the original multi-parameter link. */
+      profile = {
+        token:enrollment,
+        userId:params.get("user_id") || "",
+        name:params.get("name") || "",
+        role:params.get("role") || "",
+        reviewCenter:params.get("review_center") || "MANAGER_OPERATIONS_CENTER"
+      };
+    }
+  }
+  if(profile && profile.token && profile.name){
     ROMS_DEVICE = {
-      token:token,
-      userId:params.get("user_id") || "",
-      name:params.get("name") || "",
-      role:params.get("role") || "",
-      reviewCenter:params.get("review_center") || "MANAGER_OPERATIONS_CENTER"
+      token:profile.token,
+      userId:profile.userId,
+      name:profile.name,
+      role:profile.role,
+      reviewCenter:profile.reviewCenter
     };
-    localStorage.setItem(ROMS_DEVICE_STORAGE_KEY, JSON.stringify(ROMS_DEVICE));
-    window.history.replaceState({}, document.title, window.location.pathname);
+    try { localStorage.setItem(ROMS_DEVICE_STORAGE_KEY, JSON.stringify(ROMS_DEVICE)); }
+    catch(error) {}
+    try { window.history.replaceState({}, document.title, window.location.pathname); }
+    catch(error) {}
   } else {
     try { ROMS_DEVICE = JSON.parse(localStorage.getItem(ROMS_DEVICE_STORAGE_KEY) || "null"); }
     catch(error) { ROMS_DEVICE = null; }
@@ -3249,6 +3276,10 @@ function initializeROMSDevice(){
   roleEl.textContent = "ENROLLMENT REQUIRED";
   return false;
 }
+
+/* The script is at the end of body, so identity is applied immediately even if a
+   later optional mobile control is unavailable in a particular browser. */
+initializeROMSDevice();
 
 
 let recognition =
