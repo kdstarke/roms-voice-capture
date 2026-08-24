@@ -2406,15 +2406,15 @@
         Mobile Access
       </div>
 
-      <div class="manager-name">
-        Superintendent / Manager
+      <div id="romsDeviceName" class="manager-name">
+        Phone not enrolled
       </div>
 
     </div>
 
 
-    <div class="manager-role">
-      VOICE AI ENABLED
+    <div id="romsDeviceRole" class="manager-role">
+      ENROLLMENT REQUIRED
     </div>
 
 
@@ -3217,6 +3217,38 @@ const ROMS_MANAGER_OPERATIONS_URL =
   ROMS_MOBILE_VOICE_ENDPOINT +
 
   "?page=ManagerOperationsCenter_v3.2.1";
+
+const ROMS_DEVICE_STORAGE_KEY = "ROMS_MOBILE_VOICE_DEVICE_V1";
+let ROMS_DEVICE = null;
+
+function initializeROMSDevice(){
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("enroll");
+  if(token){
+    ROMS_DEVICE = {
+      token:token,
+      userId:params.get("user_id") || "",
+      name:params.get("name") || "",
+      role:params.get("role") || "",
+      reviewCenter:params.get("review_center") || "MANAGER_OPERATIONS_CENTER"
+    };
+    localStorage.setItem(ROMS_DEVICE_STORAGE_KEY, JSON.stringify(ROMS_DEVICE));
+    window.history.replaceState({}, document.title, window.location.pathname);
+  } else {
+    try { ROMS_DEVICE = JSON.parse(localStorage.getItem(ROMS_DEVICE_STORAGE_KEY) || "null"); }
+    catch(error) { ROMS_DEVICE = null; }
+  }
+  const nameEl = document.getElementById("romsDeviceName");
+  const roleEl = document.getElementById("romsDeviceRole");
+  if(ROMS_DEVICE && ROMS_DEVICE.token && ROMS_DEVICE.name){
+    nameEl.textContent = "Recording as: " + ROMS_DEVICE.name;
+    roleEl.textContent = ROMS_DEVICE.role;
+    return true;
+  }
+  nameEl.textContent = "Phone not enrolled";
+  roleEl.textContent = "ENROLLMENT REQUIRED";
+  return false;
+}
 
 
 let recognition =
@@ -4502,6 +4534,11 @@ function clearVoiceCapture(){
 
 async function sendVoiceToROMS(){
 
+  if(!ROMS_DEVICE || !ROMS_DEVICE.token){
+    setReviewMessage("This phone must be enrolled before sending a voice capture.","warning");
+    return;
+  }
+
   const capturedText =
     cleanVoiceText(
 
@@ -4586,16 +4623,11 @@ async function sendVoiceToROMS(){
     );
 
 
-    formData.append(
-      "user",
-      "Superintendent"
-    );
-
-
-    formData.append(
-      "role",
-      "Superintendent"
-    );
+    formData.append("device_token", ROMS_DEVICE.token);
+    formData.append("user_id", ROMS_DEVICE.userId);
+    formData.append("user", ROMS_DEVICE.name);
+    formData.append("role", ROMS_DEVICE.role);
+    formData.append("review_center", ROMS_DEVICE.reviewCenter);
 
 
     formData.append(
@@ -4955,8 +4987,15 @@ function normalizeROMSFieldReferences(
 
 function returnToCommandCenter(){
 
-  window.location.href =
-    "https://script.google.com/a/ncsu.edu/macros/s/AKfycbynkgE3JbSiSdMzEmZt1mTw9AhEDoFZAi2WfLIE1TkIiQ0T8wyNoasao2E27fAzkSPdow/exec?page=ROMS_SUPERINTENDENT_COMMAND_CENTER_v3.2.1";
+  if(ROMS_DEVICE && ROMS_DEVICE.reviewCenter === "MANAGER_OPERATIONS_CENTER"){
+    window.location.href = ROMS_MANAGER_OPERATIONS_URL +
+      "&reviewer=" + encodeURIComponent(ROMS_DEVICE.userId) +
+      "&name=" + encodeURIComponent(ROMS_DEVICE.name) +
+      "&role=" + encodeURIComponent(ROMS_DEVICE.role);
+    return;
+  }
+  window.location.href = ROMS_MOBILE_VOICE_ENDPOINT +
+    "?page=ROMS_SUPERINTENDENT_COMMAND_CENTER_v3.2.1&reviewer=KEITH_STARKE";
 
 }
 
@@ -5147,6 +5186,8 @@ window
 
     function(){
 
+      initializeROMSDevice();
+
 
       logVoice(
         "ROMS Mobile Voice AI v2.0-L8 loaded.",
@@ -5181,7 +5222,7 @@ window
 
 
       setVoiceState(
-        "Ready for field intelligence.",
+        ROMS_DEVICE ? "Ready for voice capture." : "This phone must be enrolled before use.",
         ""
       );
 
