@@ -3259,8 +3259,9 @@ function initializeROMSDevice(){
     };
     try { localStorage.setItem(ROMS_DEVICE_STORAGE_KEY, JSON.stringify(ROMS_DEVICE)); }
     catch(error) {}
-    try { window.history.replaceState({}, document.title, window.location.pathname); }
-    catch(error) {}
+    /* Keep the one-parameter enrollment URL intact. iPhone Home Screen apps use
+       separate browser storage, so the retained launch URL must reapply the
+       verified identity when the standalone shortcut opens. */
   } else {
     try { ROMS_DEVICE = JSON.parse(localStorage.getItem(ROMS_DEVICE_STORAGE_KEY) || "null"); }
     catch(error) { ROMS_DEVICE = null; }
