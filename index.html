@@ -4604,6 +4604,10 @@ async function sendVoiceToROMS(){
     );
 
 
+  let submissionSucceeded =
+    false;
+
+
   sendButton.disabled =
     true;
 
@@ -4741,6 +4745,10 @@ async function sendVoiceToROMS(){
       "PASS"
     );
 
+
+    submissionSucceeded =
+      true;
+
   }
 
   catch(error){
@@ -4783,12 +4791,76 @@ async function sendVoiceToROMS(){
       false;
 
 
-    sendButton.textContent =
-      getCaptureMode() === "note"
-        ? "SAVE OPERATIONAL NOTE"
-        : "SEND FOR TASK REVIEW";
+    if(
+      submissionSucceeded &&
+      getCaptureMode() === "single"
+    ){
+
+      sendButton.textContent =
+        "RECORD ANOTHER TASK";
+
+
+      sendButton.onclick =
+        beginAnotherSingleTask;
+
+    }
+
+    else{
+
+      sendButton.textContent =
+        getCaptureMode() === "note"
+          ? "SAVE OPERATIONAL NOTE"
+          : "SEND FOR TASK REVIEW";
+
+
+      sendButton.onclick =
+        sendVoiceToROMS;
+
+    }
 
   }
+
+}
+
+
+
+/* =========================================================
+   SINGLE-TASK CONTINUOUS CAPTURE LOOP
+   After a successful single-task submission, the primary
+   action clears the completed task, returns to Step 1 and
+   starts listening again from the same phone screen.
+   ========================================================= */
+
+
+function beginAnotherSingleTask(){
+
+  const sendButton =
+    document.getElementById(
+      "sendToROMSButton"
+    );
+
+
+  sendButton.onclick =
+    sendVoiceToROMS;
+
+
+  sendButton.textContent =
+    "SEND FOR TASK REVIEW";
+
+
+  clearVoiceCapture();
+
+
+  setVoiceState(
+    "Listening for another single task...",
+    "processing"
+  );
+
+
+  window.setTimeout(
+    startVoiceCapture,
+    100
+  );
 
 }
 
