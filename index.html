@@ -2325,6 +2325,111 @@
       line-height:1.55;
     }
 
+    .pending-task-panel{
+      display:none;
+      margin-top:16px;
+      padding:14px;
+      border:1px solid #cfc8b8;
+      border-radius:10px;
+      background:linear-gradient(145deg,#fffefb,#f3f0e8);
+      box-shadow:var(--shadow);
+    }
+
+    .pending-task-panel.show{ display:block; }
+
+    .pending-task-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .pending-task-title{
+      color:#254d31;
+      font-size:16px;
+      font-weight:900;
+    }
+
+    .pending-task-count{
+      display:grid;
+      min-width:34px;
+      height:34px;
+      place-items:center;
+      border-radius:50%;
+      background:#315f3a;
+      color:#ffffff;
+      font-size:14px;
+      font-weight:900;
+    }
+
+    .pending-task-item{
+      margin-top:8px;
+      padding:11px;
+      border:1px solid #d7d2c7;
+      border-left:4px solid #a87820;
+      border-radius:8px;
+      background:#fffefb;
+    }
+
+    .pending-task-number{
+      margin-bottom:5px;
+      color:#a87820;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .pending-task-text{
+      color:#17201a;
+      font-size:14px;
+      font-weight:700;
+      line-height:1.45;
+    }
+
+    .pending-task-actions,
+    .pending-batch-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .pending-task-action,
+    .pending-batch-action{
+      min-height:46px;
+      border:1px solid #bdb7a9;
+      border-radius:8px;
+      background:linear-gradient(#fffefb,#e9e5db);
+      color:#315f3a;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .pending-task-action.remove{
+      border-color:#caa6a2;
+      color:#9a342d;
+    }
+
+    .pending-batch-action.record{
+      border-color:#527a59;
+      background:linear-gradient(145deg,#477b50,#244a2e);
+      color:#ffffff;
+    }
+
+    .pending-batch-action.send{
+      border-color:#8f691b;
+      background:linear-gradient(145deg,#c69a3d,#966d18);
+      color:#ffffff;
+    }
+
+    .pending-batch-action:disabled{
+      cursor:wait;
+      opacity:.65;
+    }
+
     @media(max-width:520px){
       .mobile-header{ min-height:112px; padding:14px; }
       .header-title h1{ font-size:21px; white-space:normal; }
@@ -2633,6 +2738,27 @@
         >
           REVIEW VOICE CAPTURE
         </button>
+
+        <div id="pendingTaskPanel" class="pending-task-panel">
+          <div class="pending-task-head">
+            <div>
+              <div class="pending-task-title">Pending Separate Tasks</div>
+              <div class="section-note">Review the list before sending it to the Command Center.</div>
+            </div>
+            <div id="pendingTaskCount" class="pending-task-count">0</div>
+          </div>
+
+          <div id="pendingTaskList"></div>
+
+          <div class="pending-batch-actions">
+            <button class="pending-batch-action record" type="button" onclick="recordAnotherPendingTask()">
+              Record Another Task
+            </button>
+            <button id="sendPendingTasksButton" class="pending-batch-action send" type="button" onclick="sendPendingTasksToROMS()">
+              Send All to Command Center
+            </button>
+          </div>
+        </div>
 
 
       </div>
@@ -3219,7 +3345,9 @@ const ROMS_MANAGER_OPERATIONS_URL =
   "?page=ManagerOperationsCenter_v3.2.1";
 
 const ROMS_DEVICE_STORAGE_KEY = "ROMS_MOBILE_VOICE_DEVICE_V1";
+const ROMS_PENDING_TASKS_STORAGE_KEY = "ROMS_MOBILE_VOICE_PENDING_TASKS_V1";
 let ROMS_DEVICE = null;
+let pendingSingleTasks = [];
 
 function initializeROMSDevice(){
   const params = new URLSearchParams(window.location.search || "");
@@ -3268,13 +3396,21 @@ function initializeROMSDevice(){
   }
   const nameEl = document.getElementById("romsDeviceName");
   const roleEl = document.getElementById("romsDeviceRole");
+  const returnButton = document.querySelector(".return-command");
   if(ROMS_DEVICE && ROMS_DEVICE.token && ROMS_DEVICE.name){
     nameEl.textContent = "Recording as: " + ROMS_DEVICE.name;
     roleEl.textContent = ROMS_DEVICE.role;
+    if(returnButton){
+      returnButton.style.display =
+        String(ROMS_DEVICE.role || "").toLowerCase().indexOf("superintendent") !== -1
+          ? "inline-flex"
+          : "none";
+    }
     return true;
   }
   nameEl.textContent = "Phone not enrolled";
   roleEl.textContent = "ENROLLMENT REQUIRED";
+  if(returnButton){ returnButton.style.display = "none"; }
   return false;
 }
 
@@ -4401,6 +4537,8 @@ function openVoiceReviewPanel(){
     .textContent =
       captureMode === "note"
         ? "SAVE OPERATIONAL NOTE"
+        : captureMode === "single"
+          ? "ADD THIS TASK"
         : "SEND FOR TASK REVIEW";
 
 
@@ -4598,6 +4736,23 @@ async function sendVoiceToROMS(){
   }
 
 
+  const captureMode =
+    getCaptureMode();
+
+
+  if(
+    captureMode === "single"
+  ){
+
+    addSingleTaskToPending(
+      capturedText
+    );
+
+    return;
+
+  }
+
+
   const sendButton =
     document.getElementById(
       "sendToROMSButton"
@@ -4629,10 +4784,6 @@ async function sendVoiceToROMS(){
 
 
   try{
-
-
-    const captureMode =
-      getCaptureMode();
 
 
     const routedTranscript =
@@ -4791,35 +4942,284 @@ async function sendVoiceToROMS(){
       false;
 
 
-    if(
-      submissionSucceeded &&
-      getCaptureMode() === "single"
-    ){
-
-      sendButton.textContent =
-        "RECORD ANOTHER TASK";
-
-
-      sendButton.onclick =
-        beginAnotherSingleTask;
-
-    }
-
-    else{
-
-      sendButton.textContent =
-        getCaptureMode() === "note"
-          ? "SAVE OPERATIONAL NOTE"
+    sendButton.textContent =
+      getCaptureMode() === "note"
+        ? "SAVE OPERATIONAL NOTE"
+        : getCaptureMode() === "single"
+          ? "ADD THIS TASK"
           : "SEND FOR TASK REVIEW";
 
 
-      sendButton.onclick =
-        sendVoiceToROMS;
-
-    }
+    sendButton.onclick =
+      sendVoiceToROMS;
 
   }
 
+}
+
+
+
+/* =========================================================
+   PENDING SEPARATE SINGLE TASKS
+   ========================================================= */
+
+
+function loadPendingSingleTasks(){
+
+  try{
+
+    const stored =
+      JSON.parse(
+        localStorage.getItem(
+          ROMS_PENDING_TASKS_STORAGE_KEY
+        ) ||
+        "[]"
+      );
+
+    pendingSingleTasks =
+      Array.isArray(stored)
+        ? stored.filter(function(task){
+            return task && cleanVoiceText(task.text);
+          })
+        : [];
+
+  }
+  catch(error){
+
+    pendingSingleTasks = [];
+
+  }
+
+
+  renderPendingSingleTasks();
+
+}
+
+
+function savePendingSingleTasks(){
+
+  try{
+
+    localStorage.setItem(
+      ROMS_PENDING_TASKS_STORAGE_KEY,
+      JSON.stringify(pendingSingleTasks)
+    );
+
+  }
+  catch(error){}
+
+}
+
+
+function addSingleTaskToPending(
+  capturedText
+){
+
+  const cleaned =
+    cleanVoiceText(
+      capturedText
+    );
+
+
+  if(!cleaned){
+    setReviewMessage("No task is available to add.","warning");
+    return;
+  }
+
+
+  pendingSingleTasks.push({
+    id:String(Date.now()) + "_" + String(pendingSingleTasks.length + 1),
+    text:cleaned
+  });
+
+
+  savePendingSingleTasks();
+  renderPendingSingleTasks();
+  clearVoiceCapture();
+
+
+  setVoiceState(
+    "Task added separately. Record another task or send all to the Command Center.",
+    ""
+  );
+
+}
+
+
+function renderPendingSingleTasks(){
+
+  const panel = document.getElementById("pendingTaskPanel");
+  const list = document.getElementById("pendingTaskList");
+  const count = document.getElementById("pendingTaskCount");
+
+
+  if(!panel || !list || !count){ return; }
+
+
+  count.textContent = String(pendingSingleTasks.length);
+  panel.classList.toggle("show",pendingSingleTasks.length > 0);
+
+
+  list.innerHTML = pendingSingleTasks.map(function(task,index){
+    return '<div class="pending-task-item">' +
+      '<div class="pending-task-number">Task ' + (index + 1) + '</div>' +
+      '<div class="pending-task-text">' + escapePendingTaskHTML(task.text) + '</div>' +
+      '<div class="pending-task-actions">' +
+        '<button class="pending-task-action" type="button" onclick="editPendingSingleTask(\'' + escapePendingTaskJS(task.id) + '\')">Edit</button>' +
+        '<button class="pending-task-action remove" type="button" onclick="removePendingSingleTask(\'' + escapePendingTaskJS(task.id) + '\')">Remove</button>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+
+}
+
+
+function editPendingSingleTask(taskID){
+
+  const task = pendingSingleTasks.find(function(item){ return item.id === taskID; });
+  if(!task){ return; }
+
+
+  const edited = window.prompt("Edit this separate task:",task.text);
+  if(edited === null){ return; }
+
+
+  const cleaned = cleanVoiceText(edited);
+  if(!cleaned){
+    window.alert("A task cannot be blank.");
+    return;
+  }
+
+
+  task.text = cleaned;
+  savePendingSingleTasks();
+  renderPendingSingleTasks();
+
+}
+
+
+function removePendingSingleTask(taskID){
+
+  pendingSingleTasks = pendingSingleTasks.filter(function(task){
+    return task.id !== taskID;
+  });
+
+
+  savePendingSingleTasks();
+  renderPendingSingleTasks();
+
+}
+
+
+function recordAnotherPendingTask(){
+
+  clearVoiceCapture();
+  setCaptureModeToSingle();
+  setVoiceState("Listening for another separate task...","processing");
+  window.setTimeout(startVoiceCapture,100);
+
+}
+
+
+async function sendPendingTasksToROMS(){
+
+  if(!ROMS_DEVICE || !ROMS_DEVICE.token){
+    setVoiceState("This phone must be enrolled before sending tasks.","warning");
+    return;
+  }
+
+
+  if(pendingSingleTasks.length === 0){ return; }
+
+
+  const sendButton = document.getElementById("sendPendingTasksButton");
+  const tasksToSend = pendingSingleTasks.slice();
+  sendButton.disabled = true;
+  sendButton.textContent = "SENDING " + tasksToSend.length + " TASKS...";
+
+
+  try{
+
+    for(let i = 0; i < tasksToSend.length; i++){
+
+      const formData = new URLSearchParams();
+      formData.append("transcript","Single task request. " + tasksToSend[i].text);
+      formData.append("capture_mode","single");
+      formData.append("device_token",ROMS_DEVICE.token);
+      formData.append("user_id",ROMS_DEVICE.userId);
+      formData.append("user",ROMS_DEVICE.name);
+      formData.append("role",ROMS_DEVICE.role);
+      formData.append("review_center",ROMS_DEVICE.reviewCenter);
+      formData.append("source","ROMS GitHub Mobile Voice AI");
+      formData.append("version","2.1-L8");
+      formData.append("batch_position",String(i + 1));
+      formData.append("batch_total",String(tasksToSend.length));
+
+
+      await fetch(ROMS_MOBILE_VOICE_ENDPOINT,{
+        method:"POST",
+        mode:"no-cors",
+        body:formData
+      });
+
+    }
+
+
+    pendingSingleTasks = [];
+    savePendingSingleTasks();
+    renderPendingSingleTasks();
+    setCaptureStep(3,true);
+    setVoiceState(
+      tasksToSend.length +
+      (tasksToSend.length === 1 ? " separate task sent" : " separate tasks sent") +
+      " to the Command Center for review.",
+      ""
+    );
+
+  }
+  catch(error){
+
+    setVoiceState(
+      "Task transmission failed. Pending tasks remain available.",
+      "warning"
+    );
+
+  }
+  finally{
+
+    sendButton.disabled = false;
+    sendButton.textContent = "SEND ALL TO COMMAND CENTER";
+
+  }
+
+}
+
+
+function setCaptureModeToSingle(){
+
+  const single = document.querySelector("input[name='captureMode'][value='single']");
+  if(single){ single.checked = true; }
+  updateCaptureMode();
+
+}
+
+
+function escapePendingTaskHTML(value){
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
+
+
+function escapePendingTaskJS(value){
+  return String(value || "")
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/\r/g,"\\r")
+    .replace(/\n/g,"\\n");
 }
 
 
@@ -5291,6 +5691,9 @@ window
     function(){
 
       initializeROMSDevice();
+
+
+      loadPendingSingleTasks();
 
 
       logVoice(
