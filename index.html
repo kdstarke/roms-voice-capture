@@ -5478,6 +5478,24 @@ function normalizeROMSFieldReferences(
   );
 
 
+  /*
+   * ROMS location vocabulary:
+   * Browser speech recognition commonly hears
+   * "Lofton Pond" as "loft and pond."
+   */
+
+  text = text.replace(
+    /\bloft\s+(?:and|in)\s+pond\b/gi,
+    "Lofton Pond"
+  );
+
+
+  text = text.replace(
+    /\blofton\s+pond\b/gi,
+    "Lofton Pond"
+  );
+
+
   return text;
 
 }
