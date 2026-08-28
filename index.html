@@ -2097,6 +2097,7 @@
     }
 
     .return-command{
+      position:relative;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -2113,6 +2114,16 @@
       text-transform:uppercase;
       text-shadow:0 1px 1px rgba(60,34,8,.55);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 4px 8px rgba(0,0,0,.20);
+    }
+
+    .return-command::before{
+      content:"\2190";
+      position:absolute;
+      left:10px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:11px;
+      line-height:1;
     }
 
     .return-command:hover{
@@ -2480,7 +2491,7 @@
           type="button"
           onclick="returnToCommandCenter()"
         >
-          ← Return to Command Center
+          Return to Command Center
         </button>
       </div>
 
