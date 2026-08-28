@@ -5354,9 +5354,48 @@ function cleanVoiceText(
     .trim();
 
 
-  return normalizeROMSFieldReferences(
+  return normalizeROMSVocabulary(
     cleaned
   );
+
+}
+
+
+/* =========================================================
+   ROMS OPERATIONAL VOCABULARY
+   Correct high-confidence station terms before review and
+   submission while preserving the user's surrounding words.
+   ========================================================= */
+
+
+function normalizeROMSVocabulary(
+  value
+){
+
+  let text =
+    normalizeROMSFieldReferences(
+      value
+    );
+
+
+  /*
+   * Browser speech recognition may hear "Row Crop" as
+   * "road crowd", "road crop", or "row crowd".
+   */
+
+  text = text.replace(
+    /\b(?:road\s+crowd|road\s+crop|row\s+crowd)\b/gi,
+    "Row Crop"
+  );
+
+
+  text = text.replace(
+    /\brow\s+crop\b/gi,
+    "Row Crop"
+  );
+
+
+  return text;
 
 }
 
