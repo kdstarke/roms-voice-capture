@@ -3442,6 +3442,8 @@ let recognition =
 let isRecognizing =
   false;
 
+let voicePhase = "idle";
+
 
 let finalTranscript =
   "";
@@ -3824,590 +3826,153 @@ function checkSpeechRecognition(){
    ========================================================= */
 
 
-async function testMicrophone(){
-
-  if(
-    !checkMicrophoneAPI()
-  ){
-
-    return false;
-
-  }
-
-
-  setVoiceState(
-    "Requesting microphone access...",
-    "processing"
-  );
-
-
-  try{
-
-
-    const stream =
-
-      await navigator
-        .mediaDevices
-        .getUserMedia({
-
-          audio:true
-
-        });
-
-
-    const tracks =
-      stream.getAudioTracks();
-
-
-    if(
-      tracks.length >
-      0
-    ){
-
-      logVoice(
-
-        "Microphone detected: " +
-
-        (
-          tracks[0].label ||
-          "audio input"
-        ),
-
-        "PASS"
-
-      );
-
-    }
-
-
-    stream
-      .getTracks()
-      .forEach(
-        function(track){
-
-          track.stop();
-
-        }
-      );
-
-
-    setSystemStatus(
-      microphoneStatus,
-      "READY",
-      "pass"
-    );
-
-
-    return true;
-
-  }
-
-  catch(error){
-
-
-    setSystemStatus(
-      microphoneStatus,
-      "BLOCKED",
-      "fail"
-    );
-
-
-    setVoiceState(
-      "Microphone permission was not allowed.",
-      "warning"
-    );
-
-
-    logVoice(
-
-      (
-        error &&
-        error.name
-          ? error.name +
-            ": "
-          : ""
-      ) +
-
-      (
-        error &&
-        error.message
-          ? error.message
-          : "Microphone access failed."
-      ),
-
-      "ERROR"
-
-    );
-
-
-    return false;
-
-  }
-
-}
-
-
-
-/* =========================================================
-   SPEECH RECOGNITION
-   ========================================================= */
-
-
+// One speech session owns the microphone. Start directly from the user's tap;
+// a separate getUserMedia preflight can disrupt the iPad audio session.
 function initializeRecognition(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition) return false;
+  const session = new SpeechRecognition();
+  recognition = session;
+  session.continuous = true;
+  session.interimResults = true;
+  session.lang = "en-US";
+  session.maxAlternatives = 1;
+  // Keep existing wording when a user retries an interrupted recording.
+  const priorText = cleanVoiceText(transcriptText.textContent);
+  const results = [];
+  let sessionError = "";
+  const current = () => recognition === session;
 
-  const SpeechRecognition =
-
-    window.SpeechRecognition ||
-
-    window.webkitSpeechRecognition;
-
-
-  if(
-    !SpeechRecognition
-  ){
-
-    return false;
-
-  }
-
-
-  recognition =
-    new SpeechRecognition();
-
-
-  recognition.continuous =
-    true;
-
-
-  recognition.interimResults =
-    true;
-
-
-  recognition.lang =
-    "en-US";
-
-
-  recognition.maxAlternatives =
-    1;
-
-
-
-  recognition.onstart =
-    function(){
-
-
-      isRecognizing =
-        true;
-
-
-      setSystemStatus(
-        recognitionStatus,
-        "LISTENING",
-        "pass"
-      );
-
-
-      voiceButton
-        .classList
-        .add(
-          "listening"
-        );
-
-
-      voiceButtonLabel.textContent =
-        "STOP";
-
-
-      setVoiceState(
-        "Listening... speak normally.",
-        "listening"
-      );
-
-
-      logVoice(
-        "Speech recognition started.",
-        "PASS"
-      );
-
+  session.onstart = function(){
+    if(!current()) return;
+    if(voicePhase === "stopping") { session.stop(); return; }
+    voicePhase = "listening";
+    isRecognizing = true;
+    setSystemStatus(recognitionStatus, "LISTENING", "pass");
+    voiceButton.classList.add("listening");
+    voiceButtonLabel.textContent = "STOP";
+    setVoiceState("Listening... speak normally.", "listening");
+    logVoice("Speech recognition started.", "PASS");
   };
 
-
-
-  recognition.onresult =
-    function(event){
-
-
-      interimTranscript =
-        "";
-
-
-      for(
-        let i =
-          event.resultIndex;
-
-        i <
-          event.results.length;
-
-        i++
-      ){
-
-
-        const result =
-          event.results[i];
-
-
-        if(
-          !result ||
-          !result[0]
-        ){
-
-          continue;
-
-        }
-
-
-        const text =
-          result[0]
-            .transcript;
-
-
-        if(
-          result.isFinal
-        ){
-
-          finalTranscript +=
-
-            text +
-            " ";
-
-
-          logVoice(
-            "Final speech captured: " +
-            text,
-            "VOICE"
-          );
-
-        }
-
-        else{
-
-          interimTranscript +=
-            text;
-
-        }
-
-      }
-
-
-      renderVoiceTranscript();
-
+  session.onresult = function(event){
+    if(!current() || sessionError) return;
+    // Replace results by index: repeated final events must not duplicate words.
+    results.length = event.results.length;
+    for(let i = event.resultIndex; i < event.results.length; i++){
+      const result = event.results[i];
+      if(result && result[0]) results[i] = {text:result[0].transcript, final:result.isFinal};
+    }
+    finalTranscript = [priorText].concat(results.filter(r => r && r.final).map(r => r.text)).filter(Boolean).join(" ");
+    interimTranscript = results.filter(r => r && !r.final).map(r => r.text).join(" ");
+    renderVoiceTranscript();
   };
 
-
-
-  recognition.onerror =
-    function(event){
-
-
-      const error =
-
-        event &&
-        event.error
-
-          ? event.error
-
-          : "unknown";
-
-
-      setSystemStatus(
-        recognitionStatus,
-        "ERROR",
-        "fail"
-      );
-
-
-      setVoiceState(
-        "Voice capture stopped. Tap to try again.",
-        "warning"
-      );
-
-
-      logVoice(
-        "Speech recognition error: " +
-        error,
-        "ERROR"
-      );
-
-
-      resetVoiceButton();
-
+  session.onerror = function(event){
+    if(!current()) return;
+    sessionError = String(event && event.error || "unknown");
+    voicePhase = "stopping";
+    isRecognizing = false;
+    resetVoiceButton();
+    setSystemStatus(recognitionStatus, "ERROR: " + sessionError, "fail");
+    const messages = {
+      aborted:"Recording was interrupted. Your wording is retained. Tap the microphone to try again.",
+      "no-speech":"No speech was detected. Tap the microphone and speak again.",
+      "audio-capture":"Audio input became unavailable. Close any other recording, then tap the microphone again.",
+      network:"The speech service could not connect. Check your connection, then tap the microphone again.",
+      "not-allowed":"Speech recording was not allowed. Check microphone and speech-recognition permissions for this browser.",
+      "service-not-allowed":"The speech service was not allowed. Check speech-recognition access for this browser."
+    };
+    setVoiceState(messages[sessionError] || "Voice capture stopped (" + sessionError + "). Your wording is retained.", "warning");
+    if(sessionError === "audio-capture") setSystemStatus(microphoneStatus, "UNAVAILABLE", "fail");
+    logVoice("Speech recognition error: " + sessionError, "ERROR");
+    if(cleanVoiceText(transcriptText.textContent)) reviewButton.classList.add("show");
+    // Some engines omit onend after an error. Release the old instance so a
+    // deliberate retry cannot be trapped by its stale running state.
+    recognition = null;
+    voicePhase = "idle";
+    try { session.abort(); } catch(ignore) {}
   };
 
-
-
-  recognition.onend =
-    function(){
-
-
-      isRecognizing =
-        false;
-
-
-      resetVoiceButton();
-
-
-      if(
-        cleanVoiceText(
-          finalTranscript
-        )
-      ){
-
-        setSystemStatus(
-          recognitionStatus,
-          "READY",
-          "pass"
-        );
-
-
-        setVoiceState(
-          "Voice capture ready for review.",
-          ""
-        );
-
-
-        reviewButton
-          .classList
-          .add(
-            "show"
-          );
-
-
-        window.setTimeout(
-          openVoiceReviewPanel,
-          150
-        );
-
-      }
-
-      else{
-
-
-        setSystemStatus(
-          recognitionStatus,
-          "IDLE",
-          "warn"
-        );
-
-
-        setVoiceState(
-          "Ready for field intelligence.",
-          ""
-        );
-
-      }
-
-
-      logVoice(
-        "Speech recognition ended.",
-        "INFO"
-      );
-
+  session.onend = function(){
+    if(!current()) return;
+    recognition = null;
+    voicePhase = "idle";
+    isRecognizing = false;
+    resetVoiceButton();
+    const capturedText = cleanVoiceText(transcriptText.textContent);
+    setSystemStatus(recognitionStatus, capturedText ? "READY" : "IDLE", capturedText ? "pass" : "warn");
+    setVoiceState(capturedText ? "Recording ended. Review the wording or tap the microphone to continue." : "Recording ended. Tap the microphone to try again.", "");
+    if(capturedText) reviewButton.classList.add("show");
+    // Do not open an overlay or restart recording automatically when the
+    // browser ends a session; the user chooses Review or another microphone tap.
+    logVoice("Speech recognition ended.", "INFO");
   };
 
-
-  recognition.onaudiostart =
-    function(){
-
-      logVoice(
-        "Browser detected audio input.",
-        "PASS"
-      );
-
+  session.onaudiostart = function(){
+    if(!current()) return;
+    setSystemStatus(microphoneStatus, "READY", "pass");
+    logVoice("Browser detected audio input.", "PASS");
   };
-
-
-  recognition.onspeechstart =
-    function(){
-
-      logVoice(
-        "Speech detected.",
-        "PASS"
-      );
-
+  session.onspeechstart = function(){
+    if(current()) logVoice("Speech detected.", "PASS");
   };
-
-
   return true;
-
 }
 
-
-
-/* =========================================================
-   START CAPTURE
-   ========================================================= */
-
-
-async function startVoiceCapture(){
-
-  if(
-    isRecognizing
-  ){
-
-    stopVoiceCapture();
-
+function startVoiceCapture(){
+  if(voicePhase === "starting" || voicePhase === "stopping") return;
+  if(voicePhase === "listening") { stopVoiceCapture(); return; }
+  if(!window.isSecureContext){
+    setVoiceState("Open this voice page using its HTTPS address to record.", "warning");
     return;
-
   }
-
-
-  finalTranscript =
-    "";
-
-
-  interimTranscript =
-    "";
-
-
-  transcriptText.textContent =
-    "";
-
-
-  transcriptBox
-    .classList
-    .remove(
-      "show"
-    );
-
-
-  reviewButton
-    .classList
-    .remove(
-      "show"
-    );
-
-
-  const microphoneOK =
-    await testMicrophone();
-
-
-  if(
-    !microphoneOK
-  ){
-
-    return;
-
-  }
-
-
-  if(
-    !recognition
-  ){
-
-    const initialized =
-      initializeRecognition();
-
-
-    if(
-      !initialized
-    ){
-
-      setVoiceState(
-        "Speech recognition is unavailable.",
-        "warning"
-      );
-
-
-      return;
-
-    }
-
-  }
-
-
+  voicePhase = "starting";
+  setVoiceState("Starting voice capture...", "processing");
+  voiceButtonLabel.textContent = "STARTING";
+  setSystemStatus(recognitionStatus, "STARTING", "warn");
   try{
-
-
-    recognition.start();
-
-
-    logVoice(
-      "Recognition.start() called.",
-      "INFO"
-    );
-
-  }
-
-  catch(error){
-
-
-    if(
-      error &&
-      error.name ===
-      "InvalidStateError"
-    ){
-
+    if(!initializeRecognition()){
+      voicePhase = "idle";
+      resetVoiceButton();
+      setSystemStatus(recognitionStatus, "UNAVAILABLE", "fail");
+      setVoiceState("Speech recognition is unavailable in this browser.", "warning");
       return;
-
     }
-
-
-    setVoiceState(
-      "Unable to start voice capture.",
-      "warning"
-    );
-
-
-    logVoice(
-      error &&
-      error.message
-        ? error.message
-        : String(error),
-      "ERROR"
-    );
-
+    // Keep this synchronous with the click: no permission preflight or timer.
+    recognition.start();
+    logVoice("Recognition.start() called directly from microphone tap.", "INFO");
+  } catch(error){
+    const failedSession = recognition;
+    recognition = null;
+    voicePhase = "idle";
+    isRecognizing = false;
+    resetVoiceButton();
+    const name = String(error && error.name || "unknown");
+    setSystemStatus(recognitionStatus, "ERROR: " + name, "fail");
+    setVoiceState("Unable to start recording (" + name + "). Your wording is retained. Tap to try again.", "warning");
+    logVoice(name + ": " + String(error && error.message || error), "ERROR");
+    if(failedSession) { try { failedSession.abort(); } catch(ignore) {} }
   }
-
 }
-
-
-
-/* =========================================================
-   STOP
-   ========================================================= */
-
 
 function stopVoiceCapture(){
-
-  if(
-    recognition &&
-    isRecognizing
-  ){
-
-    try{
-
-      recognition.stop();
-
-    }
-
-    catch(error){
-
-      logVoice(
-        "Unable to stop recognition.",
-        "ERROR"
-      );
-
-    }
-
+  if(!recognition || voicePhase === "idle" || voicePhase === "stopping") return;
+  voicePhase = "stopping";
+  setVoiceState("Finishing voice capture...", "processing");
+  try { recognition.stop(); }
+  catch(error){
+    const failedSession = recognition;
+    recognition = null;
+    voicePhase = "idle";
+    isRecognizing = false;
+    resetVoiceButton();
+    setVoiceState("Recording could not finish normally. Your wording is retained.", "warning");
+    setSystemStatus(recognitionStatus, "ERROR", "fail");
+    logVoice("Unable to stop recognition: " + String(error && error.message || error), "ERROR");
+    try { failedSession.abort(); } catch(ignore) {}
   }
-
 }
-
-
-
-/* =========================================================
-   BUTTON RESET
-   ========================================================= */
 
 
 function resetVoiceButton(){
@@ -4649,15 +4214,13 @@ function modifyVoiceCapture(){
 
 
 function clearVoiceCapture(){
-
-  if(
-    isRecognizing
-  ){
-
-    stopVoiceCapture();
-
-  }
-
+  const previousSession = recognition;
+  recognition = null;
+  voicePhase = "idle";
+  isRecognizing = false;
+  if(previousSession) { try { previousSession.abort(); } catch(ignore) {} }
+  resetVoiceButton();
+  setSystemStatus(recognitionStatus, "IDLE", "warn");
 
   finalTranscript =
     "";
@@ -5132,7 +4695,7 @@ function recordAnotherPendingTask(){
   clearVoiceCapture();
   setCaptureModeToSingle();
   setVoiceState("Listening for another separate task...","processing");
-  window.setTimeout(startVoiceCapture,100);
+  startVoiceCapture();
 
 }
 
@@ -5273,10 +4836,7 @@ function beginAnotherSingleTask(){
   );
 
 
-  window.setTimeout(
-    startVoiceCapture,
-    100
-  );
+  startVoiceCapture();
 
 }
 
@@ -5770,7 +5330,7 @@ window
 
 
       logVoice(
-        "ROMS Mobile Voice AI v2.0-L8 loaded.",
+        "ROMS Mobile Voice AI v2.2-MIC loaded.",
         "PASS"
       );
 
@@ -5785,13 +5345,7 @@ window
       checkMicrophoneAPI();
 
 
-      if(
-        speechOK
-      ){
 
-        initializeRecognition();
-
-      }
 
 
       setSystemStatus(
@@ -5831,3 +5385,4 @@ window
 </body>
 
 </html>
+
