@@ -2528,14 +2528,14 @@
       </div>
 
       <div id="romsDeviceName" class="manager-name">
-        Phone not enrolled
+        Voice task capture
       </div>
 
     </div>
 
 
     <div id="romsDeviceRole" class="manager-role">
-      ENROLLMENT REQUIRED
+      Review &amp; save in ROMS
     </div>
 
 
@@ -2752,14 +2752,14 @@
           class="review-button"
           type="button"
         >
-          REVIEW VOICE CAPTURE
+          REVIEW IN ROMS
         </button>
 
         <div id="pendingTaskPanel" class="pending-task-panel">
           <div class="pending-task-head">
             <div>
               <div class="pending-task-title">Pending Separate Tasks</div>
-              <div class="section-note">Review the list before sending it to the Command Center.</div>
+              <div class="section-note">Review the retained tasks in ROMS before adding them to intake.</div>
             </div>
             <div id="pendingTaskCount" class="pending-task-count">0</div>
           </div>
@@ -2771,7 +2771,7 @@
               Record Another Task
             </button>
             <button id="sendPendingTasksButton" class="pending-batch-action send" type="button" onclick="sendPendingTasksToROMS()">
-              Send All to Command Center
+              Review These Tasks in ROMS
             </button>
           </div>
         </div>
@@ -3360,79 +3360,76 @@ const ROMS_MANAGER_OPERATIONS_URL =
 
   "?page=ManagerOperationsCenter_v3.2.1";
 
-const ROMS_DEVICE_STORAGE_KEY = "ROMS_MOBILE_VOICE_DEVICE_V1";
 const ROMS_PENDING_TASKS_STORAGE_KEY = "ROMS_MOBILE_VOICE_PENDING_TASKS_V1";
-let ROMS_DEVICE = null;
+const ROMS_VOICE_DRAFT_KEY = "ROMS_VOICE_REVIEW_DRAFT_V1";
 let pendingSingleTasks = [];
+let handoffDraft = null;
 
-function initializeROMSDevice(){
-  const params = new URLSearchParams(window.location.search || "");
-  const enrollment = params.get("enroll") || "";
-  let profile = null;
-  if(enrollment){
-    try{
-      const parsed = JSON.parse(enrollment);
-      if(parsed && parsed.t){
-        profile = {
-          token:String(parsed.t || ""),
-          userId:String(parsed.u || ""),
-          name:String(parsed.n || ""),
-          role:String(parsed.r || ""),
-          reviewCenter:String(parsed.c || "MANAGER_OPERATIONS_CENTER")
-        };
-      }
-    }
-    catch(error){
-      /* Backward-compatible support for the original multi-parameter link. */
-      profile = {
-        token:enrollment,
-        userId:params.get("user_id") || "",
-        name:params.get("name") || "",
-        role:params.get("role") || "",
-        reviewCenter:params.get("review_center") || "MANAGER_OPERATIONS_CENTER"
-      };
-    }
+function initializeROMSVoice(){
+  document.getElementById("romsDeviceName").textContent = "Voice task capture";
+  document.getElementById("romsDeviceRole").textContent = "Review & save in ROMS";
+  const button = document.querySelector(".return-command");
+  if(button) { button.style.display = "inline-flex"; button.textContent = "Return to ROMS"; }
+}
+initializeROMSVoice();
+
+function prepareVoiceHandoff(text, mode){
+  text = cleanVoiceText(text);
+  if(!text) throw new Error("Record or type the wording first.");
+  if(text.length > 20000) throw new Error("Send a shorter capture, up to 20,000 characters.");
+  if(!["single","bulk","note"].includes(mode)) throw new Error("Choose a capture mode.");
+  if(!handoffDraft) {
+    try { handoffDraft = JSON.parse(localStorage.getItem(ROMS_VOICE_DRAFT_KEY) || "null"); } catch(ignore) {}
   }
-  if(profile && profile.token && profile.name){
-    ROMS_DEVICE = {
-      token:profile.token,
-      userId:profile.userId,
-      name:profile.name,
-      role:profile.role,
-      reviewCenter:profile.reviewCenter
-    };
-    try { localStorage.setItem(ROMS_DEVICE_STORAGE_KEY, JSON.stringify(ROMS_DEVICE)); }
-    catch(error) {}
-    /* Keep the one-parameter enrollment URL intact. iPhone Home Screen apps use
-       separate browser storage, so the retained launch URL must reapply the
-       verified identity when the standalone shortcut opens. */
-  } else {
-    try { ROMS_DEVICE = JSON.parse(localStorage.getItem(ROMS_DEVICE_STORAGE_KEY) || "null"); }
-    catch(error) { ROMS_DEVICE = null; }
+  if(!handoffDraft || handoffDraft.text !== text || handoffDraft.mode !== mode) {
+    handoffDraft = {v:1, id:"VOICE-" + (crypto.randomUUID ? crypto.randomUUID() : Date.now()+"-"+Math.random().toString(36).slice(2)), text:text, mode:mode};
   }
-  const nameEl = document.getElementById("romsDeviceName");
-  const roleEl = document.getElementById("romsDeviceRole");
-  const returnButton = document.querySelector(".return-command");
-  if(ROMS_DEVICE && ROMS_DEVICE.token && ROMS_DEVICE.name){
-    nameEl.textContent = "Recording as: " + ROMS_DEVICE.name;
-    roleEl.textContent = ROMS_DEVICE.role;
-    if(returnButton){
-      returnButton.style.display =
-        String(ROMS_DEVICE.role || "").toLowerCase().indexOf("superintendent") !== -1
-          ? "inline-flex"
-          : "none";
-    }
-    return true;
-  }
-  nameEl.textContent = "Phone not enrolled";
-  roleEl.textContent = "ENROLLMENT REQUIRED";
-  if(returnButton){ returnButton.style.display = "none"; }
-  return false;
+  // Keep a local recovery copy until an explicit Clear or a new capture.
+  try { localStorage.setItem(ROMS_VOICE_DRAFT_KEY, JSON.stringify(handoffDraft)); } catch(ignore) {}
+  if(window.history && window.location.hash === "#new-capture")
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  const from = new URLSearchParams(window.location.search || "").get("from") === "manager" ? "manager" : "superintendent";
+  return ROMS_MOBILE_VOICE_ENDPOINT + "?page=UI_Task_Intake&from=" + from + "#voice=" + encodeURIComponent(JSON.stringify(handoffDraft));
 }
 
-/* The script is at the end of body, so identity is applied immediately even if a
-   later optional mobile control is unavailable in a particular browser. */
-initializeROMSDevice();
+function reviewVoiceInROMS(text, mode){
+  if(isRecognizing || voicePhase !== "idle") {
+    stopVoiceCapture();
+    setVoiceState("Recording is stopping. Tap Review when it has stopped.", "");
+    return;
+  }
+  try {
+    const url = prepareVoiceHandoff(text, mode);
+    setVoiceState("Opening your wording in ROMS for review…", "processing");
+    window.location.href = url;
+  } catch(error) {
+    setVoiceState(error.message + " Your wording is still on this screen.", "warning");
+  }
+}
+
+function restoreVoiceDraft(){
+  try {
+    if(window.location.hash === "#new-capture") {
+      const old = localStorage.getItem(ROMS_VOICE_DRAFT_KEY);
+      if(old) localStorage.setItem("ROMS_VOICE_PREVIOUS_DRAFT_V1", old);
+      localStorage.removeItem(ROMS_VOICE_DRAFT_KEY);
+      handoffDraft = null;
+      return;
+    }
+    const draft = JSON.parse(localStorage.getItem(ROMS_VOICE_DRAFT_KEY) || "null");
+    if(!draft || !draft.text || !["single","bulk","note"].includes(draft.mode)) return;
+    handoffDraft = draft;
+    finalTranscript = draft.text;
+    transcriptText.textContent = draft.text;
+    const selected = document.querySelector("input[name='captureMode'][value='" + draft.mode + "']");
+    if(selected) selected.checked = true;
+    updateCaptureMode();
+    transcriptBox.classList.add("show");
+    reviewButton.classList.add("show");
+    setVoiceState("Previous wording retained. Review it in ROMS or Clear for a new task.", "");
+  } catch(ignore) {}
+}
+
 
 
 let recognition =
@@ -4057,102 +4054,8 @@ function renderVoiceTranscript(){
 
 
 function openVoiceReviewPanel(){
-
-  const capturedText =
-    cleanVoiceText(
-      transcriptText.textContent
-    );
-
-
-  if(
-    !capturedText
-  ){
-
-    setVoiceState(
-      "No voice capture is available to review.",
-      "warning"
-    );
-
-
-    return;
-
-  }
-
-
-  document
-    .getElementById(
-      "reviewTranscript"
-    )
-    .textContent =
-      capturedText;
-
-
-  document
-    .getElementById(
-      "reviewDestination"
-    )
-    .textContent =
-      "ROMS Level 8 Router";
-
-
-  const captureMode =
-    getCaptureMode();
-
-
-  document
-    .getElementById(
-      "reviewCaptureMode"
-    )
-    .textContent =
-      captureMode === "bulk"
-        ? "Bulk Tasks"
-        : captureMode === "note"
-          ? "Operational Note"
-          : "Single Task";
-
-
-  document
-    .getElementById(
-      "sendToROMSButton"
-    )
-    .textContent =
-      captureMode === "note"
-        ? "SAVE OPERATIONAL NOTE"
-        : captureMode === "single"
-          ? "ADD THIS TASK"
-        : "SEND FOR TASK REVIEW";
-
-
-  setCaptureStep(
-    2
-  );
-
-
-  clearReviewMessage();
-
-
-  reviewOverlay
-    .classList
-    .add(
-      "open"
-    );
-
-
-  document.body
-    .classList
-    .add(
-      "review-open"
-    );
-
-
-  setVoiceState(
-    "Review voice capture before sending to ROMS.",
-    "processing"
-  );
-
+  reviewVoiceInROMS(transcriptText.textContent, getCaptureMode());
 }
-
-
 
 function closeVoiceReviewPanel(){
 
@@ -4214,6 +4117,9 @@ function modifyVoiceCapture(){
 
 
 function clearVoiceCapture(){
+  handoffDraft = null;
+  try { localStorage.removeItem(ROMS_VOICE_DRAFT_KEY); } catch(ignore) {}
+
   const previousSession = recognition;
   recognition = null;
   voicePhase = "idle";
@@ -4281,268 +4187,11 @@ function clearVoiceCapture(){
    ========================================================= */
 
 
-async function sendVoiceToROMS(){
-
-  if(!ROMS_DEVICE || !ROMS_DEVICE.token){
-    setReviewMessage("This phone must be enrolled before sending a voice capture.","warning");
-    return;
-  }
-
-  const capturedText =
-    cleanVoiceText(
-
-      document
-        .getElementById(
-          "reviewTranscript"
-        )
-        .textContent
-
-    );
-
-
-  if(
-    !capturedText
-  ){
-
-    setReviewMessage(
-      "No voice transcript is available to send.",
-      "warning"
-    );
-
-
-    return;
-
-  }
-
-
-  const captureMode =
-    getCaptureMode();
-
-
-  if(
-    captureMode === "single"
-  ){
-
-    addSingleTaskToPending(
-      capturedText
-    );
-
-    return;
-
-  }
-
-
-  const sendButton =
-    document.getElementById(
-      "sendToROMSButton"
-    );
-
-
-  let submissionSucceeded =
-    false;
-
-
-  sendButton.disabled =
-    true;
-
-
-  sendButton.textContent =
-    "SENDING TO ROMS...";
-
-
-  setReviewMessage(
-    "Submitting voice capture to ROMS Level 8...",
-    "success"
-  );
-
-
-  setVoiceState(
-    "Transmitting voice capture to ROMS...",
-    "processing"
-  );
-
-
-  try{
-
-
-    const routedTranscript =
-      captureMode === "bulk"
-        ? "Bulk task request. " + capturedText
-        : captureMode === "single"
-          ? "Single task request. " + capturedText
-          : "Operational note. " + capturedText;
-
-
-    const formData =
-      new URLSearchParams();
-
-
-    formData.append(
-      "transcript",
-      routedTranscript
-    );
-
-
-    formData.append(
-      "capture_mode",
-      captureMode
-    );
-
-
-    formData.append("device_token", ROMS_DEVICE.token);
-    formData.append("user_id", ROMS_DEVICE.userId);
-    formData.append("user", ROMS_DEVICE.name);
-    formData.append("role", ROMS_DEVICE.role);
-    formData.append("review_center", ROMS_DEVICE.reviewCenter);
-
-
-    formData.append(
-      "source",
-      "ROMS GitHub Mobile Voice AI"
-    );
-
-
-    formData.append(
-      "version",
-      "2.0-L8"
-    );
-
-
-    /*
-     * Safari / iPhone-safe transmission.
-     *
-     * no-cors means the browser cannot read the
-     * Apps Script JSON response.
-     *
-     * The POST still reaches the ROMS doPost(e)
-     * endpoint, where Level 8 performs the routing.
-     */
-
-
-    await fetch(
-
-      ROMS_MOBILE_VOICE_ENDPOINT,
-
-      {
-
-        method:
-          "POST",
-
-        mode:
-          "no-cors",
-
-        body:
-          formData
-
-      }
-
-    );
-
-
-    setReviewMessage(
-
-      "Voice capture submitted to ROMS. " +
-      "ROMS will route assignable work to Task Intake " +
-      "and operational observations to the Voice Log.",
-
-      "success"
-
-    );
-
-
-    document
-      .getElementById(
-        "reviewDestination"
-      )
-      .textContent =
-        "Submitted to ROMS";
-
-
-    setVoiceState(
-      "Voice capture submitted for ROMS processing.",
-      ""
-    );
-
-
-    setCaptureStep(
-      3,
-      true
-    );
-
-
-    logVoice(
-      "Voice capture POST submitted to ROMS Level 8.",
-      "PASS"
-    );
-
-
-    submissionSucceeded =
-      true;
-
-  }
-
-  catch(error){
-
-
-    const message =
-
-      error &&
-      error.message
-
-        ? error.message
-
-        : String(error);
-
-
-    setReviewMessage(
-      "ROMS submission failed: " +
-      message,
-      "warning"
-    );
-
-
-    setVoiceState(
-      "Voice transmission failed. Capture remains available.",
-      "warning"
-    );
-
-
-    logVoice(
-      message,
-      "ERROR"
-    );
-
-  }
-
-  finally{
-
-
-    sendButton.disabled =
-      false;
-
-
-    sendButton.textContent =
-      getCaptureMode() === "note"
-        ? "SAVE OPERATIONAL NOTE"
-        : getCaptureMode() === "single"
-          ? "ADD THIS TASK"
-          : "SEND FOR TASK REVIEW";
-
-
-    sendButton.onclick =
-      sendVoiceToROMS;
-
-  }
-
+function sendVoiceToROMS(){
+  reviewVoiceInROMS(document.getElementById("reviewTranscript").textContent || transcriptText.textContent, getCaptureMode());
 }
 
-
-
-/* =========================================================
-   PENDING SEPARATE SINGLE TASKS
-   ========================================================= */
-
-
+/* Previously retained separate tasks can still be reviewed together. */
 function loadPendingSingleTasks(){
 
   try{
@@ -4618,7 +4267,7 @@ function addSingleTaskToPending(
 
 
   setVoiceState(
-    "Task added separately. Record another task or send all to the Command Center.",
+    "Task added separately. Record another task or review all in ROMS.",
     ""
   );
 
@@ -4700,79 +4349,10 @@ function recordAnotherPendingTask(){
 }
 
 
-async function sendPendingTasksToROMS(){
-
-  if(!ROMS_DEVICE || !ROMS_DEVICE.token){
-    setVoiceState("This phone must be enrolled before sending tasks.","warning");
-    return;
-  }
-
-
-  if(pendingSingleTasks.length === 0){ return; }
-
-
-  const sendButton = document.getElementById("sendPendingTasksButton");
-  const tasksToSend = pendingSingleTasks.slice();
-  sendButton.disabled = true;
-  sendButton.textContent = "SENDING " + tasksToSend.length + " TASKS...";
-
-
-  try{
-
-    for(let i = 0; i < tasksToSend.length; i++){
-
-      const formData = new URLSearchParams();
-      formData.append("transcript","Single task request. " + tasksToSend[i].text);
-      formData.append("capture_mode","single");
-      formData.append("device_token",ROMS_DEVICE.token);
-      formData.append("user_id",ROMS_DEVICE.userId);
-      formData.append("user",ROMS_DEVICE.name);
-      formData.append("role",ROMS_DEVICE.role);
-      formData.append("review_center",ROMS_DEVICE.reviewCenter);
-      formData.append("source","ROMS GitHub Mobile Voice AI");
-      formData.append("version","2.1-L8");
-      formData.append("batch_position",String(i + 1));
-      formData.append("batch_total",String(tasksToSend.length));
-
-
-      await fetch(ROMS_MOBILE_VOICE_ENDPOINT,{
-        method:"POST",
-        mode:"no-cors",
-        body:formData
-      });
-
-    }
-
-
-    pendingSingleTasks = [];
-    savePendingSingleTasks();
-    renderPendingSingleTasks();
-    setCaptureStep(3,true);
-    setVoiceState(
-      tasksToSend.length +
-      (tasksToSend.length === 1 ? " separate task sent" : " separate tasks sent") +
-      " to the Command Center for review.",
-      ""
-    );
-
-  }
-  catch(error){
-
-    setVoiceState(
-      "Task transmission failed. Pending tasks remain available.",
-      "warning"
-    );
-
-  }
-  finally{
-
-    sendButton.disabled = false;
-    sendButton.textContent = "SEND ALL TO COMMAND CENTER";
-
-  }
-
+function sendPendingTasksToROMS(){
+  if(!pendingSingleTasks.length) return;
+  reviewVoiceInROMS(pendingSingleTasks.map(task => cleanVoiceText(task.text).replace(/\r?\n/g," ")).join("\n"), "bulk");
 }
-
 
 function setCaptureModeToSingle(){
 
@@ -4807,7 +4387,7 @@ function escapePendingTaskJS(value){
    SINGLE-TASK CONTINUOUS CAPTURE LOOP
    After a successful single-task submission, the primary
    action clears the completed task, returns to Step 1 and
-   starts listening again from the same phone screen.
+   starts listening again from the same capture screen.
    ========================================================= */
 
 
@@ -5123,20 +4703,10 @@ function normalizeROMSFieldReferences(
 
 
 function returnToCommandCenter(){
-
-  if(ROMS_DEVICE && ROMS_DEVICE.reviewCenter === "MANAGER_OPERATIONS_CENTER"){
-    window.location.href = ROMS_MANAGER_OPERATIONS_URL +
-      "&reviewer=" + encodeURIComponent(ROMS_DEVICE.userId) +
-      "&name=" + encodeURIComponent(ROMS_DEVICE.name) +
-      "&role=" + encodeURIComponent(ROMS_DEVICE.role);
-    return;
-  }
-  window.location.href = ROMS_MOBILE_VOICE_ENDPOINT +
-    "?page=ROMS_SUPERINTENDENT_COMMAND_CENTER_v3.2.1&reviewer=KEITH_STARKE";
-
+  const from = new URLSearchParams(window.location.search || "").get("from");
+  const page = from === "manager" ? "UI_Manager" : from === "superintendent" ? "UI_Superintendent" : "UI_Home";
+  window.location.href = ROMS_MOBILE_VOICE_ENDPOINT + "?page=" + page;
 }
-
-
 
 /* =========================================================
    DIAGNOSTICS
@@ -5330,7 +4900,7 @@ window
 
 
       logVoice(
-        "ROMS Mobile Voice AI v2.2-MIC loaded.",
+        "ROMS Mobile Voice AI v2.3-VOICE loaded.",
         "PASS"
       );
 
@@ -5356,7 +4926,7 @@ window
 
 
       setVoiceState(
-        ROMS_DEVICE ? "Ready for voice capture." : "This phone must be enrolled before use.",
+        "Ready for voice capture. Review and save your wording in ROMS.",
         ""
       );
 
@@ -5373,6 +4943,7 @@ window
       setCaptureStep(
         1
       );
+      restoreVoiceDraft();
 
     }
 
